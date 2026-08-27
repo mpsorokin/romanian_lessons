@@ -61,12 +61,16 @@ export function OverviewPage() {
       </section>
 
       {activeStory && (
-        <section className="story-continue-row">
-          <div>
-            <p className="eyebrow">ПРОДОЛЖИТЬ ЧТЕНИЕ</p>
-            <Link to={`/stories/${activeStory.id}`}><strong>{activeStory.title}</strong><span>{Math.round(getStoryProgress(activeStory.id).maxProgress * 100)}% прочитано</span></Link>
-          </div>
-          <Link to={`/stories/${activeStory.id}`} className="icon-button" aria-label="Продолжить чтение"><ArrowUpRight size={20} /></Link>
+        <section className="continue-card" aria-label="Продолжить чтение">
+          <p className="eyebrow">ПРОДОЛЖИТЬ ЧТЕНИЕ</p>
+          <Link to={`/stories/${activeStory.id}`} className="continue-card__link">
+            <div>
+              <h3>{activeStory.title}</h3>
+              <p>{Math.round(getStoryProgress(activeStory.id).maxProgress * 100)}% прочитано</p>
+            </div>
+            <span className="outline-button">Продолжить <ContinueArrow /></span>
+          </Link>
+          <ProgressBar value={getStoryProgress(activeStory.id).maxProgress} label="Прогресс чтения" />
         </section>
       )}
 

@@ -69,11 +69,7 @@ button:disabled { cursor: default; }
 .metric-card strong span { color: var(--dark-muted); font-size: 11px; font-weight: 400; }
 .metric-card small { display: block; margin-top: 3px; color: var(--dark-muted); font-size: 10px; }
 .metric-card > .progress-bar { grid-column: 1 / -1; align-self: end; }
-.story-continue-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 24px 3px 7px; }
-.story-continue-row .eyebrow { margin-bottom: 7px; }
-.story-continue-row a:not(.icon-button) { display: flex; flex-direction: column; gap: 3px; }
-.story-continue-row strong { font-family: Lora, Georgia, serif; font-size: 17px; font-weight: 500; }
-.story-continue-row span { color: var(--dark-muted); font-size: 11px; }
+.metric-grid + .continue-card { margin-top: 11px; }
 .section-block { padding-top: 23px; }
 .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 15px; margin-bottom: 7px; }
 .section-heading h3 { margin: 0; font-family: Lora, Georgia, serif; font-size: 17px; font-weight: 500; }
