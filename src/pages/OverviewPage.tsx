@@ -1,12 +1,11 @@
 import { BookOpenText, Books, ArrowUpRight } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
-import { ContinueArrow } from "../components/ContentRow";
+import { ContinueArrow, LessonRow } from "../components/ContentRow";
 import { DarkShell } from "../components/PageShell";
 import { ProgressBar, ProgressRing } from "../components/ProgressBar";
 import { lessonContent, storyContent, allContent } from "../lib/content";
 import { completedLessonCount, completedMaterialCount, completedStoryCount, getActiveStory, getNextLesson, getRecentLessons, overallProgress } from "../lib/metrics";
 import { useProgress } from "../features/progress/useProgress";
-import { LessonRow } from "../components/ContentRow";
 
 export function OverviewPage() {
   const { progress, getLessonStatus, getStoryProgress } = useProgress();

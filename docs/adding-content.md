@@ -165,7 +165,7 @@ Se opresc lângă o librărie și privesc vitrinele. Ana găsește o carte despr
 
 ## Common errors
 
-If frontmatter is invalid, the app shows an error screen: "Check YAML frontmatter and Markdown in src/content."
+Frontmatter is parsed and validated at build time. Invalid frontmatter fails `npm run build` and shows an error overlay in `npm run dev`, so a broken file never reaches production.
 
 | Error | Cause |
 | --- | --- |
@@ -173,6 +173,7 @@ If frontmatter is invalid, the app shows an error screen: "Check YAML frontmatte
 | `Invalid id/order/title` | Field missing or empty |
 | `expected a number` | `order` or `wordCount` is not a number |
 | `Duplicate content id` | Same `id` on two files (including lesson + story) |
+| `Duplicate order` | Same `order` on two lessons, or on two stories |
 
 ## Verification
 

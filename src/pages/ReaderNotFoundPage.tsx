@@ -3,7 +3,7 @@ import { DarkShell } from "../components/PageShell";
 
 export function ReaderNotFoundPage({ kind }: { kind: "урок" | "рассказ" }) {
   return (
-    <DarkShell title="Calea" className="not-found-shell">
+    <DarkShell className="not-found-shell">
       <div className="not-found">
         <p className="eyebrow">ОШИБКА</p>
         <h2>Этот {kind} не найден</h2>

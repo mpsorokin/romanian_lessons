@@ -165,7 +165,7 @@ Se opresc lângă o librărie și privesc vitrinele. Ana găsește o carte despr
 
 ## Типичные ошибки
 
-При ошибке в frontmatter приложение показывает экран с сообщением: «Проверьте YAML frontmatter и Markdown в папке src/content.»
+Frontmatter разбирается и проверяется на этапе сборки. Ошибка роняет `npm run build` и показывает оверлей в `npm run dev`, поэтому битый файл не попадёт в прод.
 
 | Ошибка | Причина |
 | --- | --- |
@@ -173,6 +173,7 @@ Se opresc lângă o librărie și privesc vitrinele. Ana găsește o carte despr
 | `Invalid id/order/title` | Поле пропущено или пустое |
 | `expected a number` | `order` или `wordCount` не число |
 | `Duplicate content id` | Один и тот же `id` у двух файлов (в том числе урок + рассказ) |
+| `Duplicate order` | Одинаковый `order` у двух уроков или у двух рассказов |
 
 ## Проверка
 

@@ -1,6 +1,13 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState, type PropsWithChildren } from "react";
 import { readReaderSettings, writeReaderSettings } from "./readerSettings.storage";
-import { DEFAULT_READER_SETTINGS, type ReaderSettings, type ReaderTheme } from "./readerSettings.types";
+import {
+  DEFAULT_READER_SETTINGS,
+  asReaderTheme,
+  clampFontSize,
+  clampLineHeight,
+  type ReaderSettings,
+  type ReaderTheme,
+} from "./readerSettings.types";
 
 interface ReaderSettingsContextValue {
   settings: ReaderSettings;
@@ -12,39 +19,30 @@ interface ReaderSettingsContextValue {
 
 const ReaderSettingsContext = createContext<ReaderSettingsContextValue | null>(null);
 
-const clampFontSize = (value: number) => Math.min(26, Math.max(18, Math.round(value)));
-const clampLineHeight = (value: number) => Math.min(2, Math.max(1.4, Math.round(value * 20) / 20));
-
 export function ReaderSettingsProvider({ children }: PropsWithChildren) {
   const [settings, setSettings] = useState<ReaderSettings>(() => readReaderSettings());
+  const settingsRef = useRef(settings);
 
-  useEffect(() => {
-    writeReaderSettings(settings);
-  }, [settings]);
-
-  const updateSettings = useCallback((next: ReaderSettings) => {
-    setSettings({
-      fontSize: clampFontSize(next.fontSize),
-      lineHeight: clampLineHeight(next.lineHeight),
-      theme: next.theme === "dark" ? "dark" : "paper",
-    });
+  const apply = useCallback((next: ReaderSettings) => {
+    settingsRef.current = next;
+    writeReaderSettings(next);
+    setSettings(next);
   }, []);
 
-  const setFontSize = useCallback((fontSize: number) => {
-    setSettings((current) => ({ ...current, fontSize: clampFontSize(fontSize) }));
-  }, []);
-
-  const setLineHeight = useCallback((lineHeight: number) => {
-    setSettings((current) => ({ ...current, lineHeight: clampLineHeight(lineHeight) }));
-  }, []);
-
-  const setTheme = useCallback((theme: ReaderTheme) => {
-    setSettings((current) => ({ ...current, theme }));
-  }, []);
-
-  const value = useMemo(
-    () => ({ settings, updateSettings, setFontSize, setLineHeight, setTheme }),
-    [settings, updateSettings, setFontSize, setLineHeight, setTheme],
+  const value = useMemo<ReaderSettingsContextValue>(
+    () => ({
+      settings,
+      updateSettings: (next) =>
+        apply({
+          fontSize: clampFontSize(next.fontSize),
+          lineHeight: clampLineHeight(next.lineHeight),
+          theme: asReaderTheme(next.theme),
+        }),
+      setFontSize: (fontSize) => apply({ ...settingsRef.current, fontSize: clampFontSize(fontSize) }),
+      setLineHeight: (lineHeight) => apply({ ...settingsRef.current, lineHeight: clampLineHeight(lineHeight) }),
+      setTheme: (theme) => apply({ ...settingsRef.current, theme }),
+    }),
+    [settings, apply],
   );
 
   return <ReaderSettingsContext.Provider value={value}>{children}</ReaderSettingsContext.Provider>;

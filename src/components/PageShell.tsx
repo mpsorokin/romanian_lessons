@@ -12,6 +12,7 @@ export function DarkShell({
   className = "",
 }: {
   children: ReactNode;
+  /** Rendered in the centre column, which only exists next to the back button. */
   title?: string;
   wide?: boolean;
   showBack?: boolean;
@@ -19,10 +20,12 @@ export function DarkShell({
   className?: string;
 }) {
   const navigate = useNavigate();
+  const titled = Boolean(title && showBack);
+
   return (
     <div className="app-background app-background--dark">
       <div className={`app-shell app-shell--dark ${wide ? "app-shell--wide" : ""} ${className}`}>
-        <header className={`app-header ${title && showBack ? "app-header--titled" : ""}`}>
+        <header className={`app-header ${titled ? "app-header--titled" : ""}`}>
           {showBack ? (
             <button className="icon-button" type="button" aria-label="Назад" onClick={() => navigate(-1)}>
               <ArrowLeft size={21} aria-hidden="true" />
@@ -32,8 +35,15 @@ export function DarkShell({
               Calea
             </Link>
           )}
-          {title && showBack && <h1>{title}</h1>}
-          {right ?? (!title && <Link className="icon-button" to="/settings" aria-label="Настройки"><Gear size={21} /></Link>)}
+          {titled && <h1>{title}</h1>}
+          {right ??
+            (showBack ? (
+              <span />
+            ) : (
+              <Link className="icon-button" to="/settings" aria-label="Настройки">
+                <Gear size={21} />
+              </Link>
+            ))}
         </header>
         <main className="shell-main">{children}</main>
         <BottomNav />
@@ -58,16 +68,10 @@ export function ReaderShell({
   );
 }
 
-export function BackButton({ to = -1, label = "Назад" }: { to?: string | number; label?: string }) {
-  const navigate = useNavigate();
+export function BackButton({ to, label = "Назад" }: { to: string; label?: string }) {
   return (
-    <button
-      className="icon-button reader-back"
-      type="button"
-      aria-label={label}
-      onClick={() => (typeof to === "number" ? navigate(to) : navigate(to))}
-    >
+    <Link className="icon-button reader-back" to={to} aria-label={label}>
       <ArrowLeft size={21} aria-hidden="true" />
-    </button>
+    </Link>
   );
 }
