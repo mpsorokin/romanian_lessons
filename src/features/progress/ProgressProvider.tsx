@@ -104,14 +104,14 @@ export function ProgressProvider({ children }: PropsWithChildren) {
     setProgress((current) => {
       const existing = current.stories[id];
       const nextCurrent = clamp(resumePosition);
-      const nextMax = Math.max(existing?.maxProgress ?? 0, clamp(currentProgress));
-      const shouldComplete = existing?.completed === true || nextMax >= 0.96;
+      const nextProgress = clamp(currentProgress);
+      const shouldComplete = existing?.completed === true || nextProgress >= 0.96;
       return {
         ...current,
         stories: {
           ...current.stories,
           [id]: {
-            maxProgress: shouldComplete ? 1 : nextMax,
+            maxProgress: shouldComplete ? 1 : nextProgress,
             resumePosition: nextCurrent,
             completed: shouldComplete,
             updatedAt: now(),
