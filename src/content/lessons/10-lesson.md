@@ -2,7 +2,7 @@
 
 id: lesson-10
 order: 10
-title: Recall: Lessons 6–9
+title: "Recall: Lessons 6–9"
 subtitle: Прошедшее, склейки и описание людей
 level: A2
 wordCount: 0
