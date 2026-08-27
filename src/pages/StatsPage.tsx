@@ -1,0 +1,34 @@
+import { ArrowRight, BookOpenText, Books, Stack } from "@phosphor-icons/react";
+import { Link } from "react-router-dom";
+import { DarkShell } from "../components/PageShell";
+import { ProgressBar } from "../components/ProgressBar";
+import { lessonContent, storyContent, allContent, getCurrentLevel } from "../lib/content";
+import { completedLessonCount, completedMaterialCount, completedStoryCount, overallProgress, averageStoryLength, estimatedWordsRead, getLastTouched } from "../lib/metrics";
+import { useProgress } from "../features/progress/useProgress";
+
+export function StatsPage() {
+  const { progress } = useProgress();
+  const lessonsDone = completedLessonCount(progress);
+  const storiesDone = completedStoryCount(progress);
+  const materialsDone = completedMaterialCount(progress);
+  const lastLesson = getLastTouched(lessonContent, progress, "lesson");
+  const lastStory = getLastTouched(storyContent, progress, "story");
+
+  return (
+    <DarkShell className="stats-shell" right={<span />}> 
+      <h1 className="page-heading">Статистика</h1>
+      <section className="stats-section"><p className="eyebrow">ОБУЧЕНИЕ</p><div className="dark-card stat-card-group"><StatMetric icon={<BookOpenText size={23} />} label="Уроки" detail="Пройдено" value={`${lessonsDone}/${lessonContent.length}`} progress={lessonContent.length ? lessonsDone / lessonContent.length : 0} /><StatMetric icon={<Books size={23} />} label="Рассказы" detail="Прочитано" value={`${storiesDone}/${storyContent.length}`} progress={storyContent.length ? storiesDone / storyContent.length : 0} /><StatMetric icon={<Stack size={23} />} label="Всего материалов" detail="Доступно" value={`${materialsDone}/${allContent.length}`} progress={overallProgress(progress, allContent)} /></div></section>
+      <section className="stats-section"><p className="eyebrow">ДЕТАЛИ</p><div className="dark-card detail-card"><DetailRow label="Общий прогресс" value={`${Math.round(overallProgress(progress, allContent) * 100)}%`} /><DetailRow label="Текущий уровень" value={getCurrentLevel()} /><DetailRow label="Последний урок" value={lastLesson?.title ?? "Пока нет"} to={lastLesson ? `/lessons/${lastLesson.id}` : undefined} /><DetailRow label="Последний рассказ" value={lastStory?.title ?? "Пока нет"} to={lastStory ? `/stories/${lastStory.id}` : undefined} /><DetailRow label="Средняя длина рассказов" value={`${averageStoryLength(storyContent)} слов`} /><DetailRow label="Примерно прочитано" value={`${estimatedWordsRead(storyContent, progress)} слов`} /></div></section>
+      <Link className="stats-back-link" to="/profile"><ArrowRight size={17} /> Вернуться в профиль</Link>
+    </DarkShell>
+  );
+}
+
+function StatMetric({ icon, label, detail, value, progress }: { icon: React.ReactNode; label: string; detail: string; value: string; progress: number }) {
+  return <div className="stat-metric"><div className="stat-metric__line"><span className="stat-metric__icon">{icon}</span><span><strong>{label}</strong><small>{detail}</small></span><b>{value}</b></div><ProgressBar value={progress} /></div>;
+}
+
+function DetailRow({ label, value, to }: { label: string; value: string; to?: string }) {
+  const content = <><span>{label}</span><strong>{value}</strong>{to && <ArrowRight size={16} />}</>;
+  return to ? <Link className="detail-row" to={to}>{content}</Link> : <div className="detail-row">{content}</div>;
+}
