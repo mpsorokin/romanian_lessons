@@ -3,7 +3,7 @@
 id: lesson-02
 order: 2
 title: Ce faci? Unde mergi?
-subtitle: Действия: делать, идти, приходить, уходить
+subtitle: "Действия: делать, идти, приходить, уходить"
 level: A1
 wordCount: 25
 -------------
