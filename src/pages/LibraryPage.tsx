@@ -1,12 +1,14 @@
-import { MagnifyingGlass, X } from "@phosphor-icons/react";
+import { BookOpenText, Books, MagnifyingGlass, TextT, X } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
-import { NavLink, Navigate, useParams } from "react-router-dom";
+import { Link, NavLink, Navigate, useParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
-import { LessonRow, StoryRow } from "@/features/reading/components/ContentRow";
+import { ContinueArrow, LessonRow, StoryRow } from "@/features/reading/components/ContentRow";
 import { GrammarRow } from "@/features/grammar/components/GrammarRow";
 import { grammarMatches, groupGrammarTopics, topicsCountLabel } from "@/features/grammar/grammar";
 import { grammarContent, lessonContent, storyContent } from "@/lib/content";
+import { completedLessonCount, completedStoryCount } from "@/features/reading/metrics";
 import { useProgress } from "@/features/reading/useProgress";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 
 const segments = [
   { id: "lessons", label: "Уроки" },
@@ -16,31 +18,95 @@ const segments = [
 
 type LibrarySection = (typeof segments)[number]["id"];
 
+const sectionTitles: Record<LibrarySection, string> = {
+  lessons: "Уроки",
+  stories: "Рассказы",
+  grammar: "Грамматика",
+};
+
 function isLibrarySection(value: string | undefined): value is LibrarySection {
   return value === "lessons" || value === "stories" || value === "grammar";
 }
 
 export function LibraryPage() {
   const { section } = useParams();
-  const { getLessonStatus, getStoryProgress } = useProgress();
-  const [query, setQuery] = useState("");
-  const activeSection = isLibrarySection(section) ? section : "lessons";
 
-  const visibleTopics = useMemo(
-    () => (activeSection === "grammar" ? grammarContent.filter((topic) => grammarMatches(topic, query)) : []),
-    [activeSection, query],
-  );
-  const grammarGroups = useMemo(
-    () => (activeSection === "grammar" ? groupGrammarTopics(visibleTopics) : []),
-    [activeSection, visibleTopics],
-  );
-
-  if (!isLibrarySection(section)) {
-    return <Navigate to="/library/lessons" replace />;
+  if (section === undefined) {
+    return <LibraryHome />;
   }
 
+  if (!isLibrarySection(section)) {
+    return <Navigate to="/library" replace />;
+  }
+
+  return <LibrarySectionView section={section} />;
+}
+
+function LibraryHome() {
+  const { progress } = useProgress();
+  const lessonsDone = completedLessonCount(progress);
+  const storiesDone = completedStoryCount(progress);
+
   return (
-    <AppShell title="Библиотека" className="library-shell">
+    <AppShell title="Библиотека" className="library-shell library-shell--home">
+      <div className="library-home-intro">
+        <p className="eyebrow">КОЛЛЕКЦИИ</p>
+        <p>Уроки, рассказы и справочник грамматики — всё для чтения и повторения.</p>
+      </div>
+
+      <div className="library-collections" aria-label="Разделы библиотеки">
+        <Link to="/library/lessons" className="library-collection-card">
+          <BookOpenText size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <strong>Уроки</strong>
+            <span>
+              {lessonsDone} / {lessonContent.length} пройдено
+            </span>
+            <ProgressBar value={lessonContent.length ? lessonsDone / lessonContent.length : 0} />
+          </div>
+          <ContinueArrow />
+        </Link>
+
+        <Link to="/library/stories" className="library-collection-card">
+          <Books size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <strong>Рассказы</strong>
+            <span>
+              {storiesDone} / {storyContent.length} прочитано
+            </span>
+            <ProgressBar value={storyContent.length ? storiesDone / storyContent.length : 0} />
+          </div>
+          <ContinueArrow />
+        </Link>
+
+        <Link to="/library/grammar" className="library-collection-card">
+          <TextT size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <strong>Грамматика</strong>
+            <span>{grammarContent.length} тем · справочник</span>
+          </div>
+          <ContinueArrow />
+        </Link>
+      </div>
+    </AppShell>
+  );
+}
+
+function LibrarySectionView({ section }: { section: LibrarySection }) {
+  const { getLessonStatus, getStoryProgress } = useProgress();
+  const [query, setQuery] = useState("");
+
+  const visibleTopics = useMemo(
+    () => (section === "grammar" ? grammarContent.filter((topic) => grammarMatches(topic, query)) : []),
+    [section, query],
+  );
+  const grammarGroups = useMemo(
+    () => (section === "grammar" ? groupGrammarTopics(visibleTopics) : []),
+    [section, visibleTopics],
+  );
+
+  return (
+    <AppShell title={sectionTitles[section]} showBack backTo="/library" className="library-shell">
       <nav className="library-segments" aria-label="Разделы библиотеки">
         {segments.map(({ id, label }) => (
           <NavLink key={id} to={`/library/${id}`} className={({ isActive }) => (isActive ? "active" : undefined)}>

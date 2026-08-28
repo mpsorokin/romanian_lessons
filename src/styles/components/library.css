@@ -1,4 +1,58 @@
-/* Library hub: segmented control for lessons, stories and grammar. */
+/* Library hub: home collections and segmented lists. */
+
+.library-home-intro {
+  margin: -4px 2px 20px;
+}
+
+.library-home-intro p:last-child {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.library-collections {
+  display: grid;
+  gap: 10px;
+}
+
+.library-collection-card {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 17px;
+  background: var(--color-surface);
+  color: inherit;
+}
+
+.library-collection-card > svg:first-child {
+  color: var(--color-gold-icon);
+}
+
+.library-collection-card > svg:last-child {
+  color: var(--color-gold);
+}
+
+.library-collection-card strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.library-collection-card span {
+  display: block;
+  color: var(--color-muted);
+  font-size: 11px;
+}
+
+.library-collection-card .progress-bar {
+  margin-top: 10px;
+}
 
 .library-segments {
   display: grid;

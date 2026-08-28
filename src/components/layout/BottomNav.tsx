@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 
 const items = [
   { to: "/", label: "Обзор", icon: House, end: true, match: (path: string) => path === "/" },
-  { to: "/library/lessons", label: "Библиотека", icon: Books, match: (path: string) => path.startsWith("/library") },
+  { to: "/library", label: "Библиотека", icon: Books, match: (path: string) => path.startsWith("/library") },
   { to: "/cards", label: "Карточки", icon: CardsThree, match: (path: string) => path.startsWith("/cards") },
   { to: "/profile", label: "Профиль", icon: UserCircle, match: (path: string) => path === "/profile" || path === "/stats" },
 ] as const;

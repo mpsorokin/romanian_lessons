@@ -24,7 +24,7 @@ export function App() {
       <Providers>
         <Routes>
           <Route path="/" element={<OverviewPage />} />
-          <Route path="/library" element={<Navigate to="/library/lessons" replace />} />
+          <Route path="/library" element={<LibraryPage />} />
           <Route path="/library/:section" element={<LibraryPage />} />
           <Route path="/lessons" element={<Navigate to="/library/lessons" replace />} />
           <Route path="/lessons/:id" element={<LessonPage />} />

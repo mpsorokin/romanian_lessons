@@ -9,6 +9,7 @@ export function AppShell({
   title,
   wide = false,
   showBack = false,
+  backTo,
   right,
   className = "",
 }: {
@@ -17,6 +18,8 @@ export function AppShell({
   title?: string;
   wide?: boolean;
   showBack?: boolean;
+  /** When set with `showBack`, navigates to a fixed route instead of browser history. */
+  backTo?: string;
   right?: ReactNode;
   className?: string;
 }) {
@@ -30,9 +33,15 @@ export function AppShell({
       <div className={`app-shell app-shell--dark ${wide ? "app-shell--wide" : ""} ${className}`}>
         <header className={`app-header ${titled ? "app-header--titled" : ""}`}>
           {showBack ? (
-            <button className="icon-button" type="button" aria-label="Назад" onClick={() => navigate(-1)}>
-              <ArrowLeft size={21} aria-hidden="true" />
-            </button>
+            backTo ? (
+              <Link className="icon-button" to={backTo} aria-label="Назад">
+                <ArrowLeft size={21} aria-hidden="true" />
+              </Link>
+            ) : (
+              <button className="icon-button" type="button" aria-label="Назад" onClick={() => navigate(-1)}>
+                <ArrowLeft size={21} aria-hidden="true" />
+              </button>
+            )
           ) : tabRoot ? (
             <span />
           ) : (
