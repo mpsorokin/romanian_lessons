@@ -1,4 +1,4 @@
-import { Books, BookOpenText, CardsThree, House, UserCircle } from "@phosphor-icons/react";
+import { Books, BookOpenText, CardsThree, House, TextT, UserCircle } from "@phosphor-icons/react";
 import { NavLink } from "react-router-dom";
 
 const items = [
@@ -6,6 +6,7 @@ const items = [
   { to: "/lessons", label: "Уроки", icon: BookOpenText },
   { to: "/cards", label: "Карточки", icon: CardsThree },
   { to: "/stories", label: "Рассказы", icon: Books },
+  { to: "/grammar", label: "Грамматика", icon: TextT },
   { to: "/profile", label: "Профиль", icon: UserCircle },
 ];
 

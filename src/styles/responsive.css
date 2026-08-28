@@ -29,6 +29,11 @@
   .card-deck-row__meta b { font-size: 11px; }
   .card-deck-hero h1, .card-summary h1 { font-size: 24px; }
   .study-card { min-height: 350px; padding-inline: 18px; }
+  .grammar-topic-row { gap: 8px; padding-inline: 2px; }
+  .grammar-topic-row__tags { flex-wrap: nowrap; overflow: hidden; }
+  .grammar-topic-row__tag:nth-child(n + 3) { display: none; }
+  .grammar-topic-row__side { align-self: start; padding-top: 2px; }
+  .grammar-reader-article { padding-inline: 24px; }
 }
 
 @media (max-width: 370px) {
@@ -42,6 +47,10 @@
   .content-row__meta { display: none; }
   .card-deck-row { grid-template-columns: 26px minmax(0, 1fr) 16px; }
   .card-deck-row__meta { display: none; }
+  .bottom-nav a { gap: 3px; font-size: 8px; }
+  .bottom-nav a svg { width: 20px; height: 20px; }
+  .grammar-category__heading h2 { font-size: 16px; }
+  .grammar-topic-row__tag { padding-inline: 5px; font-size: 8px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

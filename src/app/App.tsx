@@ -10,6 +10,8 @@ const LessonPage = lazy(() => import("@/features/reading/pages/LessonPage").then
 const LessonsPage = lazy(() => import("@/features/reading/pages/LessonsPage").then((m) => ({ default: m.LessonsPage })));
 const StoriesPage = lazy(() => import("@/features/reading/pages/StoriesPage").then((m) => ({ default: m.StoriesPage })));
 const StoryPage = lazy(() => import("@/features/reading/pages/StoryPage").then((m) => ({ default: m.StoryPage })));
+const GrammarPage = lazy(() => import("@/features/grammar/pages/GrammarPage").then((m) => ({ default: m.GrammarPage })));
+const GrammarArticlePage = lazy(() => import("@/features/grammar/pages/GrammarArticlePage").then((m) => ({ default: m.GrammarArticlePage })));
 const CardsPage = lazy(() => import("@/features/cards/pages/CardsPage").then((m) => ({ default: m.CardsPage })));
 const CardDeckPage = lazy(() => import("@/features/cards/pages/CardDeckPage").then((m) => ({ default: m.CardDeckPage })));
 const ReaderSettingsPage = lazy(() =>
@@ -29,6 +31,8 @@ export function App() {
           <Route path="/lessons/:id" element={<LessonPage />} />
           <Route path="/stories" element={<StoriesPage />} />
           <Route path="/stories/:id" element={<StoryPage />} />
+          <Route path="/grammar" element={<GrammarPage />} />
+          <Route path="/grammar/:id" element={<GrammarArticlePage />} />
           <Route path="/cards" element={<CardsPage />} />
           <Route path="/cards/:deckId" element={<CardDeckPage />} />
           <Route path="/profile" element={<ProfilePage />} />

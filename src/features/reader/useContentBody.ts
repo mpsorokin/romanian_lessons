@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { loadContentBody, type Content } from "@/lib/content";
+import { loadContentBody, type ReadableContent } from "@/lib/content";
 
 interface ContentBodyState {
   body: string | null;
@@ -7,7 +7,7 @@ interface ContentBodyState {
 }
 
 /** Loads a markdown body on demand; metadata alone is enough for every other screen. */
-export function useContentBody(item: Content | undefined): ContentBodyState {
+export function useContentBody(item: ReadableContent | undefined): ContentBodyState {
   const [state, setState] = useState<ContentBodyState>({ body: null, error: null });
 
   useEffect(() => {

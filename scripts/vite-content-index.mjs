@@ -9,6 +9,7 @@ const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?[\s\S]*$/;
 const GROUPS = [
   { type: "lesson", dir: "lessons" },
   { type: "story", dir: "stories" },
+  { type: "grammar", dir: "grammar" },
 ];
 
 function asRequiredString(value, field, source) {
@@ -31,6 +32,15 @@ function asRequiredNumber(value, field, source) {
   return number;
 }
 
+function asOptionalStringArray(value, field, source) {
+  if (value === undefined || value === null) return undefined;
+  if (!Array.isArray(value)) {
+    throw new Error(`Invalid ${field} in ${source}: expected an array of strings.`);
+  }
+  const values = value.map((entry) => asRequiredString(entry, field, source));
+  return values.length > 0 ? values : undefined;
+}
+
 async function readGroup(contentRoot, group) {
   const dir = path.join(contentRoot, group.dir);
   const files = (await readdir(dir)).filter((file) => file.endsWith(".md")).sort();
@@ -48,21 +58,28 @@ async function readGroup(contentRoot, group) {
         throw new Error(`Invalid YAML frontmatter in ${source}.`);
       }
 
-      const wordCount =
-        frontmatter.wordCount === undefined || frontmatter.wordCount === null
-          ? undefined
-          : asRequiredNumber(frontmatter.wordCount, "wordCount", source);
-
-      items[position] = {
+      const item = {
         id: asRequiredString(frontmatter.id, "id", source),
         order: asRequiredNumber(frontmatter.order, "order", source),
         title: asRequiredString(frontmatter.title, "title", source),
         subtitle: asOptionalString(frontmatter.subtitle, "subtitle", source),
         level: asOptionalString(frontmatter.level, "level", source),
-        wordCount,
         type: group.type,
         file,
       };
+
+      if (group.type === "grammar") {
+        item.category = asRequiredString(frontmatter.category, "category", source);
+        item.tags = asOptionalStringArray(frontmatter.tags, "tags", source);
+        item.related = asOptionalStringArray(frontmatter.related, "related", source);
+      } else {
+        item.wordCount =
+          frontmatter.wordCount === undefined || frontmatter.wordCount === null
+            ? undefined
+            : asRequiredNumber(frontmatter.wordCount, "wordCount", source);
+      }
+
+      items[position] = item;
     }),
   );
 
@@ -90,12 +107,25 @@ function assertUniqueIds(items) {
   }
 }
 
+function assertKnownGrammarRelations(grammar) {
+  const ids = new Set(grammar.map((topic) => topic.id));
+  for (const topic of grammar) {
+    for (const relatedId of topic.related ?? []) {
+      if (!ids.has(relatedId)) {
+        throw new Error(`Unknown related grammar topic "${relatedId}" in ${topic.file}.`);
+      }
+    }
+  }
+}
+
 async function buildIndex(contentRoot) {
-  const [lessons, stories] = await Promise.all(GROUPS.map((group) => readGroup(contentRoot, group)));
-  assertUniqueIds([...lessons, ...stories]);
+  const [lessons, stories, grammar] = await Promise.all(GROUPS.map((group) => readGroup(contentRoot, group)));
+  assertUniqueIds([...lessons, ...stories, ...grammar]);
+  assertKnownGrammarRelations(grammar);
   return [
     `export const lessonIndex = ${JSON.stringify(lessons)};`,
     `export const storyIndex = ${JSON.stringify(stories)};`,
+    `export const grammarIndex = ${JSON.stringify(grammar)};`,
     "",
   ].join("\n");
 }
