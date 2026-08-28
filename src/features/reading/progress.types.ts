@@ -8,7 +8,6 @@ export interface LessonProgressRecord {
 }
 
 export interface StoryProgressRecord {
-  maxProgress: number;
   resumePosition: number;
   completed: boolean;
   updatedAt: string;
@@ -17,7 +16,6 @@ export interface StoryProgressRecord {
 
 export interface GrammarProgressRecord {
   resumePosition: number;
-  maxProgress: number;
   updatedAt: string;
 }
 

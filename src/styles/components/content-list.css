@@ -15,6 +15,7 @@
 .status-pill { justify-self: end; display: inline-flex; align-items: center; gap: 4px; min-height: 25px; padding: 4px 9px; border: 1px solid var(--color-subtle); border-radius: 999px; color: var(--color-gold-pill); font-size: 10px; white-space: nowrap; }
 .status-pill--completed { color: var(--color-soft-alt); }
 .status-pill--in-progress { color: var(--color-gold-bright); border-color: var(--color-accent-strong); }
-.story-row { align-items: start; min-height: 89px; }
+.lesson-row, .story-row { align-items: start; min-height: 89px; }
+.lesson-row .content-row__meta, .lesson-row .status-pill,
 .story-row .content-row__meta, .story-row .status-pill { align-self: center; }
-.story-row__progress { width: min(100%, 235px); height: 4px; margin-top: 7px; }
+.content-row__progress { width: min(100%, 235px); height: 4px; margin-top: 7px; }

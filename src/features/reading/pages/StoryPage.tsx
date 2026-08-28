@@ -23,27 +23,25 @@ export function StoryPage() {
   const { getProgressSnapshot, saveStoryPosition, syncProgressState } = useProgressActions();
   const { body, error } = useContentBody(story);
 
-  const initial = useRef<{ id: string; position: number; maxProgress: number; completed: boolean } | null>(null);
+  const initial = useRef<{ id: string; position: number; completed: boolean } | null>(null);
   if (story && initial.current?.id !== story.id) {
     const entry = getProgressSnapshot().stories[story.id];
     initial.current = {
       id: story.id,
       position: entry?.resumePosition ?? 0,
-      maxProgress: entry?.maxProgress ?? 0,
       completed: entry?.completed ?? false,
     };
   }
   const initialPosition = initial.current?.position ?? 0;
-  const initialMaxProgress = initial.current?.maxProgress ?? 0;
   const initialCompleted = initial.current?.completed ?? false;
 
   const [live, setLive] = useState({
     id: story?.id ?? "",
-    progress: initialMaxProgress,
+    progress: initialPosition,
     completed: initialCompleted,
   });
   if (story && live.id !== story.id) {
-    setLive({ id: story.id, progress: initialMaxProgress, completed: initialCompleted });
+    setLive({ id: story.id, progress: initialPosition, completed: initialCompleted });
   }
 
   const savePosition = useCallback(
@@ -52,7 +50,7 @@ export function StoryPage() {
         if (prev.completed) return prev;
         return { ...prev, progress: position };
       });
-      if (story) saveStoryPosition(story.id, position, position, options);
+      if (story) saveStoryPosition(story.id, position, options);
     },
     [story, saveStoryPosition],
   );
@@ -84,7 +82,7 @@ export function StoryPage() {
         ref={scrollRef}
         style={{ "--reader-size": `${settings.fontSize}px`, "--reader-line-height": settings.lineHeight } as React.CSSProperties}
       >
-        {!live.completed && <StoryProgressTop maxProgress={live.progress} wordCount={story.wordCount} />}
+        {!live.completed && <StoryProgressTop progress={live.progress} wordCount={story.wordCount} />}
         <article className="reader-article">
           {body !== null ? (
             <MarkdownViewer markdown={body} variant="story" />
@@ -110,10 +108,10 @@ export function StoryPage() {
   );
 }
 
-function StoryProgressTop({ maxProgress, wordCount }: { maxProgress: number; wordCount?: number }) {
+function StoryProgressTop({ progress, wordCount }: { progress: number; wordCount?: number }) {
   const { t } = useTranslation();
-  const achievedPercent = Math.round(maxProgress * 100);
-  const estimatedWords = Math.round((wordCount ?? 0) * maxProgress);
+  const achievedPercent = Math.round(progress * 100);
+  const estimatedWords = Math.round((wordCount ?? 0) * progress);
 
   return (
     <div className="story-progress-top">
@@ -121,7 +119,7 @@ function StoryProgressTop({ maxProgress, wordCount }: { maxProgress: number; wor
         <span>{t("reader.wordsReadProgress", { read: estimatedWords, total: wordCount ?? "—" })}</span>
         <span>({achievedPercent}%)</span>
       </div>
-      <ProgressBar value={maxProgress} label={t("reader.readText")} />
+      <ProgressBar value={progress} label={t("reader.readText")} />
     </div>
   );
 }

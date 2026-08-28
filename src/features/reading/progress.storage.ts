@@ -43,7 +43,6 @@ function parseStories(value: unknown): Record<string, StoryProgressRecord> {
   for (const [id, raw] of Object.entries(value)) {
     if (!isRecord(raw) || !isDate(raw.updatedAt)) continue;
     result[id] = {
-      maxProgress: clamp(raw.maxProgress),
       resumePosition: clamp(raw.resumePosition),
       completed: raw.completed === true,
       updatedAt: raw.updatedAt,
@@ -62,7 +61,6 @@ function parseGrammar(value: unknown): Record<string, GrammarProgressRecord> {
     const resumePosition = clamp(raw.resumePosition);
     result[id] = {
       resumePosition,
-      maxProgress: clamp(raw.maxProgress ?? resumePosition),
       updatedAt: raw.updatedAt,
     };
   }

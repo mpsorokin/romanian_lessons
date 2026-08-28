@@ -29,7 +29,7 @@ export function getActiveStory(stories: Story[], progress: ProgressState): Story
   return stories
     .filter((story) => {
       const entry = progress.stories[story.id];
-      return entry && !entry.completed && entry.maxProgress > 0;
+      return entry && !entry.completed && entry.resumePosition > 0;
     })
     .sort((a, b) => (progress.stories[b.id]?.updatedAt ?? "").localeCompare(progress.stories[a.id]?.updatedAt ?? ""))[0];
 }
@@ -49,7 +49,11 @@ export function averageStoryLength(stories: Story[]) {
 
 export function estimatedWordsRead(stories: Story[], progress: ProgressState) {
   return Math.round(
-    stories.reduce((sum, story) => sum + (story.wordCount ?? 0) * (progress.stories[story.id]?.maxProgress ?? 0), 0),
+    stories.reduce((sum, story) => {
+      const entry = progress.stories[story.id];
+      const fraction = entry?.completed ? 1 : (entry?.resumePosition ?? 0);
+      return sum + (story.wordCount ?? 0) * fraction;
+    }, 0),
   );
 }
 

@@ -28,12 +28,11 @@ export function useProgress() {
       getStoryProgress: (id: string) => {
         const entry = progress.stories[id];
         return {
-          maxProgress: entry?.maxProgress ?? 0,
           resumePosition: entry?.resumePosition ?? 0,
           completed: entry?.completed ?? false,
         };
       },
-      getGrammarProgress: (id: string) => progress.grammar[id]?.maxProgress ?? 0,
+      getGrammarProgress: (id: string) => progress.grammar[id]?.resumePosition ?? 0,
       ...actions,
     }),
     [progress, actions],

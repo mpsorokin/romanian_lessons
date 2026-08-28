@@ -55,7 +55,7 @@ export function OverviewPage() {
           <div>
             <p className="eyebrow">{t("overview.continueReadingEyebrow")}</p>
             <strong>{activeStory.title}</strong>
-            <span>{t("overview.percentRead", { percent: Math.round(getStoryProgress(activeStory.id).maxProgress * 100) })}</span>
+            <span>{t("overview.percentRead", { percent: Math.round(getStoryProgress(activeStory.id).resumePosition * 100) })}</span>
           </div>
           <ContinueArrow />
         </Link>

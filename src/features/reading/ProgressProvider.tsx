@@ -16,7 +16,7 @@ export interface ProgressActions {
   saveLessonPosition: (id: string, position: number, options?: ProgressSaveOptions) => void;
   completeLesson: (id: string) => void;
   resetLesson: (id: string) => void;
-  saveStoryPosition: (id: string, currentProgress: number, resumePosition?: number, options?: ProgressSaveOptions) => void;
+  saveStoryPosition: (id: string, position: number, options?: ProgressSaveOptions) => void;
   completeStory: (id: string) => void;
   resetStory: (id: string) => void;
   saveGrammarPosition: (id: string, position: number, options?: ProgressSaveOptions) => void;
@@ -122,19 +122,12 @@ export function ProgressProvider({ children }: PropsWithChildren) {
           return { ...current, lessons };
         }),
 
-      saveStoryPosition: (id, currentProgress, resumePosition = currentProgress, options) =>
+      saveStoryPosition: (id, position, options) =>
         commit((current) => {
           const entry = current.stories[id];
-          const nextProgress = clamp(currentProgress);
-          const nextCurrent = clamp(resumePosition);
+          const nextPosition = clamp(position);
           const isComplete = entry?.completed === true;
-          const nextMax = isComplete ? 1 : nextProgress;
-          if (
-            entry &&
-            !positionMoved(entry.resumePosition, nextCurrent, options?.force) &&
-            !positionMoved(entry.maxProgress, nextMax, options?.force) &&
-            entry.completed === isComplete
-          ) {
+          if (entry && !positionMoved(entry.resumePosition, nextPosition, options?.force) && entry.completed === isComplete) {
             return current;
           }
           return {
@@ -142,8 +135,7 @@ export function ProgressProvider({ children }: PropsWithChildren) {
             stories: {
               ...current.stories,
               [id]: {
-                maxProgress: nextMax,
-                resumePosition: nextCurrent,
+                resumePosition: nextPosition,
                 completed: isComplete,
                 updatedAt: now(),
                 ...(isComplete && entry?.completedAt ? { completedAt: entry.completedAt } : {}),
@@ -158,7 +150,6 @@ export function ProgressProvider({ children }: PropsWithChildren) {
           stories: {
             ...current.stories,
             [id]: {
-              maxProgress: 1,
               resumePosition: current.stories[id]?.resumePosition ?? 0,
               completed: true,
               updatedAt: now(),
@@ -178,19 +169,14 @@ export function ProgressProvider({ children }: PropsWithChildren) {
         commit((current) => {
           const existing = current.grammar[id];
           const nextPosition = clamp(position);
-          const nextMaxProgress = Math.max(existing?.maxProgress ?? 0, nextPosition);
-          if (
-            existing &&
-            !positionMoved(existing.resumePosition, nextPosition, options?.force) &&
-            !positionMoved(existing.maxProgress, nextMaxProgress, options?.force)
-          ) {
+          if (existing && !positionMoved(existing.resumePosition, nextPosition, options?.force)) {
             return current;
           }
           return {
             ...current,
             grammar: {
               ...current.grammar,
-              [id]: { resumePosition: nextPosition, maxProgress: nextMaxProgress, updatedAt: now() },
+              [id]: { resumePosition: nextPosition, updatedAt: now() },
             },
           };
         }, false),

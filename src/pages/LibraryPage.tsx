@@ -93,7 +93,7 @@ function LibraryHome() {
 
 function LibrarySectionView({ section }: { section: LibrarySection }) {
   const { t } = useTranslation();
-  const { getLessonStatus, getStoryProgress, getGrammarProgress } = useProgress();
+  const { getLessonStatus, getLessonPosition, getStoryProgress, getGrammarProgress } = useProgress();
   const [query, setQuery] = useState("");
 
   const visibleTopics = useMemo(
@@ -122,7 +122,12 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
           </div>
           <div className="content-list">
             {lessonContent.map((lesson) => (
-              <LessonRow key={lesson.id} lesson={lesson} status={getLessonStatus(lesson.id)} />
+              <LessonRow
+                key={lesson.id}
+                lesson={lesson}
+                status={getLessonStatus(lesson.id)}
+                progress={getLessonPosition(lesson.id)}
+              />
             ))}
           </div>
         </>
@@ -135,8 +140,8 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
           </div>
           <div className="content-list">
             {storyContent.map((story) => {
-              const { maxProgress, completed } = getStoryProgress(story.id);
-              return <StoryRow key={story.id} story={story} maxProgress={maxProgress} completed={completed} />;
+              const { resumePosition, completed } = getStoryProgress(story.id);
+              return <StoryRow key={story.id} story={story} progress={resumePosition} completed={completed} />;
             })}
           </div>
         </>

@@ -10,8 +10,17 @@ function padOrder(order: number) {
   return String(order).padStart(2, "0");
 }
 
-export const LessonRow = memo(function LessonRow({ lesson, status }: { lesson: Lesson; status: LessonStatus }) {
+export const LessonRow = memo(function LessonRow({
+  lesson,
+  status,
+  progress,
+}: {
+  lesson: Lesson;
+  status: LessonStatus;
+  progress: number;
+}) {
   const { t } = useTranslation();
+  const percent = Math.round(progress * 100);
   const statusLabel =
     status === "completed"
       ? t("content.lessonCompleted")
@@ -26,6 +35,9 @@ export const LessonRow = memo(function LessonRow({ lesson, status }: { lesson: L
       <span className="content-row__main">
         <strong>{lesson.title}</strong>
         {lesson.subtitle && <small>{lesson.subtitle}</small>}
+        {status === "in-progress" && percent > 0 && (
+          <ProgressBar value={progress} className="content-row__progress" label={t("content.percentRead", { percent })} />
+        )}
       </span>
       <span className="content-row__meta">{lesson.level ?? "A1"}</span>
       <span className="content-row__meta content-row__words">{lengthLabel}</span>
@@ -37,18 +49,18 @@ export const LessonRow = memo(function LessonRow({ lesson, status }: { lesson: L
   );
 });
 
-// Primitive props on purpose: an inline `{ maxProgress, completed }` object would defeat the memo.
+// Primitive props on purpose: an inline `{ progress, completed }` object would defeat the memo.
 export const StoryRow = memo(function StoryRow({
   story,
-  maxProgress,
+  progress,
   completed,
 }: {
   story: Story;
-  maxProgress: number;
+  progress: number;
   completed: boolean;
 }) {
   const { t } = useTranslation();
-  const percent = Math.round(maxProgress * 100);
+  const percent = Math.round(progress * 100);
   const statusLabel = completed ? t("content.storyRead") : percent > 0 ? t("content.storyReading") : t("content.storyNew");
 
   return (
@@ -58,7 +70,7 @@ export const StoryRow = memo(function StoryRow({
         <strong>{story.title}</strong>
         {story.subtitle && <small>{story.subtitle}</small>}
         {percent > 0 && !completed && (
-          <ProgressBar value={maxProgress} className="story-row__progress" label={t("content.percentRead", { percent })} />
+          <ProgressBar value={progress} className="content-row__progress" label={t("content.percentRead", { percent })} />
         )}
       </span>
       <span className="content-row__meta">{story.level ?? "A1"}</span>
