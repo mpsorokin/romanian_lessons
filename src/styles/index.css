@@ -1,0 +1,33 @@
+/*
+ * Stylesheet entry point.
+ *
+ * Tailwind is imported in parts rather than as `@import "tailwindcss"` so that
+ * Preflight stays out: it would strip markdown list markers, make every Phosphor
+ * icon a block box and reset heading sizes. `base.css` is the reset instead.
+ *
+ * Everything of ours is wrapped in `layer(components)`. That is not cosmetic —
+ * unlayered CSS outranks every layer, so without it a rule like `.content-row`
+ * would beat any Tailwind utility and the utilities would be unusable.
+ */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "./theme.css" layer(theme);
+@import "./base.css" layer(base);
+
+@import "./components/shell.css" layer(components);
+@import "./components/overview.css" layer(components);
+@import "./components/content-list.css" layer(components);
+@import "./components/cards.css" layer(components);
+@import "./components/profile.css" layer(components);
+@import "./components/stats-settings.css" layer(components);
+@import "./components/reader.css" layer(components);
+@import "./components/reader-settings.css" layer(components);
+@import "./components/feedback.css" layer(components);
+@import "./responsive.css" layer(components);
+
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+
+/* Only the app source is scanned: the default source detection would also crawl
+ * `src/content/**.md` and mint utilities out of Romanian prose. */
+@source "../**/*.{ts,tsx}";

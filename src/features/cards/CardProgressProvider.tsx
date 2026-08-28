@@ -1,11 +1,11 @@
 import { createContext, useCallback, useMemo, useRef, useState, type PropsWithChildren } from "react";
-import { clearCardProgress, readCardProgress, writeCardProgress } from "./cardProgress.storage";
-import { createInitialCardProgress, type CardProgressRecord, type CardProgressState, type CardStatus } from "./cardProgress.types";
+import { clearCardProgress, readCardProgress, writeCardProgress } from "@/features/cards/cardProgress.storage";
+import { createInitialCardProgress, type CardProgressRecord, type CardProgressState, type CardResult, type CardStatus } from "@/features/cards/cardProgress.types";
 
 export interface CardProgressActions {
   getCardRecord: (id: string) => CardProgressRecord | undefined;
   getCardStatus: (id: string) => CardStatus | "new";
-  markCard: (id: string, result: "remembered" | "repeat") => void;
+  markCard: (id: string, result: CardResult) => void;
   resetCardProgress: () => void;
 }
 

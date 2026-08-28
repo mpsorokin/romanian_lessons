@@ -1,16 +1,8 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import "@fontsource/lora/cyrillic-400.css";
-import "@fontsource/lora/cyrillic-500.css";
-import "@fontsource/lora/cyrillic-600.css";
-import "@fontsource/lora/latin-400.css";
-import "@fontsource/lora/latin-500.css";
-import "@fontsource/lora/latin-600.css";
-import "@fontsource/lora/latin-ext-400.css";
-import "@fontsource/lora/latin-ext-500.css";
-import "@fontsource/lora/latin-ext-600.css";
-import { App } from "./App";
-import "./styles.css";
+import { App } from "@/app/App";
+import "./styles/fonts.css";
+import "./styles/index.css";
 
 const root = document.getElementById("root");
 

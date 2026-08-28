@@ -14,6 +14,7 @@ A small reading studio for learning Romanian: lessons and stories with in-browse
 
 - React 19 + TypeScript
 - Vite 8
+- Tailwind CSS 4.3 (design tokens + utilities; Preflight is deliberately not used)
 - React Router (`HashRouter`)
 - Content: Markdown in `src/content/`
 
@@ -78,13 +79,38 @@ New lessons and stories are `.md` files in `src/content/`. No application code c
 
 ```
 src/
+  app/                 # App (route table) and Providers
+  components/
+    layout/            # AppShell, ReaderShell, BottomNav
+    ui/                # ProgressBar, ProgressRing, BackButton
+    feedback/          # ErrorBoundary, NotFound
+  features/
+    reading/           # lesson/story progress, metrics, their pages
+    cards/             # flashcard decks, progress, their pages
+    reader/            # reader settings, markdown viewer, scroll handling
+  pages/               # screens that read from several features
+  lib/                 # content index
+  generated/           # cards.generated.ts (written by generate:cards)
+  styles/              # theme tokens, base reset, per-area component CSS
   content/
-    lessons/     # lessons (*.md)
-    stories/     # stories (*.md)
-  pages/         # app screens
-  features/      # progress, reader settings
-docs/            # content documentation
+    lessons/           # lessons (*.md)
+    stories/           # stories (*.md)
+docs/                  # content documentation
 ```
+
+Modules are imported through the `@/` alias (`@/features/cards/cards`), configured in
+`tsconfig.json` and `vite.config.ts`.
+
+## Styling
+
+Tailwind v4 provides the design tokens and utility classes. `src/styles/theme.css` is the single
+source of colour, font and shadow tokens; because they use Tailwind's namespaces, each token also
+yields a utility (`--color-surface` gives `bg-surface`).
+
+Tailwind's Preflight is **not** imported — it would strip markdown list markers, turn icons into
+block elements and reset heading sizes. `src/styles/base.css` is the reset instead. Existing
+screens keep their semantic classes (`.content-row`, `.study-card`), split by area under
+`src/styles/components/`; new work should prefer utilities.
 
 ## License
 

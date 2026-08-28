@@ -1,0 +1,25 @@
+/* Reading preferences screen: sliders and the theme picker. */
+
+.reader-settings-shell { max-width: 760px; }
+.reader-settings-header { min-height: 66px; display: grid; grid-template-columns: 42px 1fr 42px; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid var(--color-hairline); }
+.reader-settings-header h1 { margin: 0; font-size: 16px; font-weight: 500; }
+.reader-settings-main { flex: 1; overflow-y: auto; padding: 34px 18px 24px; }
+.reader-settings-main .eyebrow { color: var(--color-muted); }
+.preference-card { margin-bottom: 28px; overflow: hidden; border-radius: 17px; }
+.preference-card > label, .preference-row { min-height: 63px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 16px; border-bottom: 1px solid var(--color-hairline); font-size: 12px; }
+.preference-card output { color: var(--color-muted); font-size: 12px; }
+.range-row { display: grid; grid-template-columns: 18px 1fr 18px; align-items: center; gap: 9px; min-height: 48px; padding: 0 16px; border-bottom: 1px solid var(--color-hairline); color: var(--color-text); }
+.range-row input { width: 100%; accent-color: var(--color-gold); }
+.range-row span { font-size: 15px; }
+.range-row span:last-child { text-align: right; font-size: 12px; }
+.preference-row { border-bottom: 0; }
+.preference-row span { display: inline-flex; align-items: center; gap: 11px; }
+.preference-row b { font-size: 16px; font-weight: 500; }
+.preference-row strong { font-family: var(--font-serif); font-size: 12px; font-weight: 500; }
+.theme-choice { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 30px; }
+.theme-button { min-height: 80px; display: flex; align-items: flex-end; justify-content: space-between; gap: 7px; padding: 13px; border: 1px solid var(--color-paper-line); border-radius: 13px; background: var(--color-paper-soft); color: var(--color-paper-text); text-align: left; }
+.theme-button.active { border-color: var(--color-selected); box-shadow: 0 0 0 1px var(--color-selected) inset; }
+.theme-button > span { width: 25px; height: 25px; align-self: flex-start; border-radius: 50%; border: 5px solid var(--color-swatch-border-paper); background: var(--color-paper); }
+.theme-button--dark { color: var(--color-text); background: var(--color-app); border-color: var(--color-subtle); }
+.theme-button--dark > span { border-color: var(--color-subtle); background: var(--color-swatch-dark); }
+.theme-button b { font-size: 11px; font-weight: 500; }

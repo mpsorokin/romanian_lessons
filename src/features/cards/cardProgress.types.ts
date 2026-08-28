@@ -1,5 +1,8 @@
 export type CardStatus = "learning" | "known";
 
+/** How the learner graded a card in a study session. */
+export type CardResult = "remembered" | "repeat";
+
 export interface CardProgressRecord {
   status: CardStatus;
   attempts: number;

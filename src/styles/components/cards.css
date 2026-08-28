@@ -1,0 +1,55 @@
+/* Flashcards: deck list, deck overview, study session and session summary. */
+
+.cards-intro { padding: 19px 3px 15px; color: var(--color-muted); font-size: 12px; line-height: 1.5; }
+.cards-intro .eyebrow { margin-bottom: 7px; color: var(--color-gold-dim); }
+.cards-intro p:last-child { margin: 0; max-width: 470px; }
+.cards-list { border-top: 1px solid var(--color-hairline); }
+.card-deck-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto 20px; align-items: center; gap: 12px; min-height: 89px; padding: 12px 0; border-bottom: 1px solid var(--color-hairline); }
+.card-deck-row:hover strong { color: var(--color-gold-bright); }
+.card-deck-row__order { align-self: start; padding-top: 4px; color: var(--color-dimmer); font-family: var(--font-serif); font-size: 16px; }
+.card-deck-row__main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.card-deck-row__main strong { overflow: hidden; color: var(--color-text); font-size: 13px; font-weight: 500; line-height: 1.25; text-overflow: ellipsis; }
+.card-deck-row__main small { overflow: hidden; color: var(--color-muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.card-deck-row__main .progress-bar { width: min(100%, 260px); height: 4px; margin-top: 4px; }
+.card-deck-row__meta { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; color: var(--color-text); white-space: nowrap; }
+.card-deck-row__meta b { font-size: 12px; font-weight: 500; }
+.card-deck-row__meta small { color: var(--color-muted); font-size: 9px; }
+.card-deck-row > svg { color: var(--color-icon-dimmer); }
+.secondary-button { min-height: 44px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 16px; border: 1px solid var(--color-accent); border-radius: 11px; background: transparent; color: var(--color-gold-dim); font-size: 12px; }
+.secondary-button:hover { border-color: var(--color-accent-strong); color: var(--color-gold-bright); }
+.card-deck-shell .shell-main, .card-session-shell .shell-main { padding-top: 24px; }
+.card-deck-back, .card-session-back { min-height: 40px; display: inline-flex; align-items: center; gap: 6px; color: var(--color-gold); font-size: 11px; }
+.card-session-back { padding: 0; background: transparent; }
+.card-deck-hero { padding: 23px 2px 25px; }
+.card-deck-hero h1, .card-summary h1 { margin: 0 0 7px; font-family: var(--font-serif); font-size: 27px; font-weight: 500; letter-spacing: -0.03em; }
+.card-deck-hero > p:not(.eyebrow), .card-summary > p:not(.eyebrow) { margin: 0; color: var(--color-muted); font-size: 12px; line-height: 1.5; }
+.card-deck-hero__progress { display: flex; align-items: center; gap: 17px; margin-top: 25px; padding: 15px; border: 1px solid var(--color-hairline); border-radius: 17px; background: var(--color-surface); }
+.card-deck-hero__progress > div:last-child { flex: 1; }
+.card-deck-hero__progress > div:last-child strong, .card-deck-hero__progress > div:last-child span { display: block; }
+.card-deck-hero__progress strong { margin-bottom: 4px; font-size: 15px; font-weight: 500; }
+.card-deck-hero__progress > div:last-child span { margin-bottom: 10px; color: var(--color-muted); font-size: 10px; }
+.card-deck-actions { display: grid; gap: 9px; }
+.card-deck-breakdown { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 17px; color: var(--color-muted); font-size: 10px; }
+.card-deck-breakdown span::before { content: ""; display: inline-block; width: 5px; height: 5px; margin: 0 5px 1px 0; border-radius: 50%; background: var(--color-gold); }
+.card-session-top { padding: 0 2px 20px; }
+.card-session-top > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 9px; }
+.card-session-top .eyebrow { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.card-session-top span { color: var(--color-muted); font-size: 10px; white-space: nowrap; }
+.study-card { display: flex; flex-direction: column; min-height: 375px; padding: 29px 22px 22px; border: 1px solid var(--color-hairline); border-radius: 20px; background: var(--color-surface); }
+.study-card h1 { max-width: 520px; margin: 18px 0 auto; font-family: var(--font-serif); font-size: clamp(23px, 4vw, 31px); font-weight: 500; line-height: 1.25; }
+.study-card > .primary-button { margin-top: 26px; }
+.study-card--revealed h1 { margin-bottom: 25px; }
+.study-card__answer { display: flex; flex-direction: column; gap: 7px; margin-bottom: auto; padding: 17px 16px; border-left: 2px solid var(--color-gold); background: rgba(197, 160, 100, 0.08); }
+.study-card__answer strong { font-family: var(--font-serif); font-size: 23px; font-weight: 500; line-height: 1.3; }
+.study-card__answer span { color: var(--color-muted); font-size: 13px; }
+.study-card__answer small { color: var(--color-soft); font-size: 11px; line-height: 1.45; }
+.study-card__actions { display: grid; gap: 9px; margin-top: 25px; }
+.card-session-back { margin: 18px 2px 0; }
+.card-summary { padding: 54px 4px 20px; text-align: center; }
+.card-summary h1 { margin-bottom: 11px; }
+.card-summary > p:not(.eyebrow) { max-width: 360px; margin-inline: auto; }
+.card-summary__stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 26px 0 18px; }
+.card-summary__stats > div { display: flex; flex-direction: column; gap: 4px; padding: 14px 10px; border: 1px solid var(--color-hairline); border-radius: 15px; background: var(--color-surface); }
+.card-summary__stats strong { font-size: 21px; font-weight: 500; }
+.card-summary__stats span { color: var(--color-muted); font-size: 10px; }
+.card-summary .secondary-button { margin-top: 9px; }

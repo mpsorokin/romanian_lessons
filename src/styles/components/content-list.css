@@ -1,0 +1,20 @@
+/* Lesson and story lists. */
+
+.list-intro { padding: 19px 3px 11px; color: var(--color-muted); font-size: 12px; line-height: 1.45; }
+.content-list { border-top: 1px solid var(--color-hairline); }
+.content-list--compact { border-top: 0; }
+.content-row { display: grid; grid-template-columns: 32px minmax(0, 1fr) 32px 70px auto; align-items: center; gap: 10px; min-height: 72px; padding: 11px 0; border-bottom: 1px solid var(--color-hairline); }
+.content-list--compact .content-row { min-height: 57px; padding: 8px 2px; }
+.content-row:hover .content-row__main strong { color: var(--color-gold-bright); }
+.content-row__order { align-self: start; padding-top: 5px; color: var(--color-dimmer); font-family: var(--font-serif); font-size: 16px; }
+.content-row__main { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.content-row__main strong { overflow: hidden; color: var(--color-text); font-size: 13px; font-weight: 500; line-height: 1.25; text-overflow: ellipsis; }
+.content-row__main small { overflow: hidden; color: var(--color-muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.content-row__meta { color: var(--color-dim); font-size: 11px; white-space: nowrap; }
+.content-row__words { color: var(--color-muted); }
+.status-pill { justify-self: end; display: inline-flex; align-items: center; gap: 4px; min-height: 25px; padding: 4px 9px; border: 1px solid var(--color-subtle); border-radius: 999px; color: var(--color-gold-pill); font-size: 10px; white-space: nowrap; }
+.status-pill--completed { color: var(--color-soft-alt); }
+.status-pill--in-progress { color: var(--color-gold-bright); border-color: var(--color-accent-strong); }
+.story-row { align-items: start; min-height: 89px; }
+.story-row .content-row__meta, .story-row .status-pill { align-self: center; }
+.story-row__progress { width: min(100%, 235px); height: 4px; margin-top: 7px; }

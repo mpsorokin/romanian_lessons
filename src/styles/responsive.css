@@ -1,0 +1,49 @@
+/*
+ * All responsive overrides live here, imported last.
+ *
+ * Media queries add no specificity — they win purely on source order. Several of
+ * these rules span files (`.app-shell, .reader-shell`; `.reader-article,
+ * .reader-meta, .story-progress-top`), so scattering them into the component
+ * files would make the result depend on import order. Keeping them together
+ * reproduces the original cascade exactly.
+ */
+
+@media (min-width: 700px) {
+  .app-background, .reader-background { padding: 20px; }
+  .app-shell, .reader-shell { height: calc(100dvh - 40px); max-height: calc(100dvh - 40px); border: 1px solid; border-radius: 23px; }
+  .app-shell { border-color: var(--color-shell); box-shadow: var(--shadow-app); }
+  .reader-shell { border-color: var(--color-paper-line); box-shadow: var(--shadow-reader); }
+  .reader-settings-shell { max-width: 520px; }
+}
+
+@media (max-width: 520px) {
+  .shell-main { padding-inline: 18px; }
+  .bottom-nav a { font-size: 9px; }
+  .content-row { grid-template-columns: 30px minmax(0, 1fr) 30px 64px auto; gap: 7px; }
+  .content-row__words { display: none; }
+  .content-row__meta { justify-self: end; }
+  .status-pill { padding-inline: 7px; }
+  .reader-article, .reader-meta, .story-progress-top { padding-inline: 24px; }
+  .card-deck-row { grid-template-columns: 28px minmax(0, 1fr) 54px 16px; gap: 8px; }
+  .card-deck-row__meta small { display: none; }
+  .card-deck-row__meta b { font-size: 11px; }
+  .card-deck-hero h1, .card-summary h1 { font-size: 24px; }
+  .study-card { min-height: 350px; padding-inline: 18px; }
+}
+
+@media (max-width: 370px) {
+  .dashboard-intro { gap: 8px; }
+  .intro-copy { font-size: 11px; }
+  .dashboard-ring .progress-ring { width: 78px; height: 78px; }
+  .dashboard-ring .progress-ring__inner { width: 64px; height: 64px; }
+  .continue-card__link { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .outline-button { align-self: stretch; justify-content: center; }
+  .content-row { grid-template-columns: 28px minmax(0, 1fr) auto; }
+  .content-row__meta { display: none; }
+  .card-deck-row { grid-template-columns: 26px minmax(0, 1fr) 16px; }
+  .card-deck-row__meta { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}

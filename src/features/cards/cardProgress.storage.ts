@@ -1,4 +1,4 @@
-import { createInitialCardProgress, type CardProgressRecord, type CardProgressState } from "./cardProgress.types";
+import { createInitialCardProgress, type CardProgressRecord, type CardProgressState } from "@/features/cards/cardProgress.types";
 
 export const CARD_PROGRESS_STORAGE_KEY = "calea:cards:v1";
 

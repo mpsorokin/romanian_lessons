@@ -1,11 +1,13 @@
 import { BookOpenText, Books, ArrowUpRight } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
-import { ContinueArrow, LessonRow } from "../components/ContentRow";
-import { DarkShell } from "../components/PageShell";
-import { ProgressBar, ProgressRing } from "../components/ProgressBar";
-import { lessonContent, storyContent, allContent } from "../lib/content";
-import { completedLessonCount, completedMaterialCount, completedStoryCount, getActiveStory, getNextLesson, getRecentLessons, overallProgress } from "../lib/metrics";
-import { useProgress } from "../features/progress/useProgress";
+import { ContinueArrow, LessonRow } from "@/features/reading/components/ContentRow";
+import { AppShell } from "@/components/layout/AppShell";
+import { ProgressBar } from "@/components/ui/ProgressBar";
+
+import { ProgressRing } from "@/components/ui/ProgressRing";
+import { lessonContent, storyContent, allContent } from "@/lib/content";
+import { completedLessonCount, completedMaterialCount, completedStoryCount, getActiveStory, getNextLesson, getRecentLessons, overallProgress } from "@/features/reading/metrics";
+import { useProgress } from "@/features/reading/useProgress";
 
 export function OverviewPage() {
   const { progress, getLessonStatus, getStoryProgress } = useProgress();
@@ -18,7 +20,7 @@ export function OverviewPage() {
   const recentLessons = getRecentLessons(lessonContent, progress);
 
   return (
-    <DarkShell className="dashboard-shell">
+    <AppShell className="dashboard-shell">
       <section className="dashboard-intro">
         <div>
           <p className="eyebrow">STUDIO DE LECTURĂ</p>
@@ -82,6 +84,6 @@ export function OverviewPage() {
       </section>
 
       <div className="dashboard-footer-stat"><span>Всего материалов</span><strong>{completedMaterials} / {allContent.length}</strong></div>
-    </DarkShell>
+    </AppShell>
   );
 }

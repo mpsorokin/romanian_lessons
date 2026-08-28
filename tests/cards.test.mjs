@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 
 const root = process.cwd();
 const lessonsDir = join(root, "src", "content", "lessons");
-const generatedPath = join(root, "src", "content", "cards.generated.ts");
+const generatedPath = join(root, "src", "generated", "cards.generated.ts");
 
 function readGeneratedArray(source, name) {
   const match = source.match(new RegExp(`export const ${name}[^=]*= ([\\s\\S]*?);\\n`));

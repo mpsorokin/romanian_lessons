@@ -1,0 +1,33 @@
+/* Dashboard: intro, continue cards, metric grid and the shared progress meters. */
+
+.dashboard-intro { display: flex; align-items: flex-start; justify-content: space-between; gap: 22px; padding: 4px 2px 25px; }
+.dashboard-intro h2 { margin: 0 0 7px; font-family: var(--font-serif); font-size: 30px; font-weight: 500; letter-spacing: -0.04em; }
+.intro-copy { max-width: 315px; margin: 0; color: var(--color-muted); font-size: 12px; line-height: 1.55; }
+.dashboard-ring { display: grid; justify-items: center; gap: 6px; padding-top: 2px; color: var(--color-muted); font-size: 11px; }
+.progress-ring { width: 92px; height: 92px; display: grid; place-items: center; border-radius: 50%; background: conic-gradient(var(--color-gold) var(--progress-angle), var(--color-track) var(--progress-angle) 360deg); transform: rotate(-35deg); }
+.progress-ring__inner { width: 76px; height: 76px; display: grid; place-items: center; border-radius: 50%; background: var(--color-app); color: var(--color-text); font-size: 17px; font-weight: 600; transform: rotate(35deg); }
+.continue-card, .dark-card, .metric-card { background: var(--color-surface); border: 1px solid var(--color-hairline); border-radius: 19px; }
+.continue-card { padding: 18px 16px 14px; margin-bottom: 11px; }
+.continue-card__link { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.continue-card h3 { margin: 0 0 3px; font-family: var(--font-serif); font-size: 19px; font-weight: 500; }
+.continue-card p { margin: 0; color: var(--color-muted); font-size: 11px; }
+.outline-button { display: inline-flex; align-items: center; gap: 7px; padding: 8px 11px; border: 1px solid var(--color-accent); border-radius: 999px; color: var(--color-gold-dim); font-size: 11px; white-space: nowrap; }
+.empty-copy { padding: 8px 0 3px; color: var(--color-muted); font-size: 12px; }
+.progress-bar { height: 4px; overflow: hidden; border-radius: 99px; background: var(--color-track); }
+.progress-bar span { display: block; height: 100%; border-radius: inherit; background: var(--color-gold); transition: width 220ms ease; }
+.continue-card > .progress-bar { margin-top: 14px; }
+.metric-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.metric-card { min-height: 126px; display: grid; grid-template-columns: 30px minmax(0, 1fr); grid-template-rows: 1fr auto; gap: 6px; padding: 17px 15px 13px; color: var(--color-soft); }
+.metric-card > svg { color: var(--color-gold-icon); margin-top: 7px; }
+.metric-card .eyebrow { margin-bottom: 5px; font-size: 9px; }
+.metric-card strong { display: block; font-size: 17px; font-weight: 500; }
+.metric-card strong span { color: var(--color-muted); font-size: 11px; font-weight: 400; }
+.metric-card small { display: block; margin-top: 3px; color: var(--color-muted); font-size: 10px; }
+.metric-card > .progress-bar { grid-column: 1 / -1; align-self: end; }
+.metric-grid + .continue-card { margin-top: 11px; }
+.section-block { padding-top: 23px; }
+.section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 15px; margin-bottom: 7px; }
+.section-heading h3 { margin: 0; font-family: var(--font-serif); font-size: 17px; font-weight: 500; }
+.section-heading a, .stats-back-link { display: inline-flex; align-items: center; gap: 4px; color: var(--color-gold); font-size: 11px; }
+.dashboard-footer-stat { display: flex; justify-content: space-between; margin: 25px 2px 0; padding-top: 15px; border-top: 1px solid var(--color-hairline); color: var(--color-muted); font-size: 11px; }
+.dashboard-footer-stat strong { color: var(--color-text); font-weight: 500; }

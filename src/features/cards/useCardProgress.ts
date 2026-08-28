@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
-import { CardProgressActionsContext, CardProgressStateContext, type CardProgressActions } from "./CardProgressProvider";
-import type { CardProgressState } from "./cardProgress.types";
+import { CardProgressActionsContext, CardProgressStateContext, type CardProgressActions } from "@/features/cards/CardProgressProvider";
+import type { CardProgressState } from "@/features/cards/cardProgress.types";
 
 export function useCardProgressState(): CardProgressState {
   const context = useContext(CardProgressStateContext);

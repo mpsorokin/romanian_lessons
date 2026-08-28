@@ -1,12 +1,13 @@
 import { ArrowRight, BookOpenText, Books, CardsThree, Gear, Stack, UserCircle } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
-import { DarkShell } from "../components/PageShell";
-import { ProgressBar, ProgressRing } from "../components/ProgressBar";
-import { lessonContent, storyContent, allContent, getCurrentLevel, getLessonLengthLabel } from "../lib/content";
-import { completedLessonCount, completedMaterialCount, completedStoryCount, overallProgress, getNextLesson } from "../lib/metrics";
-import { useProgress } from "../features/progress/useProgress";
-import { useCardProgressState } from "../features/cards/useCardProgress";
-import { getTotalCardProgress } from "../lib/cards";
+import { AppShell } from "@/components/layout/AppShell";
+import { ProgressBar } from "@/components/ui/ProgressBar";
+import { ProgressRing } from "@/components/ui/ProgressRing";
+import { lessonContent, storyContent, allContent, getCurrentLevel, getLessonLengthLabel } from "@/lib/content";
+import { completedLessonCount, completedMaterialCount, completedStoryCount, overallProgress, getNextLesson } from "@/features/reading/metrics";
+import { useProgress } from "@/features/reading/useProgress";
+import { useCardProgressState } from "@/features/cards/useCardProgress";
+import { getTotalCardProgress } from "@/features/cards/cards";
 
 export function ProfilePage() {
   const { progress } = useProgress();
@@ -18,7 +19,7 @@ export function ProfilePage() {
   const cardsDone = getTotalCardProgress(cardProgress);
 
   return (
-    <DarkShell className="profile-shell">
+    <AppShell className="profile-shell">
       <div className="profile-heading-row"><h1>Профиль</h1></div>
       <section className="profile-identity"><div className="avatar-mark">C</div><div><h2>Локальный профиль</h2><p>Добро пожаловать<br />в Calea.</p></div></section>
       <section className="dark-card profile-progress-card">
@@ -32,6 +33,6 @@ export function ProfilePage() {
       <section className="profile-next-section"><p className="eyebrow">ПРОДОЛЖИТЬ ОБУЧЕНИЕ</p>{nextLesson ? <Link to={`/lessons/${nextLesson.id}`} className="next-card"><div><span>Урок {String(nextLesson.order).padStart(2, "0")} · {nextLesson.level ?? "A1"}</span><strong>{nextLesson.title}</strong><small>{getLessonLengthLabel(nextLesson)}</small></div><ArrowRight size={22} /></Link> : <p className="empty-copy">Все уроки пройдены.</p>}</section>
       <div className="profile-links"><Link to="/stats"><span><UserCircle size={18} /> Статистика</span><ArrowRight size={17} /></Link><Link to="/settings"><span><Gear size={18} /> Настройки</span><ArrowRight size={17} /></Link></div>
       <p className="profile-total">Всего материалов: {materialsDone} / {allContent.length}</p>
-    </DarkShell>
+    </AppShell>
   );
 }

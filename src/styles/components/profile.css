@@ -1,0 +1,26 @@
+/* Profile screen. */
+
+.profile-heading-row { display: flex; align-items: center; justify-content: space-between; margin: -2px 0 24px; }
+.profile-heading-row h1 { margin: 0; font-family: var(--font-serif); font-size: 28px; font-weight: 500; }
+.profile-identity { display: flex; align-items: center; gap: 16px; padding: 0 3px 25px; }
+.avatar-mark { width: 76px; height: 76px; display: grid; place-items: center; border: 6px solid var(--color-track); border-radius: 50%; color: var(--color-gold); font-family: var(--font-serif); font-size: 27px; }
+.profile-identity h2 { margin: 0 0 5px; font-family: var(--font-serif); font-size: 18px; font-weight: 500; }
+.profile-identity p { margin: 0; color: var(--color-muted); font-size: 11px; line-height: 1.45; }
+.profile-progress-card { padding: 17px 16px 4px; }
+.profile-progress-top { display: flex; align-items: center; gap: 18px; padding: 3px 0 16px; }
+.profile-progress-top > div:last-child { flex: 1; }
+.profile-progress-top > div:last-child strong, .profile-progress-top > div:last-child span { display: block; }
+.profile-progress-top > div:last-child strong { margin-bottom: 5px; font-size: 13px; font-weight: 500; }
+.profile-progress-top > div:last-child span { margin-bottom: 12px; color: var(--color-muted); font-size: 11px; }
+.profile-stat-row { display: grid; grid-template-columns: 25px 1fr auto; align-items: center; gap: 11px; min-height: 48px; border-top: 1px solid var(--color-hairline); color: var(--color-muted); font-size: 11px; }
+.profile-stat-row svg { color: var(--color-gold-icon); }
+.profile-stat-row strong { color: var(--color-text); font-weight: 500; font-size: 13px; }
+.profile-next-section { padding: 27px 2px 16px; }
+.next-card { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px; border: 1px solid var(--color-hairline); border-radius: 17px; background: var(--color-surface); }
+.next-card span, .next-card small, .next-card strong { display: block; }
+.next-card span, .next-card small { color: var(--color-muted); font-size: 10px; }
+.next-card strong { margin: 7px 0; font-family: var(--font-serif); font-size: 17px; font-weight: 500; }
+.profile-links { border-top: 1px solid var(--color-hairline); }
+.profile-links a { display: flex; justify-content: space-between; align-items: center; min-height: 52px; border-bottom: 1px solid var(--color-hairline); color: var(--color-muted); font-size: 12px; }
+.profile-links a > span { display: flex; align-items: center; gap: 10px; color: var(--color-text); }
+.profile-total { margin: 18px 2px 0; color: var(--color-muted); font-size: 11px; }

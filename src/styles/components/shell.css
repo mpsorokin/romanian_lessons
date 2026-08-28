@@ -1,0 +1,21 @@
+/* App frame: background, shell, header and bottom navigation. */
+
+.app-background { min-height: 100dvh; display: flex; justify-content: center; }
+.app-background--dark { background: var(--color-page); }
+.app-shell, .reader-shell { width: 100%; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+.app-shell { max-width: 520px; }
+.app-shell--dark { color: var(--color-text); background: var(--color-app); }
+.app-shell--wide { max-width: 760px; }
+.shell-main { flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; padding: 28px 24px 34px; scrollbar-width: thin; scrollbar-color: var(--color-subtle) transparent; }
+.app-header { min-height: 70px; display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; gap: 10px; padding: 0 20px; border-bottom: 1px solid var(--color-hairline); flex-shrink: 0; }
+.app-header--titled h1 { margin: 0; text-align: center; font-family: var(--font-serif); font-size: 18px; font-weight: 500; }
+.brand-mark { grid-column: 1 / span 2; justify-self: start; font-family: var(--font-serif); font-size: 22px; letter-spacing: -0.02em; }
+.page-heading { margin: -2px 0 25px; font-family: var(--font-serif); font-size: 28px; font-weight: 500; letter-spacing: -0.03em; }
+.icon-button { width: 40px; height: 40px; display: inline-grid; place-items: center; color: currentColor; background: transparent; border-radius: 50%; }
+.app-header > .icon-button:last-child { justify-self: end; }
+.eyebrow { margin: 0 0 8px; color: var(--color-muted); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; line-height: 1.2; }
+
+.bottom-nav { display: grid; grid-template-columns: repeat(5, 1fr); min-height: 77px; padding: 10px 10px max(10px, env(safe-area-inset-bottom)); border-top: 1px solid var(--color-hairline); background: var(--color-nav); flex-shrink: 0; }
+.bottom-nav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--color-faint); font-size: 10px; }
+.bottom-nav a.active { color: var(--color-gold-bright); }
+.bottom-nav a.active svg { stroke-width: 1.8; }

@@ -1,0 +1,45 @@
+/*
+ * Reader: frame, header, markdown typography and the completion action.
+ * Colours come from the `--r-*` aliases so the paper and dark themes share one
+ * set of rules; the aliases themselves live in `base.css`.
+ */
+
+.reader-background { align-items: center; background: var(--color-reader-frame); }
+.reader-background--paper { background: var(--color-reader-frame-paper); }
+.reader-shell { color: var(--r-text); background: var(--r-bg); }
+.reader-header { min-height: 66px; display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 0 18px; border-bottom: 1px solid var(--r-line); flex-shrink: 0; }
+.reader-header__title { min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.reader-header__title span { color: var(--r-muted); font-size: 10px; }
+.reader-header__title strong { overflow: hidden; font-family: var(--font-serif); font-size: 16px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.reader-controls { display: inline-flex; align-items: center; gap: 7px; color: var(--r-text); font-size: 12px; }
+.reader-controls button { width: 40px; height: 40px; padding: 0; background: transparent; color: inherit; font-size: 15px; border-radius: 10px; }
+.reader-controls button:disabled { opacity: .35; }
+.reader-controls > span { min-width: 16px; text-align: center; color: var(--r-muted); }
+.reader-scroll { flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--r-scroll-thumb) transparent; }
+.reader-article, .reader-meta, .reader-action, .story-progress-top { max-width: 700px; margin: 0 auto; }
+.reader-article { padding: 48px 42px 25px; font-family: var(--font-serif); font-size: var(--reader-size); line-height: var(--reader-line-height); }
+.markdown-viewer h1, .markdown-viewer h2, .markdown-viewer h3 { margin: 0 0 22px; color: inherit; font-family: var(--font-serif); font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }
+.markdown-viewer h1 { font-size: 1.55em; }
+.markdown-viewer h2 { margin-top: 1.65em; font-size: 1.2em; }
+.markdown-viewer h3 { margin-top: 1.55em; font-size: 1.05em; }
+.markdown-viewer p { margin: 0 0 1.2em; }
+.markdown-viewer strong { font-weight: 600; }
+.markdown-viewer ul, .markdown-viewer ol { margin: 0 0 1.25em; padding-left: 1.3em; }
+.markdown-viewer li { padding-left: .2em; margin: .35em 0; }
+.markdown-viewer blockquote { margin: 1.35em 0; padding: .2em 0 .2em 1em; border-left: 2px solid var(--color-gold); color: var(--r-muted); }
+.markdown-viewer table { width: 100%; margin: 1.35em 0; border-collapse: collapse; font-family: var(--font-sans); font-size: .62em; line-height: 1.45; }
+.markdown-viewer th, .markdown-viewer td { padding: 8px 7px; border-bottom: 1px solid var(--r-line); text-align: left; vertical-align: top; }
+.markdown-viewer th { font-weight: 600; }
+.markdown-viewer code { padding: .1em .25em; border-radius: 4px; background: var(--color-code-bg); font-family: var(--font-mono); font-size: .8em; }
+.markdown-viewer hr { margin: 2.1em 0; border: 0; border-top: 1px solid var(--r-line); }
+.reader-meta { display: flex; align-items: center; gap: 8px; padding: 5px 42px 27px; color: var(--r-muted); font-family: var(--font-sans); font-size: 10px; }
+.reader-meta svg { color: var(--color-gold); }
+.reader-action { width: 100%; padding: 14px 18px max(18px, env(safe-area-inset-bottom)); border-top: 1px solid var(--r-line); }
+.primary-button { min-height: 44px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 11px 16px; border-radius: 11px; background: var(--btn-bg); color: var(--btn-fg); font-size: 12px; }
+.primary-button:hover { background: var(--btn-bg-hover); }
+.primary-button--completed { background: var(--btn-done-bg); color: var(--btn-done-fg); }
+
+.story-progress-top { padding: 19px 42px 0; color: var(--color-paper-muted); font-family: var(--font-sans); font-size: 10px; }
+.story-progress-top > div { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 9px; }
+.story-progress-top .progress-bar { background: var(--color-track-paper); }
+.story-progress-top .progress-bar span { background: var(--color-gold-progress); }

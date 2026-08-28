@@ -1,5 +1,5 @@
 import { lessonIndex, storyIndex } from "virtual:content-index";
-import type { Content, Lesson, Story } from "./content.types";
+import type { Content, Lesson, Story } from "@/lib/content.types";
 
 export type { Content, ContentMeta, Lesson, Story } from "./content.types";
 

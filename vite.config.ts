@@ -1,12 +1,19 @@
 import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { contentIndexPlugin } from "./scripts/vite-content-index.mjs";
 
 // Single source of truth for the version shown in Settings; bumped by the commit-msg hook.
 const { version } = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"));
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
+  },
   define: {
     __APP_VERSION__: JSON.stringify(version),
   },
@@ -23,6 +30,6 @@ export default defineConfig({
       clientFiles: ["./src/main.tsx"],
     },
   },
-  plugins: [react(), contentIndexPlugin()],
+  plugins: [react(), tailwindcss(), contentIndexPlugin()],
   base: "./",
 });

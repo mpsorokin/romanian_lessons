@@ -1,0 +1,15 @@
+/*
+ * Empty, missing and crashed states.
+ *
+ * Must stay after `reader.css` and `shell.css`: `.route-fallback` and
+ * `.app-background--dark` both set `background` at the same specificity, so the
+ * later rule is what makes the route fallback use the app surface.
+ */
+
+.not-found { max-width: 400px; margin: auto; padding: 50px 0; text-align: center; }
+.not-found h2 { margin: 0 0 11px; font-family: var(--font-serif); font-size: 25px; font-weight: 500; }
+.not-found p:not(.eyebrow) { margin: 0 0 25px; color: var(--color-muted); font-size: 13px; line-height: 1.5; }
+.not-found .primary-button { display: inline-flex; width: auto; min-width: 150px; }
+.reader-placeholder { margin: 0; color: var(--r-muted); font-size: .8em; }
+.route-fallback { background: var(--color-app); }
+.error-detail { display: block; margin-top: 20px; color: var(--color-gold-dim); font-size: 11px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
