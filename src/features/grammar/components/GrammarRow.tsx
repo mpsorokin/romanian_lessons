@@ -1,10 +1,13 @@
 import { ArrowRight } from "@phosphor-icons/react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { ProgressBar } from "@/components/ui/ProgressBar";
 import type { Grammar } from "@/lib/content.types";
 
-export function GrammarRow({ topic }: { topic: Grammar }) {
+export const GrammarRow = memo(function GrammarRow({ topic, progress }: { topic: Grammar; progress: number }) {
   const { t } = useTranslation();
+  const percent = Math.round(progress * 100);
 
   return (
     <Link className="grammar-topic-row" to={`/grammar/${topic.id}`}>
@@ -20,6 +23,9 @@ export function GrammarRow({ topic }: { topic: Grammar }) {
             ))}
           </span>
         )}
+        {percent > 0 && (
+          <ProgressBar value={progress} className="grammar-topic-row__progress" label={t("content.percentRead", { percent })} />
+        )}
       </span>
       <span className="grammar-topic-row__side">
         {topic.level && <span className="grammar-topic-row__level">{topic.level}</span>}
@@ -27,4 +33,4 @@ export function GrammarRow({ topic }: { topic: Grammar }) {
       </span>
     </Link>
   );
-}
+});

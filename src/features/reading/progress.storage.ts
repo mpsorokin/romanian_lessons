@@ -1,4 +1,10 @@
-import { createInitialProgress, type LessonProgressRecord, type ProgressState, type StoryProgressRecord } from "@/features/reading/progress.types";
+import {
+  createInitialProgress,
+  type GrammarProgressRecord,
+  type LessonProgressRecord,
+  type ProgressState,
+  type StoryProgressRecord,
+} from "@/features/reading/progress.types";
 
 export const PROGRESS_STORAGE_KEY = "calea:progress:v1";
 
@@ -47,6 +53,22 @@ function parseStories(value: unknown): Record<string, StoryProgressRecord> {
   return result;
 }
 
+function parseGrammar(value: unknown): Record<string, GrammarProgressRecord> {
+  if (!isRecord(value)) return {};
+  const result: Record<string, GrammarProgressRecord> = {};
+
+  for (const [id, raw] of Object.entries(value)) {
+    if (!isRecord(raw) || !isDate(raw.updatedAt)) continue;
+    const resumePosition = clamp(raw.resumePosition);
+    result[id] = {
+      resumePosition,
+      maxProgress: clamp(raw.maxProgress ?? resumePosition),
+      updatedAt: raw.updatedAt,
+    };
+  }
+  return result;
+}
+
 export function readProgress(): ProgressState {
   try {
     const raw = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
@@ -57,6 +79,7 @@ export function readProgress(): ProgressState {
       version: 1,
       lessons: parseLessons(parsed.lessons),
       stories: parseStories(parsed.stories),
+      grammar: parseGrammar(parsed.grammar),
     };
   } catch {
     return createInitialProgress();

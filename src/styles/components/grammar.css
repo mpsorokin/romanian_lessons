@@ -27,6 +27,7 @@
 .grammar-topic-row__tag { padding: 3px 6px; border: 1px solid var(--color-subtle); border-radius: 999px; color: var(--color-gold-pill); font-family: var(--font-mono); font-size: 9px; line-height: 1; }
 .grammar-topic-row__side { display: inline-flex; align-items: center; gap: 8px; color: var(--color-faint); }
 .grammar-topic-row__level { color: var(--color-dim); font-size: 10px; white-space: nowrap; }
+.grammar-topic-row__progress { width: min(100%, 235px); height: 4px; margin-top: 7px; }
 .grammar-empty { padding: 34px 3px; color: var(--color-muted); text-align: center; }
 .grammar-empty strong { display: block; color: var(--color-soft); font-family: var(--font-serif); font-size: 18px; font-weight: 500; }
 .grammar-empty p { margin: 8px 0 18px; font-size: 12px; }

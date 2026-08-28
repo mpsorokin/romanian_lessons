@@ -34,10 +34,12 @@
 .markdown-viewer hr { margin: 2.1em 0; border: 0; border-top: 1px solid var(--r-line); }
 .reader-meta { display: flex; align-items: center; gap: 8px; padding: 5px 42px 27px; color: var(--r-muted); font-family: var(--font-sans); font-size: 10px; }
 .reader-meta svg { color: var(--color-gold); }
-.reader-action { width: 100%; padding: 14px 18px max(18px, env(safe-area-inset-bottom)); border-top: 1px solid var(--r-line); }
+.reader-action { width: 100%; padding: 14px 18px max(18px, env(safe-area-inset-bottom)); border-top: 1px solid var(--r-line); display: flex; flex-direction: column; gap: 9px; }
 .primary-button { min-height: 44px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 11px 16px; border-radius: 11px; background: var(--btn-bg); color: var(--btn-fg); font-size: 12px; }
 .primary-button:hover { background: var(--btn-bg-hover); }
 .primary-button--completed { background: var(--btn-done-bg); color: var(--btn-done-fg); }
+.reader-secondary-button { min-height: 44px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 10px 16px; border: 1px solid var(--r-line); border-radius: 11px; background: transparent; color: var(--r-muted); font-size: 12px; }
+.reader-secondary-button:hover { border-color: var(--color-gold); color: var(--r-text); }
 
 .story-progress-top { padding: 19px 42px 0; color: var(--color-paper-muted); font-family: var(--font-sans); font-size: 10px; }
 .story-progress-top > div { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 9px; }

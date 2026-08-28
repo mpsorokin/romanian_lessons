@@ -93,7 +93,7 @@ function LibraryHome() {
 
 function LibrarySectionView({ section }: { section: LibrarySection }) {
   const { t } = useTranslation();
-  const { getLessonStatus, getStoryProgress } = useProgress();
+  const { getLessonStatus, getStoryProgress, getGrammarProgress } = useProgress();
   const [query, setQuery] = useState("");
 
   const visibleTopics = useMemo(
@@ -183,7 +183,7 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
                   </div>
                   <div className="grammar-topic-list">
                     {topics.map((topic) => (
-                      <GrammarRow key={topic.id} topic={topic} />
+                      <GrammarRow key={topic.id} topic={topic} progress={getGrammarProgress(topic.id)} />
                     ))}
                   </div>
                 </section>

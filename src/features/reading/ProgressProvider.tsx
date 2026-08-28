@@ -8,8 +8,10 @@ export interface ProgressActions {
   openLesson: (id: string) => void;
   saveLessonPosition: (id: string, position: number) => void;
   completeLesson: (id: string) => void;
+  resetLesson: (id: string) => void;
   saveStoryPosition: (id: string, currentProgress: number, resumePosition?: number) => void;
   completeStory: (id: string) => void;
+  saveGrammarPosition: (id: string, position: number) => void;
   resetProgress: () => void;
 }
 
@@ -81,6 +83,13 @@ export function ProgressProvider({ children }: PropsWithChildren) {
           },
         })),
 
+      resetLesson: (id) =>
+        apply((current) => {
+          if (!current.lessons[id]) return current;
+          const { [id]: _removed, ...lessons } = current.lessons;
+          return { ...current, lessons };
+        }),
+
       saveStoryPosition: (id, currentProgress, resumePosition = currentProgress) =>
         apply((current) => {
           const existing = current.stories[id];
@@ -125,6 +134,21 @@ export function ProgressProvider({ children }: PropsWithChildren) {
             },
           },
         })),
+
+      saveGrammarPosition: (id, position) =>
+        apply((current) => {
+          const existing = current.grammar[id];
+          const nextPosition = clamp(position);
+          const nextMaxProgress = Math.max(existing?.maxProgress ?? 0, nextPosition);
+          if (existing?.resumePosition === nextPosition && existing.maxProgress === nextMaxProgress) return current;
+          return {
+            ...current,
+            grammar: {
+              ...current.grammar,
+              [id]: { resumePosition: nextPosition, maxProgress: nextMaxProgress, updatedAt: now() },
+            },
+          };
+        }),
 
       resetProgress: () => {
         const initial = createInitialProgress();

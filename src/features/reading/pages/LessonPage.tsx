@@ -19,7 +19,7 @@ export function LessonPage() {
   const { id = "" } = useParams();
   const lesson = findContent("lesson", id);
   const { settings } = useReaderSettings();
-  const { getProgressSnapshot, openLesson, saveLessonPosition, completeLesson } = useProgressActions();
+  const { getProgressSnapshot, openLesson, saveLessonPosition, completeLesson, resetLesson } = useProgressActions();
   const { body, error } = useContentBody(lesson);
   const [completed, setCompleted] = useState(false);
 
@@ -49,6 +49,13 @@ export function LessonPage() {
     if (!lesson) return;
     completeLesson(lesson.id);
     setCompleted(true);
+  };
+
+  const handleReset = () => {
+    if (!lesson) return;
+    resetLesson(lesson.id);
+    setCompleted(false);
+    scrollRef.current?.scrollTo({ top: 0 });
   };
 
   if (!lesson) return <ReaderNotFoundPage kind="lesson" />;
@@ -88,6 +95,11 @@ export function LessonPage() {
           <button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={handleComplete} disabled={completed}>
             {completed && <Check size={17} weight="bold" />} {completed ? t("reader.lessonCompleted") : t("reader.completeLesson")}
           </button>
+          {completed && (
+            <button className="reader-secondary-button" type="button" onClick={handleReset}>
+              {t("reader.markLessonNew")}
+            </button>
+          )}
         </div>
       </div>
     </ReaderShell>

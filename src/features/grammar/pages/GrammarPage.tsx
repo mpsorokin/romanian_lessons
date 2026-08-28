@@ -6,9 +6,11 @@ import { grammarContent } from "@/lib/content";
 import { GrammarRow } from "@/features/grammar/components/GrammarRow";
 import { grammarMatches, groupGrammarTopics } from "@/features/grammar/grammar";
 import { grammarCategoryLabel } from "@/features/grammar/grammarLabels";
+import { useProgress } from "@/features/reading/useProgress";
 
 export function GrammarPage() {
   const { t } = useTranslation();
+  const { getGrammarProgress } = useProgress();
   const [query, setQuery] = useState("");
   const visibleTopics = useMemo(() => grammarContent.filter((topic) => grammarMatches(topic, query)), [query]);
   const groups = useMemo(() => groupGrammarTopics(visibleTopics), [visibleTopics]);
@@ -54,7 +56,7 @@ export function GrammarPage() {
               </div>
               <div className="grammar-topic-list">
                 {topics.map((topic) => (
-                  <GrammarRow key={topic.id} topic={topic} />
+                  <GrammarRow key={topic.id} topic={topic} progress={getGrammarProgress(topic.id)} />
                 ))}
               </div>
             </section>

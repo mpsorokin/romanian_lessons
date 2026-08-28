@@ -33,6 +33,7 @@ export function useProgress() {
           completed: entry?.completed ?? false,
         };
       },
+      getGrammarProgress: (id: string) => progress.grammar[id]?.maxProgress ?? 0,
       ...actions,
     }),
     [progress, actions],
