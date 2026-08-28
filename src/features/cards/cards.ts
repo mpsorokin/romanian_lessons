@@ -56,7 +56,7 @@ function assertCardData() {
   }
 }
 
-assertCardData();
+if (import.meta.env.DEV) assertCardData();
 
 export function findCardDeck(id: string): CardDeck | undefined {
   return decksById.get(id);
@@ -97,13 +97,3 @@ export function getCardDeckProgress(deckId: string, progress: CardProgressState)
   return { total, known, learning, newCount: Math.max(0, total - known - learning), percent: total ? known / total : 0 };
 }
 
-export function getTotalCardProgress(progress: CardProgressState): CardDeckProgress {
-  const total = studyCards.length;
-  let known = 0;
-  let learning = 0;
-  for (const card of studyCards) {
-    if (progress.cards[card.id]?.status === "known") known += 1;
-    else if (progress.cards[card.id]?.status === "learning") learning += 1;
-  }
-  return { total, known, learning, newCount: Math.max(0, total - known - learning), percent: total ? known / total : 0 };
-}

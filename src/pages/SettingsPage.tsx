@@ -1,12 +1,12 @@
 import { ArrowRight, Database, GithubLogo, Moon, SlidersHorizontal, Tag, Trash, TextAa } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
-import { useProgress } from "@/features/reading/useProgress";
+import { useProgressActions } from "@/features/reading/useProgress";
 import { useCardProgressActions } from "@/features/cards/useCardProgress";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
 
 export function SettingsPage() {
-  const { resetProgress } = useProgress();
+  const { resetProgress } = useProgressActions();
   const { resetCardProgress } = useCardProgressActions();
   const { settings } = useReaderSettings();
   const handleResetReading = () => {

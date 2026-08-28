@@ -1,12 +1,12 @@
 import { BookOpenText, Check } from "@phosphor-icons/react";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { BackButton } from "@/components/ui/BackButton";
 
 import { ReaderShell } from "@/components/layout/ReaderShell";
 import { MarkdownViewer } from "@/features/reader/MarkdownViewer";
 import { ReaderControls } from "@/features/reader/ReaderControls";
-import { useProgressActions, useProgressState } from "@/features/reading/useProgress";
+import { useProgressActions } from "@/features/reading/useProgress";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
 import { findContent, getLessonLengthLabel } from "@/lib/content";
 import { useContentBody } from "@/features/reader/useContentBody";
@@ -18,8 +18,8 @@ export function LessonPage() {
   const lesson = findContent("lesson", id);
   const { settings } = useReaderSettings();
   const { getProgressSnapshot, openLesson, saveLessonPosition, completeLesson } = useProgressActions();
-  const progress = useProgressState();
   const { body, error } = useContentBody(lesson);
+  const [completed, setCompleted] = useState(false);
 
   // Read once per lesson: the live value changes on every scroll save and would restart the
   // restore effect. Keyed by id because the route reuses this component across `/lessons/:id`.
@@ -30,8 +30,11 @@ export function LessonPage() {
   const initialPosition = initial.current?.position ?? 0;
 
   useEffect(() => {
-    if (lesson) openLesson(lesson.id);
-  }, [lesson, openLesson]);
+    if (lesson) {
+      openLesson(lesson.id);
+      setCompleted(getProgressSnapshot().lessons[lesson.id]?.status === "completed");
+    }
+  }, [lesson, openLesson, getProgressSnapshot]);
 
   const savePosition = useCallback(
     (position: number) => {
@@ -42,8 +45,13 @@ export function LessonPage() {
 
   const scrollRef = useReaderScroll(lesson?.id ?? "missing", initialPosition, savePosition, body !== null);
 
+  const handleComplete = () => {
+    if (!lesson) return;
+    completeLesson(lesson.id);
+    setCompleted(true);
+  };
+
   if (!lesson) return <ReaderNotFoundPage kind="урок" />;
-  const completed = progress.lessons[lesson.id]?.status === "completed";
 
   return (
     <ReaderShell theme={settings.theme} className="reader-shell--lesson">
@@ -65,7 +73,7 @@ export function LessonPage() {
           )}
         </article>
         <div className="reader-meta"><BookOpenText size={16} aria-hidden="true" /> <span>{getLessonLengthLabel(lesson)}</span><span>·</span><span>{lesson.subtitle}</span></div>
-        <div className="reader-action"><button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={() => completeLesson(lesson.id)} disabled={completed}>{completed && <Check size={17} weight="bold" />} {completed ? "Урок пройден" : "Завершить урок"}</button></div>
+        <div className="reader-action"><button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={handleComplete} disabled={completed}>{completed && <Check size={17} weight="bold" />} {completed ? "Урок пройден" : "Завершить урок"}</button></div>
       </div>
     </ReaderShell>
   );

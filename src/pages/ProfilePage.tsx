@@ -7,7 +7,7 @@ import { lessonContent, storyContent, allContent, getCurrentLevel, getLessonLeng
 import { completedLessonCount, completedMaterialCount, completedStoryCount, overallProgress, getNextLesson } from "@/features/reading/metrics";
 import { useProgress } from "@/features/reading/useProgress";
 import { useCardProgressState } from "@/features/cards/useCardProgress";
-import { getTotalCardProgress } from "@/features/cards/cards";
+import { getTotalCardProgress } from "@/features/cards/cardStats";
 
 export function ProfilePage() {
   const { progress } = useProgress();

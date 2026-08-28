@@ -56,11 +56,13 @@ export function ProgressProvider({ children }: PropsWithChildren) {
         apply((current) => {
           const existing = current.lessons[id];
           if (existing?.status === "completed") return current;
+          const nextPosition = clamp(position);
+          if (existing?.status === "in-progress" && existing.resumePosition === nextPosition) return current;
           return {
             ...current,
             lessons: {
               ...current.lessons,
-              [id]: { status: "in-progress", resumePosition: clamp(position), updatedAt: now() },
+              [id]: { status: "in-progress", resumePosition: nextPosition, updatedAt: now() },
             },
           };
         }),
@@ -85,12 +87,21 @@ export function ProgressProvider({ children }: PropsWithChildren) {
           const nextCurrent = clamp(resumePosition);
           const nextProgress = clamp(currentProgress);
           const shouldComplete = existing?.completed === true || nextProgress >= 0.96;
+          const nextMaxProgress = shouldComplete ? 1 : nextProgress;
+          if (
+            existing &&
+            existing.resumePosition === nextCurrent &&
+            existing.maxProgress === nextMaxProgress &&
+            existing.completed === shouldComplete
+          ) {
+            return current;
+          }
           return {
             ...current,
             stories: {
               ...current.stories,
               [id]: {
-                maxProgress: shouldComplete ? 1 : nextProgress,
+                maxProgress: nextMaxProgress,
                 resumePosition: nextCurrent,
                 completed: shouldComplete,
                 updatedAt: now(),

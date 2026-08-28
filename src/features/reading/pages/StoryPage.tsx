@@ -18,8 +18,7 @@ export function StoryPage() {
   const { id = "" } = useParams();
   const story = findContent("story", id);
   const { settings } = useReaderSettings();
-  const { getProgressSnapshot, saveStoryPosition, completeStory } = useProgressActions();
-  const progress = useProgressState();
+  const { getProgressSnapshot, saveStoryPosition } = useProgressActions();
   const { body, error } = useContentBody(story);
 
   // Read once per story: the live value changes on every scroll save and would restart the
@@ -40,11 +39,6 @@ export function StoryPage() {
   const scrollRef = useReaderScroll(story?.id ?? "missing", initialPosition, savePosition, body !== null);
 
   if (!story) return <ReaderNotFoundPage kind="рассказ" />;
-  const entry = progress.stories[story.id];
-  const maxProgress = entry?.maxProgress ?? 0;
-  const completed = entry?.completed ?? false;
-  const achievedPercent = Math.round(maxProgress * 100);
-  const estimatedWords = Math.round((story.wordCount ?? 0) * maxProgress);
 
   return (
     <ReaderShell theme={settings.theme} className="reader-shell--story">
@@ -58,7 +52,7 @@ export function StoryPage() {
         ref={scrollRef}
         style={{ "--reader-size": `${settings.fontSize}px`, "--reader-line-height": settings.lineHeight } as React.CSSProperties}
       >
-        <div className="story-progress-top"><div><span>{estimatedWords} / {story.wordCount ?? "—"} слов</span><span>({achievedPercent}%)</span></div><ProgressBar value={maxProgress} label="Прочитанный текст" /></div>
+        <StoryProgressTop storyId={story.id} wordCount={story.wordCount} />
         <article className="reader-article">
           {body !== null ? (
             <MarkdownViewer markdown={body} />
@@ -67,8 +61,37 @@ export function StoryPage() {
           )}
         </article>
         <div className="reader-meta"><BookOpenText size={16} aria-hidden="true" /> <span>{story.wordCount ?? "—"} слов</span><span>·</span><span>{story.subtitle}</span></div>
-        <div className="reader-action"><button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={() => completeStory(story.id)} disabled={completed}>{completed && <Check size={17} weight="bold" />} {completed ? "Прочитано" : "Отметить прочитанным"}</button></div>
+        <StoryCompleteAction storyId={story.id} />
       </div>
     </ReaderShell>
+  );
+}
+
+function StoryProgressTop({ storyId, wordCount }: { storyId: string; wordCount?: number }) {
+  const progress = useProgressState();
+  const entry = progress.stories[storyId];
+  const maxProgress = entry?.maxProgress ?? 0;
+  const achievedPercent = Math.round(maxProgress * 100);
+  const estimatedWords = Math.round((wordCount ?? 0) * maxProgress);
+
+  return (
+    <div className="story-progress-top">
+      <div><span>{estimatedWords} / {wordCount ?? "—"} слов</span><span>({achievedPercent}%)</span></div>
+      <ProgressBar value={maxProgress} label="Прочитанный текст" />
+    </div>
+  );
+}
+
+function StoryCompleteAction({ storyId }: { storyId: string }) {
+  const { completeStory } = useProgressActions();
+  const progress = useProgressState();
+  const completed = progress.stories[storyId]?.completed ?? false;
+
+  return (
+    <div className="reader-action">
+      <button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={() => completeStory(storyId)} disabled={completed}>
+        {completed && <Check size={17} weight="bold" />} {completed ? "Прочитано" : "Отметить прочитанным"}
+      </button>
+    </div>
   );
 }
