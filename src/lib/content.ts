@@ -24,6 +24,10 @@ export function getCurrentLevel(): string {
   return allContent.find((item) => item.level)?.level ?? "A1";
 }
 
+export function getLessonLengthLabel(lesson: Lesson): string {
+  return lesson.wordCount ? `${lesson.wordCount} слов` : "Повторение";
+}
+
 const bodyLoaders: Record<Content["type"], Record<string, () => Promise<string>>> = {
   lesson: import.meta.glob<string>("../content/lessons/*.md", { query: "?raw", import: "default" }),
   story: import.meta.glob<string>("../content/stories/*.md", { query: "?raw", import: "default" }),

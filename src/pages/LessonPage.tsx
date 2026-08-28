@@ -6,7 +6,7 @@ import { MarkdownViewer } from "../components/MarkdownViewer";
 import { ReaderControls } from "../components/ReaderControls";
 import { useProgressActions, useProgressState } from "../features/progress/useProgress";
 import { useReaderSettings } from "../features/reader-settings/ReaderSettingsProvider";
-import { findContent } from "../lib/content";
+import { findContent, getLessonLengthLabel } from "../lib/content";
 import { useContentBody } from "../hooks/useContentBody";
 import { useReaderScroll } from "../hooks/useReaderScroll";
 import { ReaderNotFoundPage } from "./ReaderNotFoundPage";
@@ -62,7 +62,7 @@ export function LessonPage() {
             <p className="reader-placeholder">{error ? "Не удалось загрузить урок." : "Загрузка…"}</p>
           )}
         </article>
-        <div className="reader-meta"><BookOpenText size={16} aria-hidden="true" /> <span>{lesson.wordCount ?? "—"} слов</span><span>·</span><span>{lesson.subtitle}</span></div>
+        <div className="reader-meta"><BookOpenText size={16} aria-hidden="true" /> <span>{getLessonLengthLabel(lesson)}</span><span>·</span><span>{lesson.subtitle}</span></div>
         <div className="reader-action"><button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={() => completeLesson(lesson.id)} disabled={completed}>{completed && <Check size={17} weight="bold" />} {completed ? "Урок пройден" : "Завершить урок"}</button></div>
       </div>
     </ReaderShell>

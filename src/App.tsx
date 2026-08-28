@@ -3,6 +3,7 @@ import { HashRouter, Link, Navigate, Route, Routes } from "react-router-dom";
 import { DarkShell } from "./components/PageShell";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { ProgressProvider } from "./features/progress/ProgressProvider";
+import { CardProgressProvider } from "./features/cards/CardProgressProvider";
 import { ReaderSettingsProvider } from "./features/reader-settings/ReaderSettingsProvider";
 import { OverviewPage } from "./pages/OverviewPage";
 
@@ -18,30 +19,36 @@ const SettingsPage = lazy(() => import("./pages/SettingsPage").then((m) => ({ de
 const StatsPage = lazy(() => import("./pages/StatsPage").then((m) => ({ default: m.StatsPage })));
 const StoriesPage = lazy(() => import("./pages/StoriesPage").then((m) => ({ default: m.StoriesPage })));
 const StoryPage = lazy(() => import("./pages/StoryPage").then((m) => ({ default: m.StoryPage })));
+const CardsPage = lazy(() => import("./pages/CardsPage").then((m) => ({ default: m.CardsPage })));
+const CardDeckPage = lazy(() => import("./pages/CardDeckPage").then((m) => ({ default: m.CardDeckPage })));
 
 export function App() {
   return (
     <HashRouter>
       <ProgressProvider>
-        <ReaderSettingsProvider>
-          <ErrorBoundary>
-            <Suspense fallback={<RouteFallback />}>
-              <Routes>
+        <CardProgressProvider>
+          <ReaderSettingsProvider>
+            <ErrorBoundary>
+              <Suspense fallback={<RouteFallback />}>
+                <Routes>
                 <Route path="/" element={<OverviewPage />} />
                 <Route path="/lessons" element={<LessonsPage />} />
                 <Route path="/lessons/:id" element={<LessonPage />} />
                 <Route path="/stories" element={<StoriesPage />} />
                 <Route path="/stories/:id" element={<StoryPage />} />
+                <Route path="/cards" element={<CardsPage />} />
+                <Route path="/cards/:deckId" element={<CardDeckPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/stats" element={<StatsPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/settings/reader" element={<ReaderSettingsPage />} />
                 <Route path="/not-found" element={<NotFoundPage />} />
                 <Route path="*" element={<Navigate to="/not-found" replace />} />
-              </Routes>
-            </Suspense>
-          </ErrorBoundary>
-        </ReaderSettingsProvider>
+                </Routes>
+              </Suspense>
+            </ErrorBoundary>
+          </ReaderSettingsProvider>
+        </CardProgressProvider>
       </ProgressProvider>
     </HashRouter>
   );

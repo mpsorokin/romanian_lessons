@@ -2,6 +2,7 @@ import { memo } from "react";
 import { Check, ArrowRight } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import type { Lesson, Story } from "../lib/content";
+import { getLessonLengthLabel } from "../lib/content";
 import type { LessonStatus } from "../features/progress/progress.types";
 import { ProgressBar } from "./ProgressBar";
 
@@ -19,7 +20,7 @@ export const LessonRow = memo(function LessonRow({ lesson, status }: { lesson: L
         {lesson.subtitle && <small>{lesson.subtitle}</small>}
       </span>
       <span className="content-row__meta">{lesson.level ?? "A1"}</span>
-      <span className="content-row__meta content-row__words">{lesson.wordCount ?? "—"} слов</span>
+      <span className="content-row__meta content-row__words">{getLessonLengthLabel(lesson)}</span>
       <span className={`status-pill status-pill--${status}`}>
         {status === "completed" && <Check size={13} weight="bold" aria-hidden="true" />}
         {statusLabel}
