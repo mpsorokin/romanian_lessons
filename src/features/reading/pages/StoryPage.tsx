@@ -89,7 +89,7 @@ export function StoryPage() {
         <StoryProgressTop maxProgress={live.progress} wordCount={story.wordCount} />
         <article className="reader-article">
           {body !== null ? (
-            <MarkdownViewer markdown={body} />
+            <MarkdownViewer markdown={body} variant="story" />
           ) : (
             <p className="reader-placeholder">{error ? t("reader.loadStoryError") : t("common.loading")}</p>
           )}

@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from "react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -9,21 +9,28 @@ const plugins = [remarkGfm];
  * Memoised on purpose: the reader saves its scroll position every 250ms, and
  * without this every save would re-parse the whole lesson.
  */
-export const MarkdownViewer = memo(function MarkdownViewer({ markdown, variant = "default" }: { markdown: string; variant?: "default" | "grammar" }) {
+export const MarkdownViewer = memo(function MarkdownViewer({
+  markdown,
+  variant = "default",
+}: {
+  markdown: string;
+  variant?: "default" | "grammar" | "story";
+}) {
   const { t } = useTranslation();
 
   const components: Components = {
     h3: ({ children, ...props }) => {
+      if (variant !== "story") {
+        return <h3 {...props}>{children}</h3>;
+      }
+
       const text = typeof children === "string" ? children : String(children ?? "");
-      const label =
-        text === "🇷🇴"
-          ? t("reader.sectionRomanian")
-          : text === "🇷🇺"
-            ? t("reader.sectionTranslation")
-            : text === "🔊"
-              ? t("reader.sectionPronunciation")
-              : children;
-      return <h3 {...props}>{label}</h3>;
+      if (text === "🇷🇴") return null;
+      if (text === "🔊" || text === "🇷🇺") {
+        return <hr className="story-section-hr" aria-hidden="true" />;
+      }
+
+      return <h3 {...props}>{children}</h3>;
     },
   };
 

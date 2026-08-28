@@ -32,6 +32,7 @@
 .markdown-viewer th { font-weight: 600; }
 .markdown-viewer code { padding: .1em .25em; border-radius: 4px; background: var(--color-code-bg); font-family: var(--font-mono); font-size: .8em; }
 .markdown-viewer hr { margin: 2.1em 0; border: 0; border-top: 1px solid var(--r-line); }
+.markdown-viewer--story .story-section-hr { margin: 1.1em 0; border-top-color: color-mix(in srgb, var(--r-line) 55%, transparent); }
 .reader-meta { display: flex; align-items: center; gap: 8px; padding: 5px 42px 27px; color: var(--r-muted); font-family: var(--font-sans); font-size: 10px; }
 .reader-meta svg { color: var(--color-gold); }
 .reader-action { width: 100%; padding: 14px 18px max(18px, env(safe-area-inset-bottom)); border-top: 1px solid var(--r-line); display: flex; flex-direction: column; gap: 9px; }
