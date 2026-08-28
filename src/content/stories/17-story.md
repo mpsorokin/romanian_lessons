@@ -2,8 +2,8 @@
 
 id: story-17
 order: 17
-title: Telefon nou: online sau din magazin?
-subtitle: Новый телефон: онлайн или в магазине?
+title: "Telefon nou: online sau din magazin?"
+subtitle: "Новый телефон: онлайн или в магазине?"
 level: A2+/B1-
 wordCount: 491
 --------------

@@ -16,7 +16,7 @@ export interface GeneratedCardDeck {
   sourceLessonIds: string[];
 }
 
-export const generatedCardCount = 549;
+export const generatedCardCount = 640;
 
 export const generatedStudyCards: GeneratedStudyCard[] = [
   {
@@ -4410,6 +4410,734 @@ export const generatedStudyCards: GeneratedStudyCard[] = [
     "answerRo": "Pot să vin mâine.",
     "pronunciation": "Пот сэ вин мы́йне.",
     "promptRu": "Я могу прийти завтра."
+  },
+  {
+    "id": "lesson-31:card-01",
+    "lessonId": "lesson-31",
+    "order": 1,
+    "answerRo": "vino",
+    "pronunciation": "ви́но",
+    "promptRu": "иди сюда / приходи"
+  },
+  {
+    "id": "lesson-31:card-02",
+    "lessonId": "lesson-31",
+    "order": 2,
+    "answerRo": "stai",
+    "pronunciation": "стай",
+    "promptRu": "стой / подожди"
+  },
+  {
+    "id": "lesson-31:card-03",
+    "lessonId": "lesson-31",
+    "order": 3,
+    "answerRo": "stai puțin",
+    "pronunciation": "стай пуци́н",
+    "promptRu": "подожди немного"
+  },
+  {
+    "id": "lesson-31:card-04",
+    "lessonId": "lesson-31",
+    "order": 4,
+    "answerRo": "ia",
+    "pronunciation": "я",
+    "promptRu": "возьми"
+  },
+  {
+    "id": "lesson-31:card-05",
+    "lessonId": "lesson-31",
+    "order": 5,
+    "answerRo": "uite",
+    "pronunciation": "у́йте",
+    "promptRu": "смотри / вот"
+  },
+  {
+    "id": "lesson-31:card-06",
+    "lessonId": "lesson-31",
+    "order": 6,
+    "answerRo": "dă-mi",
+    "pronunciation": "дэ-мь",
+    "promptRu": "дай мне"
+  },
+  {
+    "id": "lesson-31:card-07",
+    "lessonId": "lesson-31",
+    "order": 7,
+    "answerRo": "spune-mi",
+    "pronunciation": "спу́не-мь",
+    "promptRu": "скажи мне"
+  },
+  {
+    "id": "lesson-31:card-08",
+    "lessonId": "lesson-31",
+    "order": 8,
+    "answerRo": "zi-mi",
+    "pronunciation": "зи-мь",
+    "promptRu": "скажи мне, разговорно"
+  },
+  {
+    "id": "lesson-31:card-09",
+    "lessonId": "lesson-31",
+    "order": 9,
+    "answerRo": "lasă",
+    "pronunciation": "ла́сэ",
+    "promptRu": "оставь / да ладно"
+  },
+  {
+    "id": "lesson-31:card-10",
+    "lessonId": "lesson-31",
+    "order": 10,
+    "answerRo": "lasă-mă",
+    "pronunciation": "ла́сэ-мэ",
+    "promptRu": "оставь меня"
+  },
+  {
+    "id": "lesson-31:card-11",
+    "lessonId": "lesson-31",
+    "order": 11,
+    "answerRo": "așteaptă",
+    "pronunciation": "аштя́птэ",
+    "promptRu": "подожди"
+  },
+  {
+    "id": "lesson-31:card-12",
+    "lessonId": "lesson-31",
+    "order": 12,
+    "answerRo": "ascultă",
+    "pronunciation": "аску́лтэ",
+    "promptRu": "послушай"
+  },
+  {
+    "id": "lesson-31:card-13",
+    "lessonId": "lesson-31",
+    "order": 13,
+    "answerRo": "vezi?",
+    "pronunciation": "везь?",
+    "promptRu": "видишь? / понимаешь?"
+  },
+  {
+    "id": "lesson-31:card-14",
+    "lessonId": "lesson-31",
+    "order": 14,
+    "answerRo": "nu pleca",
+    "pronunciation": "ну плека́",
+    "promptRu": "не уходи"
+  },
+  {
+    "id": "lesson-31:card-15",
+    "lessonId": "lesson-31",
+    "order": 15,
+    "answerRo": "nu te grăbi",
+    "pronunciation": "ну те грэби́",
+    "promptRu": "не торопись"
+  },
+  {
+    "id": "lesson-31:card-16",
+    "lessonId": "lesson-31",
+    "order": 16,
+    "answerRo": "nu uita",
+    "pronunciation": "ну уйта́",
+    "promptRu": "не забудь"
+  },
+  {
+    "id": "lesson-31:card-17",
+    "lessonId": "lesson-31",
+    "order": 17,
+    "answerRo": "nu uita să",
+    "pronunciation": "ну уйта́ сэ",
+    "promptRu": "не забудь сделать"
+  },
+  {
+    "id": "lesson-31:card-18",
+    "lessonId": "lesson-31",
+    "order": 18,
+    "answerRo": "hai să vedem",
+    "pronunciation": "хай сэ веде́м",
+    "promptRu": "давай посмотрим"
+  },
+  {
+    "id": "lesson-31:card-19",
+    "lessonId": "lesson-31",
+    "order": 19,
+    "answerRo": "hai să mergem",
+    "pronunciation": "хай сэ ме́рджем",
+    "promptRu": "давай пойдём"
+  },
+  {
+    "id": "lesson-31:card-20",
+    "lessonId": "lesson-31",
+    "order": 20,
+    "answerRo": "Vino aici.",
+    "pronunciation": "Ви́но айчь.",
+    "promptRu": "Иди / подойди сюда."
+  },
+  {
+    "id": "lesson-31:card-21",
+    "lessonId": "lesson-31",
+    "order": 21,
+    "answerRo": "Stai puțin.",
+    "pronunciation": "Стай пуци́н.",
+    "promptRu": "Подожди немного."
+  },
+  {
+    "id": "lesson-31:card-22",
+    "lessonId": "lesson-31",
+    "order": 22,
+    "answerRo": "Ia asta.",
+    "pronunciation": "Я а́ста.",
+    "promptRu": "Возьми это."
+  },
+  {
+    "id": "lesson-31:card-23",
+    "lessonId": "lesson-31",
+    "order": 23,
+    "answerRo": "Dă-mi telefonul.",
+    "pronunciation": "Дэ-мь телефо́нул.",
+    "promptRu": "Дай мне телефон."
+  },
+  {
+    "id": "lesson-32:card-01",
+    "lessonId": "lesson-32",
+    "order": 1,
+    "answerRo": "păi",
+    "pronunciation": "пэй",
+    "promptRu": "ну..., начало ответа"
+  },
+  {
+    "id": "lesson-32:card-02",
+    "lessonId": "lesson-32",
+    "order": 2,
+    "answerRo": "adică",
+    "pronunciation": "ади́кэ",
+    "promptRu": "то есть / в смысле"
+  },
+  {
+    "id": "lesson-32:card-03",
+    "lessonId": "lesson-32",
+    "order": 3,
+    "answerRo": "na",
+    "pronunciation": "на",
+    "promptRu": "ну / вот / что ж"
+  },
+  {
+    "id": "lesson-32:card-04",
+    "lessonId": "lesson-32",
+    "order": 4,
+    "answerRo": "asta e",
+    "pronunciation": "а́ста е",
+    "promptRu": "ничего не поделаешь"
+  },
+  {
+    "id": "lesson-32:card-05",
+    "lessonId": "lesson-32",
+    "order": 5,
+    "answerRo": "mă rog",
+    "pronunciation": "мэ рог",
+    "promptRu": "ну ладно / в общем"
+  },
+  {
+    "id": "lesson-32:card-06",
+    "lessonId": "lesson-32",
+    "order": 6,
+    "answerRo": "oricum",
+    "pronunciation": "орику́м",
+    "promptRu": "в любом случае"
+  },
+  {
+    "id": "lesson-32:card-07",
+    "lessonId": "lesson-32",
+    "order": 7,
+    "answerRo": "chiar",
+    "pronunciation": "кяр",
+    "promptRu": "действительно / даже"
+  },
+  {
+    "id": "lesson-32:card-08",
+    "lessonId": "lesson-32",
+    "order": 8,
+    "answerRo": "chiar dacă",
+    "pronunciation": "кяр да́кэ",
+    "promptRu": "даже если"
+  },
+  {
+    "id": "lesson-32:card-09",
+    "lessonId": "lesson-32",
+    "order": 9,
+    "answerRo": "de fapt",
+    "pronunciation": "де фапт",
+    "promptRu": "на самом деле / вообще-то"
+  },
+  {
+    "id": "lesson-32:card-10",
+    "lessonId": "lesson-32",
+    "order": 10,
+    "answerRo": "apropo",
+    "pronunciation": "апропо́",
+    "promptRu": "кстати"
+  },
+  {
+    "id": "lesson-32:card-11",
+    "lessonId": "lesson-32",
+    "order": 11,
+    "answerRo": "apropo de",
+    "pronunciation": "апропо́ де",
+    "promptRu": "кстати о"
+  },
+  {
+    "id": "lesson-32:card-12",
+    "lessonId": "lesson-32",
+    "order": 12,
+    "answerRo": "gen",
+    "pronunciation": "джен",
+    "promptRu": "типа, разговорно"
+  },
+  {
+    "id": "lesson-32:card-13",
+    "lessonId": "lesson-32",
+    "order": 13,
+    "answerRo": "exact",
+    "pronunciation": "экза́кт",
+    "promptRu": "именно / точно"
+  },
+  {
+    "id": "lesson-32:card-14",
+    "lessonId": "lesson-32",
+    "order": 14,
+    "answerRo": "normal",
+    "pronunciation": "норма́л",
+    "promptRu": "естественно / конечно"
+  },
+  {
+    "id": "lesson-32:card-15",
+    "lessonId": "lesson-32",
+    "order": 15,
+    "answerRo": "serios?",
+    "pronunciation": "серио́с?",
+    "promptRu": "серьёзно?"
+  },
+  {
+    "id": "lesson-32:card-16",
+    "lessonId": "lesson-32",
+    "order": 16,
+    "answerRo": "din nou",
+    "pronunciation": "дин ноу",
+    "promptRu": "снова"
+  },
+  {
+    "id": "lesson-32:card-17",
+    "lessonId": "lesson-32",
+    "order": 17,
+    "answerRo": "măi",
+    "pronunciation": "мэй",
+    "promptRu": "эй / ну, зависит от тона"
+  },
+  {
+    "id": "lesson-32:card-18",
+    "lessonId": "lesson-32",
+    "order": 18,
+    "answerRo": "bă",
+    "pronunciation": "бэ",
+    "promptRu": "эй / чувак, очень неформально"
+  },
+  {
+    "id": "lesson-32:card-19",
+    "lessonId": "lesson-32",
+    "order": 19,
+    "answerRo": "Păi, adică... nu știu, poate vine mai târziu.",
+    "pronunciation": "Пэй, ади́кэ... ну штиу, поа́те ви́не май тырзи́у.",
+    "promptRu": "Ну, то есть... не знаю, может, он придёт позже."
+  },
+  {
+    "id": "lesson-32:card-20",
+    "lessonId": "lesson-32",
+    "order": 20,
+    "answerRo": "— De ce nu vii?",
+    "pronunciation": "— Де че ну вий?",
+    "promptRu": "— Почему ты не придёшь?"
+  },
+  {
+    "id": "lesson-32:card-21",
+    "lessonId": "lesson-32",
+    "order": 21,
+    "answerRo": "— Păi, trebuie să lucrez.",
+    "pronunciation": "— Пэй, трэ́буе сэ лукре́з.",
+    "promptRu": "— Ну, мне нужно работать."
+  },
+  {
+    "id": "lesson-32:card-22",
+    "lessonId": "lesson-32",
+    "order": 22,
+    "answerRo": "Păi, nu știu încă.",
+    "pronunciation": "Пэй, ну штиу ы́нкэ.",
+    "promptRu": "Ну, я пока не знаю."
+  },
+  {
+    "id": "lesson-33:card-01",
+    "lessonId": "lesson-33",
+    "order": 1,
+    "answerRo": "am treabă",
+    "pronunciation": "ам тря́бэ",
+    "promptRu": "у меня дела"
+  },
+  {
+    "id": "lesson-33:card-02",
+    "lessonId": "lesson-33",
+    "order": 2,
+    "answerRo": "am multă treabă",
+    "pronunciation": "ам му́лтэ тря́бэ",
+    "promptRu": "у меня много дел"
+  },
+  {
+    "id": "lesson-33:card-03",
+    "lessonId": "lesson-33",
+    "order": 3,
+    "answerRo": "am de făcut",
+    "pronunciation": "ам де фэку́т",
+    "promptRu": "мне есть что сделать"
+  },
+  {
+    "id": "lesson-33:card-04",
+    "lessonId": "lesson-33",
+    "order": 4,
+    "answerRo": "mai am ceva de făcut",
+    "pronunciation": "май ам че́ва де фэку́т",
+    "promptRu": "мне осталось кое-что сделать"
+  },
+  {
+    "id": "lesson-33:card-05",
+    "lessonId": "lesson-33",
+    "order": 5,
+    "answerRo": "mă ocup de",
+    "pronunciation": "мэ оку́п де",
+    "promptRu": "занимаюсь / займусь"
+  },
+  {
+    "id": "lesson-33:card-06",
+    "lessonId": "lesson-33",
+    "order": 6,
+    "answerRo": "ședință",
+    "pronunciation": "шеди́нцэ",
+    "promptRu": "совещание"
+  },
+  {
+    "id": "lesson-33:card-07",
+    "lessonId": "lesson-33",
+    "order": 7,
+    "answerRo": "urgent",
+    "pronunciation": "урже́нт",
+    "promptRu": "срочно / срочный"
+  },
+  {
+    "id": "lesson-33:card-08",
+    "lessonId": "lesson-33",
+    "order": 8,
+    "answerRo": "important",
+    "pronunciation": "импорта́нт",
+    "promptRu": "важный"
+  },
+  {
+    "id": "lesson-33:card-09",
+    "lessonId": "lesson-33",
+    "order": 9,
+    "answerRo": "a rezolva",
+    "pronunciation": "а резолва́",
+    "promptRu": "решить проблему"
+  },
+  {
+    "id": "lesson-33:card-10",
+    "lessonId": "lesson-33",
+    "order": 10,
+    "answerRo": "s-a rezolvat",
+    "pronunciation": "са резолва́т",
+    "promptRu": "всё решилось"
+  },
+  {
+    "id": "lesson-33:card-11",
+    "lessonId": "lesson-33",
+    "order": 11,
+    "answerRo": "a reuși să",
+    "pronunciation": "а реуши́ сэ",
+    "promptRu": "суметь / успеть"
+  },
+  {
+    "id": "lesson-33:card-12",
+    "lessonId": "lesson-33",
+    "order": 12,
+    "answerRo": "n-am reușit să",
+    "pronunciation": "нам реуши́т сэ",
+    "promptRu": "не смог / не успел"
+  },
+  {
+    "id": "lesson-33:card-13",
+    "lessonId": "lesson-33",
+    "order": 13,
+    "answerRo": "a apuca să",
+    "pronunciation": "а апука́ сэ",
+    "promptRu": "успеть сделать"
+  },
+  {
+    "id": "lesson-33:card-14",
+    "lessonId": "lesson-33",
+    "order": 14,
+    "answerRo": "n-am apucat să",
+    "pronunciation": "нам апука́т сэ",
+    "promptRu": "не успел"
+  },
+  {
+    "id": "lesson-33:card-15",
+    "lessonId": "lesson-33",
+    "order": 15,
+    "answerRo": "gata",
+    "pronunciation": "га́та",
+    "promptRu": "готово / всё"
+  },
+  {
+    "id": "lesson-33:card-16",
+    "lessonId": "lesson-33",
+    "order": 16,
+    "answerRo": "sunt gata",
+    "pronunciation": "сунт га́та",
+    "promptRu": "я готов"
+  },
+  {
+    "id": "lesson-33:card-17",
+    "lessonId": "lesson-33",
+    "order": 17,
+    "answerRo": "am terminat pe azi",
+    "pronunciation": "ам термина́т пе азь",
+    "promptRu": "на сегодня закончил"
+  },
+  {
+    "id": "lesson-33:card-18",
+    "lessonId": "lesson-33",
+    "order": 18,
+    "answerRo": "termen",
+    "pronunciation": "те́рмен",
+    "promptRu": "срок"
+  },
+  {
+    "id": "lesson-33:card-19",
+    "lessonId": "lesson-33",
+    "order": 19,
+    "answerRo": "am timp să",
+    "pronunciation": "ам тимп сэ",
+    "promptRu": "у меня есть время сделать"
+  },
+  {
+    "id": "lesson-33:card-20",
+    "lessonId": "lesson-33",
+    "order": 20,
+    "answerRo": "n-am timp să",
+    "pronunciation": "нам тимп сэ",
+    "promptRu": "у меня нет времени сделать"
+  },
+  {
+    "id": "lesson-33:card-21",
+    "lessonId": "lesson-33",
+    "order": 21,
+    "answerRo": "Am multă treabă azi.",
+    "pronunciation": "Ам му́лтэ тря́бэ азь.",
+    "promptRu": "У меня сегодня много дел."
+  },
+  {
+    "id": "lesson-33:card-22",
+    "lessonId": "lesson-33",
+    "order": 22,
+    "answerRo": "Trebuie să termin ceva înainte de ședință.",
+    "pronunciation": "Трэ́буе сэ терми́н че́ва ынаи́нте де шеди́нцэ.",
+    "promptRu": "Мне нужно кое-что закончить до встречи."
+  },
+  {
+    "id": "lesson-33:card-23",
+    "lessonId": "lesson-33",
+    "order": 23,
+    "answerRo": "Mai am câteva lucruri de făcut.",
+    "pronunciation": "Май ам кы́тева лу́крурь де фэку́т.",
+    "promptRu": "У меня осталось ещё несколько дел."
+  },
+  {
+    "id": "lesson-34:card-01",
+    "lessonId": "lesson-34",
+    "order": 1,
+    "answerRo": "obosit",
+    "pronunciation": "обоси́т",
+    "promptRu": "уставший"
+  },
+  {
+    "id": "lesson-34:card-02",
+    "lessonId": "lesson-34",
+    "order": 2,
+    "answerRo": "stresat",
+    "pronunciation": "стреса́т",
+    "promptRu": "в стрессе"
+  },
+  {
+    "id": "lesson-34:card-03",
+    "lessonId": "lesson-34",
+    "order": 3,
+    "answerRo": "nervos",
+    "pronunciation": "нерво́с",
+    "promptRu": "нервный / раздражённый"
+  },
+  {
+    "id": "lesson-34:card-04",
+    "lessonId": "lesson-34",
+    "order": 4,
+    "answerRo": "liniștit",
+    "pronunciation": "линишти́т",
+    "promptRu": "спокойный"
+  },
+  {
+    "id": "lesson-34:card-05",
+    "lessonId": "lesson-34",
+    "order": 5,
+    "answerRo": "relaxat",
+    "pronunciation": "релакса́т",
+    "promptRu": "расслабленный"
+  },
+  {
+    "id": "lesson-34:card-06",
+    "lessonId": "lesson-34",
+    "order": 6,
+    "answerRo": "fericit",
+    "pronunciation": "феричи́т",
+    "promptRu": "счастливый"
+  },
+  {
+    "id": "lesson-34:card-07",
+    "lessonId": "lesson-34",
+    "order": 7,
+    "answerRo": "trist",
+    "pronunciation": "трист",
+    "promptRu": "грустный"
+  },
+  {
+    "id": "lesson-34:card-08",
+    "lessonId": "lesson-34",
+    "order": 8,
+    "answerRo": "mulțumit",
+    "pronunciation": "мулцуми́т",
+    "promptRu": "довольный"
+  },
+  {
+    "id": "lesson-34:card-09",
+    "lessonId": "lesson-34",
+    "order": 9,
+    "answerRo": "dezamăgit",
+    "pronunciation": "дезамэджи́т",
+    "promptRu": "разочарованный"
+  },
+  {
+    "id": "lesson-34:card-10",
+    "lessonId": "lesson-34",
+    "order": 10,
+    "answerRo": "îngrijorat",
+    "pronunciation": "ынгрижора́т",
+    "promptRu": "обеспокоенный"
+  },
+  {
+    "id": "lesson-34:card-11",
+    "lessonId": "lesson-34",
+    "order": 11,
+    "answerRo": "plictisit",
+    "pronunciation": "пликтиси́т",
+    "promptRu": "скучающий"
+  },
+  {
+    "id": "lesson-34:card-12",
+    "lessonId": "lesson-34",
+    "order": 12,
+    "answerRo": "surprins",
+    "pronunciation": "сурпри́нс",
+    "promptRu": "удивлённый"
+  },
+  {
+    "id": "lesson-34:card-13",
+    "lessonId": "lesson-34",
+    "order": 13,
+    "answerRo": "entuziasmat",
+    "pronunciation": "энтузиасма́т",
+    "promptRu": "воодушевлённый"
+  },
+  {
+    "id": "lesson-34:card-14",
+    "lessonId": "lesson-34",
+    "order": 14,
+    "answerRo": "mă simt bine",
+    "pronunciation": "мэ симт би́не",
+    "promptRu": "я хорошо себя чувствую"
+  },
+  {
+    "id": "lesson-34:card-15",
+    "lessonId": "lesson-34",
+    "order": 15,
+    "answerRo": "sunt obosit",
+    "pronunciation": "сунт обоси́т",
+    "promptRu": "я устал"
+  },
+  {
+    "id": "lesson-34:card-16",
+    "lessonId": "lesson-34",
+    "order": 16,
+    "answerRo": "sunt stresat",
+    "pronunciation": "сунт стреса́т",
+    "promptRu": "я в стрессе"
+  },
+  {
+    "id": "lesson-34:card-17",
+    "lessonId": "lesson-34",
+    "order": 17,
+    "answerRo": "sunt liniștit",
+    "pronunciation": "сунт линишти́т",
+    "promptRu": "я спокоен"
+  },
+  {
+    "id": "lesson-34:card-18",
+    "lessonId": "lesson-34",
+    "order": 18,
+    "answerRo": "sunt mulțumit de",
+    "pronunciation": "сунт мулцуми́т де",
+    "promptRu": "я доволен"
+  },
+  {
+    "id": "lesson-34:card-19",
+    "lessonId": "lesson-34",
+    "order": 19,
+    "answerRo": "sunt dezamăgit de",
+    "pronunciation": "сунт дезамэджи́т де",
+    "promptRu": "я разочарован"
+  },
+  {
+    "id": "lesson-34:card-20",
+    "lessonId": "lesson-34",
+    "order": 20,
+    "answerRo": "mi-e frică",
+    "pronunciation": "мье фри́кэ",
+    "promptRu": "мне страшно"
+  },
+  {
+    "id": "lesson-34:card-21",
+    "lessonId": "lesson-34",
+    "order": 21,
+    "answerRo": "mi-e dor de",
+    "pronunciation": "мье дор де",
+    "promptRu": "я скучаю по"
+  },
+  {
+    "id": "lesson-34:card-22",
+    "lessonId": "lesson-34",
+    "order": 22,
+    "answerRo": "am chef să",
+    "pronunciation": "ам кеф сэ",
+    "promptRu": "мне хочется сделать"
+  },
+  {
+    "id": "lesson-34:card-23",
+    "lessonId": "lesson-34",
+    "order": 23,
+    "answerRo": "am chef de",
+    "pronunciation": "ам кеф де",
+    "promptRu": "мне хочется чего-то"
   }
 ];
 
@@ -4670,6 +5398,49 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
       "lesson-27",
       "lesson-28",
       "lesson-29"
+    ]
+  },
+  {
+    "id": "lesson-31",
+    "lessonId": "lesson-31",
+    "kind": "lesson",
+    "sourceLessonIds": [
+      "lesson-31"
+    ]
+  },
+  {
+    "id": "lesson-32",
+    "lessonId": "lesson-32",
+    "kind": "lesson",
+    "sourceLessonIds": [
+      "lesson-32"
+    ]
+  },
+  {
+    "id": "lesson-33",
+    "lessonId": "lesson-33",
+    "kind": "lesson",
+    "sourceLessonIds": [
+      "lesson-33"
+    ]
+  },
+  {
+    "id": "lesson-34",
+    "lessonId": "lesson-34",
+    "kind": "lesson",
+    "sourceLessonIds": [
+      "lesson-34"
+    ]
+  },
+  {
+    "id": "lesson-35",
+    "lessonId": "lesson-35",
+    "kind": "recall",
+    "sourceLessonIds": [
+      "lesson-31",
+      "lesson-32",
+      "lesson-33",
+      "lesson-34"
     ]
   }
 ];
