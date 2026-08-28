@@ -1,9 +1,9 @@
 {
   "id": "./",
-  "name": "Calea — студия чтения",
+  "name": "Calea — reading studio",
   "short_name": "Calea",
-  "description": "Румынский через чтение: короткие уроки и рассказы с прогрессом по каждому тексту.",
-  "lang": "ru",
+  "description": "Romanian through reading: short lessons and stories with progress for every text.",
+  "lang": "en",
   "start_url": "./#/",
   "scope": "./",
   "display": "standalone",

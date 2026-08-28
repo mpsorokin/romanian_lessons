@@ -1,5 +1,6 @@
 import { BookOpenText, Check } from "@phosphor-icons/react";
 import { useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { BackButton } from "@/components/ui/BackButton";
 
@@ -15,14 +16,13 @@ import { useReaderScroll } from "@/features/reader/useReaderScroll";
 import { ReaderNotFoundPage } from "@/features/reading/pages/ReaderNotFoundPage";
 
 export function StoryPage() {
+  const { t } = useTranslation();
   const { id = "" } = useParams();
   const story = findContent("story", id);
   const { settings } = useReaderSettings();
   const { getProgressSnapshot, saveStoryPosition } = useProgressActions();
   const { body, error } = useContentBody(story);
 
-  // Read once per story: the live value changes on every scroll save and would restart the
-  // restore effect. Keyed by id because the route reuses this component across `/stories/:id`.
   const initial = useRef<{ id: string; position: number } | null>(null);
   if (story && initial.current?.id !== story.id) {
     initial.current = { id: story.id, position: getProgressSnapshot().stories[story.id]?.resumePosition ?? 0 };
@@ -38,13 +38,18 @@ export function StoryPage() {
 
   const scrollRef = useReaderScroll(story?.id ?? "missing", initialPosition, savePosition, body !== null);
 
-  if (!story) return <ReaderNotFoundPage kind="рассказ" />;
+  if (!story) return <ReaderNotFoundPage kind="story" />;
 
   return (
     <ReaderShell theme={settings.theme} className="reader-shell--story">
       <header className="reader-header">
         <BackButton to="/library/stories" />
-        <div className="reader-header__title"><span>Рассказ {String(story.order).padStart(2, "0")} · {story.level ?? "A1"}</span><strong>{story.title}</strong></div>
+        <div className="reader-header__title">
+          <span>
+            {t("reader.storyHeader", { order: String(story.order).padStart(2, "0"), level: story.level ?? "A1" })}
+          </span>
+          <strong>{story.title}</strong>
+        </div>
         <ReaderControls />
       </header>
       <div
@@ -57,10 +62,15 @@ export function StoryPage() {
           {body !== null ? (
             <MarkdownViewer markdown={body} />
           ) : (
-            <p className="reader-placeholder">{error ? "Не удалось загрузить рассказ." : "Загрузка…"}</p>
+            <p className="reader-placeholder">{error ? t("reader.loadStoryError") : t("common.loading")}</p>
           )}
         </article>
-        <div className="reader-meta"><BookOpenText size={16} aria-hidden="true" /> <span>{story.wordCount ?? "—"} слов</span><span>·</span><span>{story.subtitle}</span></div>
+        <div className="reader-meta">
+          <BookOpenText size={16} aria-hidden="true" />{" "}
+          <span>{story.wordCount ? t("reader.wordCount", { count: story.wordCount }) : "—"}</span>
+          <span>·</span>
+          <span>{story.subtitle}</span>
+        </div>
         <StoryCompleteAction storyId={story.id} />
       </div>
     </ReaderShell>
@@ -68,6 +78,7 @@ export function StoryPage() {
 }
 
 function StoryProgressTop({ storyId, wordCount }: { storyId: string; wordCount?: number }) {
+  const { t } = useTranslation();
   const progress = useProgressState();
   const entry = progress.stories[storyId];
   const maxProgress = entry?.maxProgress ?? 0;
@@ -76,13 +87,17 @@ function StoryProgressTop({ storyId, wordCount }: { storyId: string; wordCount?:
 
   return (
     <div className="story-progress-top">
-      <div><span>{estimatedWords} / {wordCount ?? "—"} слов</span><span>({achievedPercent}%)</span></div>
-      <ProgressBar value={maxProgress} label="Прочитанный текст" />
+      <div>
+        <span>{t("reader.wordsReadProgress", { read: estimatedWords, total: wordCount ?? "—" })}</span>
+        <span>({achievedPercent}%)</span>
+      </div>
+      <ProgressBar value={maxProgress} label={t("reader.readText")} />
     </div>
   );
 }
 
 function StoryCompleteAction({ storyId }: { storyId: string }) {
+  const { t } = useTranslation();
   const { completeStory } = useProgressActions();
   const progress = useProgressState();
   const completed = progress.stories[storyId]?.completed ?? false;
@@ -90,7 +105,7 @@ function StoryCompleteAction({ storyId }: { storyId: string }) {
   return (
     <div className="reader-action">
       <button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={() => completeStory(storyId)} disabled={completed}>
-        {completed && <Check size={17} weight="bold" />} {completed ? "Прочитано" : "Отметить прочитанным"}
+        {completed && <Check size={17} weight="bold" />} {completed ? t("reader.read") : t("reader.markRead")}
       </button>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useReducer } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { DeckOverview } from "@/features/cards/components/DeckOverview";
@@ -72,6 +73,7 @@ function sessionReducer(state: SessionState, event: SessionEvent): SessionState 
 }
 
 export function CardDeckPage() {
+  const { t } = useTranslation();
   const { deckId = "" } = useParams();
   const deck = findCardDeck(deckId);
   const lesson = deck ? findContent("lesson", deck.lessonId) : undefined;
@@ -106,7 +108,7 @@ export function CardDeckPage() {
 
   if (session.cards) {
     return (
-      <AppShell title="Карточки" showBack right={<span />} className="card-session-shell">
+      <AppShell title={t("cards.title")} showBack right={<span />} className="card-session-shell">
         <StudySession
           lessonTitle={lesson.title}
           card={session.cards[session.index]}
@@ -123,7 +125,7 @@ export function CardDeckPage() {
 
   if (session.summaryVisible) {
     return (
-      <AppShell title="Карточки" showBack right={<span />} className="card-deck-shell">
+      <AppShell title={t("cards.title")} showBack right={<span />} className="card-deck-shell">
         <SessionSummary
           remembered={session.remembered}
           repeat={session.repeat}
@@ -136,13 +138,14 @@ export function CardDeckPage() {
   }
 
   const sourceLessons = deck.sourceLessonIds.map((id) => findContent("lesson", id)).filter(Boolean);
-  const sourceLabel = deck.kind === "recall"
-    ? `${lesson.level} · Повторение уроков ${sourceLessons.map((item) => item?.order).join("–")}`
-    : `${lesson.level} · Русский → румынский`;
+  const sourceLabel =
+    deck.kind === "recall"
+      ? t("cards.recallDeckSource", { level: lesson.level, orders: sourceLessons.map((item) => item?.order).join("–") })
+      : t("cards.lessonDeckSource", { level: lesson.level });
   const hasAdaptiveCards = deckProgress.newCount + deckProgress.learning > 0;
 
   return (
-    <AppShell title="Карточки" showBack right={<span />} className="card-deck-shell">
+    <AppShell title={t("cards.title")} showBack right={<span />} className="card-deck-shell">
       <DeckOverview
         title={lesson.title}
         subtitle={lesson.subtitle}

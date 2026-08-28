@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 
@@ -20,12 +21,14 @@ interface NotFoundProps {
  * The single empty/missing/crashed state. Four screens rendered this markup by
  * hand before, which is why the copy is entirely prop-driven.
  */
-export function NotFound({ title, description, action, eyebrow = "ОШИБКА", icon, detail }: NotFoundProps) {
+export function NotFound({ title, description, action, eyebrow, icon, detail }: NotFoundProps) {
+  const { t } = useTranslation();
+
   return (
     <AppShell className="not-found-shell">
       <div className="not-found">
         {icon}
-        <p className="eyebrow">{eyebrow}</p>
+        <p className="eyebrow">{eyebrow ?? t("common.error")}</p>
         <h2>{title}</h2>
         <p>{description}</p>
         {"to" in action ? (

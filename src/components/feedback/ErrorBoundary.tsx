@@ -1,4 +1,5 @@
 import { Component, type ErrorInfo, type ReactNode } from "react";
+import i18n from "@/i18n";
 import { NotFound } from "@/components/feedback/NotFound";
 
 /**
@@ -33,13 +34,11 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBound
     const stale = isChunkLoadError(error);
     return (
       <NotFound
-        title={stale ? "Приложение обновилось" : "Что-то пошло не так"}
+        title={stale ? i18n.t("errors.appUpdated") : i18n.t("errors.somethingWrong")}
         description={
-          stale
-            ? "Вышла новая версия — перезагрузите страницу, чтобы продолжить чтение."
-            : "Попробуйте перезагрузить страницу. Прогресс чтения сохранён."
+          stale ? i18n.t("errors.appUpdatedDescription") : i18n.t("errors.somethingWrongDescription")
         }
-        action={{ label: "Перезагрузить", onClick: () => window.location.reload() }}
+        action={{ label: i18n.t("errors.reload"), onClick: () => window.location.reload() }}
         detail={!stale && <code className="error-detail">{error.message}</code>}
       />
     );

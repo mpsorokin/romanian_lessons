@@ -16,3 +16,4 @@ Preflight — `src/styles/base.css` is the reset, and Preflight would change the
 - Use the Calea app mark as a gold (`#E0BC79`) monoline "C" shaped like a path on a near-black (`#111210`) field.
 - Keep the install experience manifest-based and online-only: no service worker, offline cache, or custom install prompt unless explicitly requested later.
 - Keep Cards as a standalone fifth navigation area with Russian-to-Romanian active recall, immediate deck availability, and progress stored independently from lesson/story reading.
+- Keep the app chrome bilingual (English and Russian) via i18next. Default interface language is English; the choice persists in `calea:locale`. Lesson, story, and grammar markdown in `src/content/` and card study content (Russian prompt → Romanian answer) stay independent of the UI language.

@@ -1,27 +1,29 @@
 import { BookOpenText, Books, MagnifyingGlass, TextT, X } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, NavLink, Navigate, useParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { ContinueArrow, LessonRow, StoryRow } from "@/features/reading/components/ContentRow";
 import { GrammarRow } from "@/features/grammar/components/GrammarRow";
-import { grammarMatches, groupGrammarTopics, topicsCountLabel } from "@/features/grammar/grammar";
+import { grammarMatches, groupGrammarTopics } from "@/features/grammar/grammar";
+import { grammarCategoryLabel } from "@/features/grammar/grammarLabels";
 import { grammarContent, lessonContent, storyContent } from "@/lib/content";
 import { completedLessonCount, completedStoryCount } from "@/features/reading/metrics";
 import { useProgress } from "@/features/reading/useProgress";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
 const segments = [
-  { id: "lessons", label: "Уроки" },
-  { id: "stories", label: "Рассказы" },
-  { id: "grammar", label: "Грамматика" },
+  { id: "lessons", labelKey: "library.lessons" },
+  { id: "stories", labelKey: "library.stories" },
+  { id: "grammar", labelKey: "library.grammar" },
 ] as const;
 
 type LibrarySection = (typeof segments)[number]["id"];
 
-const sectionTitles: Record<LibrarySection, string> = {
-  lessons: "Уроки",
-  stories: "Рассказы",
-  grammar: "Грамматика",
+const sectionTitleKeys: Record<LibrarySection, "library.lessons" | "library.stories" | "library.grammar"> = {
+  lessons: "library.lessons",
+  stories: "library.stories",
+  grammar: "library.grammar",
 };
 
 function isLibrarySection(value: string | undefined): value is LibrarySection {
@@ -43,25 +45,24 @@ export function LibraryPage() {
 }
 
 function LibraryHome() {
+  const { t } = useTranslation();
   const { progress } = useProgress();
   const lessonsDone = completedLessonCount(progress);
   const storiesDone = completedStoryCount(progress);
 
   return (
-    <AppShell title="Библиотека" className="library-shell library-shell--home">
+    <AppShell title={t("library.title")} className="library-shell library-shell--home">
       <div className="library-home-intro">
-        <p className="eyebrow">КОЛЛЕКЦИИ</p>
-        <p>Уроки, рассказы и справочник грамматики — всё для чтения и повторения.</p>
+        <p className="eyebrow">{t("library.collectionsEyebrow")}</p>
+        <p>{t("library.homeIntro")}</p>
       </div>
 
-      <div className="library-collections" aria-label="Разделы библиотеки">
+      <div className="library-collections" aria-label={t("library.sections")}>
         <Link to="/library/lessons" className="library-collection-card">
           <BookOpenText size={24} weight="regular" aria-hidden="true" />
           <div>
-            <strong>Уроки</strong>
-            <span>
-              {lessonsDone} / {lessonContent.length} пройдено
-            </span>
+            <strong>{t("library.lessons")}</strong>
+            <span>{t("library.lessonsProgress", { done: lessonsDone, total: lessonContent.length })}</span>
             <ProgressBar value={lessonContent.length ? lessonsDone / lessonContent.length : 0} />
           </div>
           <ContinueArrow />
@@ -70,10 +71,8 @@ function LibraryHome() {
         <Link to="/library/stories" className="library-collection-card">
           <Books size={24} weight="regular" aria-hidden="true" />
           <div>
-            <strong>Рассказы</strong>
-            <span>
-              {storiesDone} / {storyContent.length} прочитано
-            </span>
+            <strong>{t("library.stories")}</strong>
+            <span>{t("library.storiesProgress", { done: storiesDone, total: storyContent.length })}</span>
             <ProgressBar value={storyContent.length ? storiesDone / storyContent.length : 0} />
           </div>
           <ContinueArrow />
@@ -82,8 +81,8 @@ function LibraryHome() {
         <Link to="/library/grammar" className="library-collection-card">
           <TextT size={24} weight="regular" aria-hidden="true" />
           <div>
-            <strong>Грамматика</strong>
-            <span>{grammarContent.length} тем · справочник</span>
+            <strong>{t("library.grammar")}</strong>
+            <span>{t("library.grammarCount", { count: grammarContent.length })}</span>
           </div>
           <ContinueArrow />
         </Link>
@@ -93,6 +92,7 @@ function LibraryHome() {
 }
 
 function LibrarySectionView({ section }: { section: LibrarySection }) {
+  const { t } = useTranslation();
   const { getLessonStatus, getStoryProgress } = useProgress();
   const [query, setQuery] = useState("");
 
@@ -106,11 +106,11 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
   );
 
   return (
-    <AppShell title={sectionTitles[section]} showBack backTo="/library" className="library-shell">
-      <nav className="library-segments" aria-label="Разделы библиотеки">
-        {segments.map(({ id, label }) => (
+    <AppShell title={t(sectionTitleKeys[section])} showBack backTo="/library" className="library-shell">
+      <nav className="library-segments" aria-label={t("library.sections")}>
+        {segments.map(({ id, labelKey }) => (
           <NavLink key={id} to={`/library/${id}`} className={({ isActive }) => (isActive ? "active" : undefined)}>
-            {label}
+            {t(labelKey)}
           </NavLink>
         ))}
       </nav>
@@ -118,7 +118,7 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
       {section === "lessons" && (
         <>
           <div className="list-intro">
-            <p>{lessonContent.length} небольших уроков о языке и жизни в Румынии.</p>
+            <p>{t("library.lessonsIntro", { count: lessonContent.length })}</p>
           </div>
           <div className="content-list">
             {lessonContent.map((lesson) => (
@@ -131,7 +131,7 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
       {section === "stories" && (
         <>
           <div className="list-intro">
-            <p>Читайте короткие истории и возвращайтесь к ним в удобном темпе.</p>
+            <p>{t("library.storiesIntro")}</p>
           </div>
           <div className="content-list">
             {storyContent.map((story) => {
@@ -145,32 +145,32 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
       {section === "grammar" && (
         <>
           <div className="grammar-intro">
-            <p className="eyebrow">СПРАВОЧНИК</p>
-            <p>Быстро находите правило, таблицу или конструкцию и возвращайтесь к чтению.</p>
+            <p className="eyebrow">{t("library.grammarEyebrow")}</p>
+            <p>{t("library.grammarIntro")}</p>
           </div>
 
           <form className="grammar-search" role="search" onSubmit={(event) => event.preventDefault()}>
             <MagnifyingGlass size={18} aria-hidden="true" />
             <label className="sr-only" htmlFor="grammar-search-input">
-              Найти правило
+              {t("library.searchLabel")}
             </label>
             <input
               id="grammar-search-input"
               type="search"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Найти правило или тег"
+              placeholder={t("library.searchPlaceholder")}
               autoComplete="off"
             />
             {query && (
-              <button type="button" className="grammar-search__clear" onClick={() => setQuery("")} aria-label="Очистить поиск">
+              <button type="button" className="grammar-search__clear" onClick={() => setQuery("")} aria-label={t("library.clearSearch")}>
                 <X size={16} aria-hidden="true" />
               </button>
             )}
           </form>
 
           <p className="grammar-results-count" aria-live="polite">
-            {topicsCountLabel(visibleTopics.length)}
+            {t("grammar.topicsCount", { count: visibleTopics.length })}
           </p>
 
           {grammarGroups.length > 0 ? (
@@ -178,8 +178,8 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
               {grammarGroups.map(({ category, topics }) => (
                 <section className="grammar-category" key={category.id} aria-labelledby={`grammar-category-${category.id}`}>
                   <div className="grammar-category__heading">
-                    <h2 id={`grammar-category-${category.id}`}>{category.label}</h2>
-                    <span>{topicsCountLabel(topics.length)}</span>
+                    <h2 id={`grammar-category-${category.id}`}>{grammarCategoryLabel(t, category.id)}</h2>
+                    <span>{t("grammar.topicsCount", { count: topics.length })}</span>
                   </div>
                   <div className="grammar-topic-list">
                     {topics.map((topic) => (
@@ -191,10 +191,10 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
             </div>
           ) : (
             <div className="grammar-empty" role="status">
-              <strong>Ничего не найдено</strong>
-              <p>Попробуйте название на румынском, перевод или тег.</p>
+              <strong>{t("library.emptyTitle")}</strong>
+              <p>{t("library.emptyHint")}</p>
               <button type="button" className="outline-button" onClick={() => setQuery("")}>
-                Показать все темы
+                {t("library.showAllTopics")}
               </button>
             </div>
           )}

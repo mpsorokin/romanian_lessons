@@ -1,4 +1,5 @@
 import { ArrowRight } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 /** Shown once a session runs out of cards. */
@@ -12,19 +13,31 @@ export function SessionSummary({
   /** Absent when nothing was marked for repetition. */
   onRepeatDifficult?: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <section className="card-summary">
-      <p className="eyebrow">СЕССИЯ ЗАВЕРШЕНА</p>
-      <h1>Хорошая работа</h1>
-      <p>Ты отметил знакомыми {remembered} из {remembered + repeat} карточек.</p>
+      <p className="eyebrow">{t("cards.sessionDoneEyebrow")}</p>
+      <h1>{t("cards.goodJob")}</h1>
+      <p>{t("cards.sessionSummary", { remembered, total: remembered + repeat })}</p>
       <div className="card-summary__stats">
-        <div><strong>{remembered}</strong><span>вспомнил</span></div>
-        <div><strong>{repeat}</strong><span>на повторении</span></div>
+        <div>
+          <strong>{remembered}</strong>
+          <span>{t("cards.rememberedStat")}</span>
+        </div>
+        <div>
+          <strong>{repeat}</strong>
+          <span>{t("cards.repeatStat")}</span>
+        </div>
       </div>
       {onRepeatDifficult && (
-        <button className="primary-button" type="button" onClick={onRepeatDifficult}>Повторить сложные</button>
+        <button className="primary-button" type="button" onClick={onRepeatDifficult}>
+          {t("cards.repeatDifficult")}
+        </button>
       )}
-      <Link className="secondary-button" to="/cards">К списку колод <ArrowRight size={17} /></Link>
+      <Link className="secondary-button" to="/cards">
+        {t("cards.backToDecks")} <ArrowRight size={17} />
+      </Link>
     </section>
   );
 }

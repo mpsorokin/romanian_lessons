@@ -1,4 +1,5 @@
 import { ArrowLeft } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProgressRing } from "@/components/ui/ProgressRing";
@@ -21,32 +22,40 @@ export function DeckOverview({
   /** Absent once nothing is left to learn — then the adaptive button replays the deck. */
   onStartAll?: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <>
-      <Link className="card-deck-back" to="/cards"><ArrowLeft size={16} /> Все колоды</Link>
+      <Link className="card-deck-back" to="/cards">
+        <ArrowLeft size={16} /> {t("cards.allDecks")}
+      </Link>
       <section className="card-deck-hero">
         <p className="eyebrow">{sourceLabel}</p>
         <h1>{title}</h1>
         <p>{subtitle}</p>
         <div className="card-deck-hero__progress">
-          <ProgressRing value={progress.percent} label={`${Math.round(progress.percent * 100)}% карточек закреплено`} />
+          <ProgressRing value={progress.percent} label={t("cards.percentMastered", { percent: Math.round(progress.percent * 100) })} />
           <div>
-            <strong>{progress.known} из {progress.total}</strong>
-            <span>закреплено</span>
+            <strong>{t("cards.masteredCount", { known: progress.known, total: progress.total })}</strong>
+            <span>{t("cards.mastered")}</span>
             <ProgressBar value={progress.percent} />
           </div>
         </div>
       </section>
       <div className="card-deck-actions">
         <button className="primary-button" type="button" onClick={onStartAdaptive}>
-          {onStartAll ? "Продолжить" : "Повторить колоду"}
+          {onStartAll ? t("cards.continue") : t("cards.reviewDeck")}
         </button>
-        {onStartAll && <button className="secondary-button" type="button" onClick={onStartAll}>Повторить всё</button>}
+        {onStartAll && (
+          <button className="secondary-button" type="button" onClick={onStartAll}>
+            {t("cards.reviewAll")}
+          </button>
+        )}
       </div>
       <div className="card-deck-breakdown">
-        <span>{progress.newCount} новых</span>
-        <span>{progress.learning} на повторении</span>
-        <span>{progress.known} закреплено</span>
+        <span>{t("cards.newCount", { count: progress.newCount })}</span>
+        <span>{t("cards.learningCount", { count: progress.learning })}</span>
+        <span>{t("cards.masteredCountShort", { count: progress.known })}</span>
       </div>
     </>
   );

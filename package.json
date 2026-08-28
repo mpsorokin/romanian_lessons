@@ -1,6 +1,6 @@
 {
   "name": "romanian-learn",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "test:sites": "node --test tests/sites-worker.test.mjs",
     "test:cards": "npm run generate:cards && node --test tests/cards.test.mjs",
+    "test:i18n": "node --test tests/i18n.test.mjs",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
@@ -17,8 +18,10 @@
     "@fontsource/lora": "5.3.0",
     "@phosphor-icons/react": "2.1.10",
     "@vitejs/plugin-react": "6.1.0",
+    "i18next": "^26.4.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-i18next": "^17.0.12",
     "react-markdown": "10.1.0",
     "react-router-dom": "7.18.2",
     "remark-gfm": "4.0.1",

@@ -1,4 +1,5 @@
 import { ArrowLeft, Gear } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -23,6 +24,7 @@ export function AppShell({
   right?: ReactNode;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const tabRoot = Boolean(title && !showBack);
   const titled = Boolean(title && (showBack || tabRoot));
@@ -34,11 +36,11 @@ export function AppShell({
         <header className={`app-header ${titled ? "app-header--titled" : ""}`}>
           {showBack ? (
             backTo ? (
-              <Link className="icon-button" to={backTo} aria-label="Назад">
+              <Link className="icon-button" to={backTo} aria-label={t("common.back")}>
                 <ArrowLeft size={21} aria-hidden="true" />
               </Link>
             ) : (
-              <button className="icon-button" type="button" aria-label="Назад" onClick={() => navigate(-1)}>
+              <button className="icon-button" type="button" aria-label={t("common.back")} onClick={() => navigate(-1)}>
                 <ArrowLeft size={21} aria-hidden="true" />
               </button>
             )
@@ -54,7 +56,7 @@ export function AppShell({
             (showBack || tabRoot ? (
               <span />
             ) : isHome ? (
-              <Link className="icon-button" to="/settings" aria-label="Настройки">
+              <Link className="icon-button" to="/settings" aria-label={t("common.settings")}>
                 <Gear size={21} />
               </Link>
             ) : (

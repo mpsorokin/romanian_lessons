@@ -21,7 +21,7 @@ export default defineConfig({
     outDir: "dist/client",
   },
   optimizeDeps: {
-    include: ["react", "react-dom/client", "@phosphor-icons/react"],
+    include: ["react", "react-dom/client", "@phosphor-icons/react", "i18next", "react-i18next"],
   },
   server: {
     host: "0.0.0.0",

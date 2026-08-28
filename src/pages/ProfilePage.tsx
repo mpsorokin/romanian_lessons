@@ -1,4 +1,5 @@
 import { ArrowRight, BookOpenText, Books, CardsThree, Gear, Stack } from "@phosphor-icons/react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
@@ -18,6 +19,7 @@ import { useCardProgressState } from "@/features/cards/useCardProgress";
 import { getTotalCardProgress } from "@/features/cards/cardStats";
 
 export function ProfilePage() {
+  const { t } = useTranslation();
   const { progress } = useProgress();
   const cardProgress = useCardProgressState();
   const lessonsDone = completedLessonCount(progress);
@@ -29,72 +31,65 @@ export function ProfilePage() {
   const lastStory = getLastTouched(storyContent, progress, "story");
 
   return (
-    <AppShell title="Профиль" className="profile-shell">
+    <AppShell title={t("profile.title")} className="profile-shell">
       <section className="profile-identity">
         <div className="avatar-mark">C</div>
         <div>
-          <h2>Локальный профиль</h2>
+          <h2>{t("profile.localProfile")}</h2>
           <p>
-            Добро пожаловать
-            <br />в Calea.
+            {t("profile.welcome")}
+            <br />
+            {t("profile.welcomeTo")}
           </p>
         </div>
       </section>
 
       <section className="dark-card profile-progress-card">
-        <p className="eyebrow">ПРОГРЕСС КУРСА</p>
+        <p className="eyebrow">{t("profile.courseProgressEyebrow")}</p>
         <div className="profile-progress-top">
-          <ProgressRing value={courseProgress} label="Общий прогресс" />
+          <ProgressRing value={courseProgress} label={t("profile.overallProgress")} />
           <div>
-            <strong>Общий прогресс</strong>
-            <span>
-              {materialsDone} из {allContent.length} материалов
-            </span>
+            <strong>{t("profile.overallProgress")}</strong>
+            <span>{t("profile.materialsProgress", { done: materialsDone, total: allContent.length })}</span>
             <ProgressBar value={courseProgress} />
           </div>
         </div>
         <div className="profile-stat-row">
           <BookOpenText size={19} />
-          <span>Пройдено уроков</span>
-          <strong>
-            {lessonsDone} из {lessonContent.length}
-          </strong>
+          <span>{t("profile.lessonsCompleted")}</span>
+          <strong>{t("profile.ofTotal", { done: lessonsDone, total: lessonContent.length })}</strong>
         </div>
         <div className="profile-stat-row">
           <Books size={19} />
-          <span>Прочитано рассказов</span>
-          <strong>
-            {storiesDone} из {storyContent.length}
-          </strong>
+          <span>{t("profile.storiesRead")}</span>
+          <strong>{t("profile.ofTotal", { done: storiesDone, total: storyContent.length })}</strong>
         </div>
         <div className="profile-stat-row">
           <CardsThree size={19} />
-          <span>Закреплено карточек</span>
-          <strong>
-            {cardsDone.known} из {cardsDone.total}
-          </strong>
+          <span>{t("profile.cardsMastered")}</span>
+          <strong>{t("profile.ofTotal", { done: cardsDone.known, total: cardsDone.total })}</strong>
         </div>
         <div className="profile-stat-row">
           <Stack size={19} />
-          <span>Текущий уровень</span>
+          <span>{t("profile.currentLevel")}</span>
           <strong>{getCurrentLevel()}</strong>
         </div>
       </section>
 
       <section className="stats-section profile-details-section">
-        <p className="eyebrow">ДЕТАЛИ</p>
+        <p className="eyebrow">{t("profile.detailsEyebrow")}</p>
         <div className="dark-card detail-card">
-          <DetailRow label="Последний урок" value={lastLesson?.title ?? "Пока нет"} to={lastLesson ? `/lessons/${lastLesson.id}` : undefined} />
-          <DetailRow label="Последний рассказ" value={lastStory?.title ?? "Пока нет"} to={lastStory ? `/stories/${lastStory.id}` : undefined} />
-          <DetailRow label="Средняя длина рассказов" value={`${averageStoryLength(storyContent)} слов`} />
-          <DetailRow label="Примерно прочитано" value={`${estimatedWordsRead(storyContent, progress)} слов`} />
+          <DetailRow label={t("profile.lastLesson")} value={lastLesson?.title ?? t("common.noneYet")} to={lastLesson ? `/lessons/${lastLesson.id}` : undefined} />
+          <DetailRow label={t("profile.lastStory")} value={lastStory?.title ?? t("common.noneYet")} to={lastStory ? `/stories/${lastStory.id}` : undefined} />
+          <DetailRow label={t("profile.avgStoryLength")} value={t("common.words", { count: averageStoryLength(storyContent) })} />
+          <DetailRow label={t("profile.estimatedRead")} value={t("common.words", { count: estimatedWordsRead(storyContent, progress) })} />
         </div>
       </section>
 
       <div className="profile-links">
         <Link to="/settings">
           <span>
-            <Gear size={18} /> Настройки
+            <Gear size={18} /> {t("profile.settingsLink")}
           </span>
           <ArrowRight size={17} />
         </Link>
