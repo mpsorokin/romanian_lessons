@@ -57,7 +57,9 @@ export const StoryRow = memo(function StoryRow({
       <span className="content-row__main">
         <strong>{story.title}</strong>
         {story.subtitle && <small>{story.subtitle}</small>}
-        {percent > 0 && <ProgressBar value={maxProgress} className="story-row__progress" label={t("content.percentRead", { percent })} />}
+        {percent > 0 && !completed && (
+          <ProgressBar value={maxProgress} className="story-row__progress" label={t("content.percentRead", { percent })} />
+        )}
       </span>
       <span className="content-row__meta">{story.level ?? "A1"}</span>
       <span className="content-row__meta content-row__words">

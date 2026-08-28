@@ -49,9 +49,7 @@ export function StoryPage() {
   const savePosition = useCallback(
     (position: number, options?: { force?: boolean }) => {
       setLive((prev) => {
-        if (prev.completed || position >= 0.96) {
-          return { ...prev, progress: 1, completed: true };
-        }
+        if (prev.completed) return prev;
         return { ...prev, progress: position };
       });
       if (story) saveStoryPosition(story.id, position, position, options);
@@ -86,7 +84,7 @@ export function StoryPage() {
         ref={scrollRef}
         style={{ "--reader-size": `${settings.fontSize}px`, "--reader-line-height": settings.lineHeight } as React.CSSProperties}
       >
-        <StoryProgressTop maxProgress={live.progress} wordCount={story.wordCount} />
+        {!live.completed && <StoryProgressTop maxProgress={live.progress} wordCount={story.wordCount} />}
         <article className="reader-article">
           {body !== null ? (
             <MarkdownViewer markdown={body} variant="story" />
@@ -103,7 +101,9 @@ export function StoryPage() {
         <StoryCompleteAction
           storyId={story.id}
           completed={live.completed}
+          scrollRef={scrollRef}
           onCompleted={() => setLive((prev) => ({ ...prev, progress: 1, completed: true }))}
+          onReset={() => setLive({ id: story.id, progress: 0, completed: false })}
         />
       </div>
     </ReaderShell>
@@ -129,18 +129,28 @@ function StoryProgressTop({ maxProgress, wordCount }: { maxProgress: number; wor
 function StoryCompleteAction({
   storyId,
   completed,
+  scrollRef,
   onCompleted,
+  onReset,
 }: {
   storyId: string;
   completed: boolean;
+  scrollRef: React.RefObject<HTMLDivElement | null>;
   onCompleted: () => void;
+  onReset: () => void;
 }) {
   const { t } = useTranslation();
-  const { completeStory } = useProgressActions();
+  const { completeStory, resetStory } = useProgressActions();
 
   const handleComplete = () => {
     completeStory(storyId);
     onCompleted();
+  };
+
+  const handleReset = () => {
+    resetStory(storyId);
+    onReset();
+    scrollRef.current?.scrollTo({ top: 0 });
   };
 
   return (
@@ -148,6 +158,11 @@ function StoryCompleteAction({
       <button className={`primary-button ${completed ? "primary-button--completed" : ""}`} type="button" onClick={handleComplete} disabled={completed}>
         {completed && <Check size={17} weight="bold" />} {completed ? t("reader.read") : t("reader.markRead")}
       </button>
+      {completed && (
+        <button className="reader-secondary-button" type="button" onClick={handleReset}>
+          {t("reader.markStoryNew")}
+        </button>
+      )}
     </div>
   );
 }

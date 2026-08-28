@@ -18,6 +18,7 @@ export interface ProgressActions {
   resetLesson: (id: string) => void;
   saveStoryPosition: (id: string, currentProgress: number, resumePosition?: number, options?: ProgressSaveOptions) => void;
   completeStory: (id: string) => void;
+  resetStory: (id: string) => void;
   saveGrammarPosition: (id: string, position: number, options?: ProgressSaveOptions) => void;
   resetProgress: () => void;
   replaceProgress: (state: ProgressState) => void;
@@ -74,8 +75,17 @@ export function ProgressProvider({ children }: PropsWithChildren) {
       saveLessonPosition: (id, position, options) =>
         commit((current) => {
           const existing = current.lessons[id];
-          if (existing?.status === "completed") return current;
           const nextPosition = clamp(position);
+          if (existing?.status === "completed") {
+            if (!positionMoved(existing.resumePosition, nextPosition, options?.force)) return current;
+            return {
+              ...current,
+              lessons: {
+                ...current.lessons,
+                [id]: { ...existing, resumePosition: nextPosition, updatedAt: now() },
+              },
+            };
+          }
           if (
             existing?.status === "in-progress" &&
             !positionMoved(existing.resumePosition, nextPosition, options?.force)
@@ -112,22 +122,18 @@ export function ProgressProvider({ children }: PropsWithChildren) {
           return { ...current, lessons };
         }),
 
-      saveStoryPosition: (id, currentProgress, resumePosition = currentProgress, options) => {
-        const existing = progressRef.current.stories[id];
-        const nextProgress = clamp(currentProgress);
-        const wasComplete = existing?.completed === true;
-        const shouldComplete = wasComplete || nextProgress >= 0.96;
-        const broadcast = shouldComplete && !wasComplete;
-
+      saveStoryPosition: (id, currentProgress, resumePosition = currentProgress, options) =>
         commit((current) => {
           const entry = current.stories[id];
+          const nextProgress = clamp(currentProgress);
           const nextCurrent = clamp(resumePosition);
-          const nextMax = shouldComplete ? 1 : nextProgress;
+          const isComplete = entry?.completed === true;
+          const nextMax = isComplete ? 1 : nextProgress;
           if (
             entry &&
             !positionMoved(entry.resumePosition, nextCurrent, options?.force) &&
             !positionMoved(entry.maxProgress, nextMax, options?.force) &&
-            entry.completed === shouldComplete
+            entry.completed === isComplete
           ) {
             return current;
           }
@@ -138,14 +144,13 @@ export function ProgressProvider({ children }: PropsWithChildren) {
               [id]: {
                 maxProgress: nextMax,
                 resumePosition: nextCurrent,
-                completed: shouldComplete,
+                completed: isComplete,
                 updatedAt: now(),
-                ...(shouldComplete ? { completedAt: entry?.completedAt ?? now() } : {}),
+                ...(isComplete && entry?.completedAt ? { completedAt: entry.completedAt } : {}),
               },
             },
           };
-        }, broadcast);
-      },
+        }, false),
 
       completeStory: (id) =>
         commit((current) => ({
@@ -154,13 +159,20 @@ export function ProgressProvider({ children }: PropsWithChildren) {
             ...current.stories,
             [id]: {
               maxProgress: 1,
-              resumePosition: 1,
+              resumePosition: current.stories[id]?.resumePosition ?? 0,
               completed: true,
               updatedAt: now(),
               completedAt: current.stories[id]?.completedAt ?? now(),
             },
           },
         })),
+
+      resetStory: (id) =>
+        commit((current) => {
+          if (!current.stories[id]) return current;
+          const { [id]: _removed, ...stories } = current.stories;
+          return { ...current, stories };
+        }),
 
       saveGrammarPosition: (id, position, options) =>
         commit((current) => {
