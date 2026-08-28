@@ -69,18 +69,22 @@ function parseGrammar(value: unknown): Record<string, GrammarProgressRecord> {
   return result;
 }
 
+export function parseProgressState(value: unknown): ProgressState | null {
+  if (!isRecord(value) || value.version !== 1) return null;
+  return {
+    version: 1,
+    lessons: parseLessons(value.lessons),
+    stories: parseStories(value.stories),
+    grammar: parseGrammar(value.grammar),
+  };
+}
+
 export function readProgress(): ProgressState {
   try {
     const raw = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
     if (!raw) return createInitialProgress();
     const parsed: unknown = JSON.parse(raw);
-    if (!isRecord(parsed) || parsed.version !== 1) return createInitialProgress();
-    return {
-      version: 1,
-      lessons: parseLessons(parsed.lessons),
-      stories: parseStories(parsed.stories),
-      grammar: parseGrammar(parsed.grammar),
-    };
+    return parseProgressState(parsed) ?? createInitialProgress();
   } catch {
     return createInitialProgress();
   }

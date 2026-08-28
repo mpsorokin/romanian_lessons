@@ -20,6 +20,7 @@ export interface ProgressActions {
   completeStory: (id: string) => void;
   saveGrammarPosition: (id: string, position: number, options?: ProgressSaveOptions) => void;
   resetProgress: () => void;
+  replaceProgress: (state: ProgressState) => void;
 }
 
 export const ProgressStateContext = createContext<ProgressState | null>(null);
@@ -187,6 +188,12 @@ export function ProgressProvider({ children }: PropsWithChildren) {
         clearProgress();
         progressRef.current = initial;
         setProgress(initial);
+      },
+
+      replaceProgress: (state) => {
+        writeProgress(state);
+        progressRef.current = state;
+        setProgress(state);
       },
     };
   }, [commit, syncProgressState]);

@@ -7,6 +7,7 @@ export interface CardProgressActions {
   getCardStatus: (id: string) => CardStatus | "new";
   markCard: (id: string, result: CardResult) => void;
   resetCardProgress: () => void;
+  replaceCardProgress: (state: CardProgressState) => void;
 }
 
 export const CardProgressStateContext = createContext<CardProgressState | null>(null);
@@ -46,6 +47,11 @@ export function CardProgressProvider({ children }: PropsWithChildren) {
       clearCardProgress();
       progressRef.current = initial;
       setProgress(initial);
+    },
+    replaceCardProgress: (state) => {
+      writeCardProgress(state);
+      progressRef.current = state;
+      setProgress(state);
     },
   }), [apply]);
 

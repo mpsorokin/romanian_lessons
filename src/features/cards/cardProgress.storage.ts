@@ -29,13 +29,17 @@ function parseCards(value: unknown): Record<string, CardProgressRecord> {
   return result;
 }
 
+export function parseCardProgressState(value: unknown): CardProgressState | null {
+  if (!isRecord(value) || value.version !== 1) return null;
+  return { version: 1, cards: parseCards(value.cards) };
+}
+
 export function readCardProgress(): CardProgressState {
   try {
     const raw = window.localStorage.getItem(CARD_PROGRESS_STORAGE_KEY);
     if (!raw) return createInitialCardProgress();
     const parsed: unknown = JSON.parse(raw);
-    if (!isRecord(parsed) || parsed.version !== 1) return createInitialCardProgress();
-    return { version: 1, cards: parseCards(parsed.cards) };
+    return parseCardProgressState(parsed) ?? createInitialCardProgress();
   } catch {
     return createInitialCardProgress();
   }

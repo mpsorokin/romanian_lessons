@@ -1,25 +1,64 @@
-import { ArrowRight, Database, Globe, Moon, SlidersHorizontal, Tag, Trash, TextAa } from "@phosphor-icons/react";
+import { ArrowRight, Database, Export, Globe, Moon, SlidersHorizontal, Tag, Trash, TextAa, Upload } from "@phosphor-icons/react";
+import { useRef, type ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
-import { useProgressActions } from "@/features/reading/useProgress";
-import { useCardProgressActions } from "@/features/cards/useCardProgress";
+import { createProgressBackup, downloadProgressBackup, parseProgressBackup } from "@/features/backup/progressBackup";
+import { useCardProgressActions, useCardProgressState } from "@/features/cards/useCardProgress";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
+import { useProgressActions } from "@/features/reading/useProgress";
 import i18n from "@/i18n";
 import type { AppLocale } from "@/i18n/locale.types";
 
 export function SettingsPage() {
   const { t } = useTranslation();
-  const { resetProgress } = useProgressActions();
-  const { resetCardProgress } = useCardProgressActions();
+  const { getProgressSnapshot, resetProgress, replaceProgress } = useProgressActions();
+  const cardProgress = useCardProgressState();
+  const { resetCardProgress, replaceCardProgress } = useCardProgressActions();
   const { settings } = useReaderSettings();
   const currentLocale = i18n.language as AppLocale;
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   const handleResetReading = () => {
     if (window.confirm(t("settings.resetReadingConfirm"))) resetProgress();
   };
   const handleResetCards = () => {
     if (window.confirm(t("settings.resetCardsConfirm"))) resetCardProgress();
+  };
+
+  const handleExportProgress = () => {
+    const backup = createProgressBackup(getProgressSnapshot(), cardProgress);
+    downloadProgressBackup(backup);
+  };
+
+  const handleImportClick = () => {
+    importInputRef.current?.click();
+  };
+
+  const handleImportFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(await file.text());
+    } catch {
+      window.alert(t("settings.importInvalid"));
+      return;
+    }
+
+    const backup = parseProgressBackup(parsed);
+    if (!backup) {
+      window.alert(t("settings.importInvalid"));
+      return;
+    }
+
+    if (!window.confirm(t("settings.importConfirm"))) return;
+
+    replaceProgress(backup.reading);
+    replaceCardProgress(backup.cards);
+    window.alert(t("settings.importDone"));
   };
 
   const setLocale = (locale: AppLocale) => {
@@ -88,6 +127,18 @@ export function SettingsPage() {
             </span>
             <strong>{t("settings.localStorage")}</strong>
           </div>
+          <button type="button" onClick={handleExportProgress}>
+            <span>
+              <Export size={18} /> {t("settings.exportProgress")}
+            </span>
+            <ArrowRight size={16} />
+          </button>
+          <button type="button" onClick={handleImportClick}>
+            <span>
+              <Upload size={18} /> {t("settings.importProgress")}
+            </span>
+            <ArrowRight size={16} />
+          </button>
           <button type="button" className="settings-danger" onClick={handleResetReading}>
             <span>
               <Trash size={18} /> {t("settings.resetReading")}
@@ -101,6 +152,13 @@ export function SettingsPage() {
             <ArrowRight size={16} />
           </button>
         </div>
+        <input
+          ref={importInputRef}
+          type="file"
+          accept="application/json"
+          hidden
+          onChange={handleImportFile}
+        />
       </section>
       <section className="settings-section">
         <p className="eyebrow">{t("settings.aboutEyebrow")}</p>
