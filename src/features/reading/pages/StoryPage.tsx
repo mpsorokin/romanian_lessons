@@ -43,7 +43,7 @@ export function StoryPage() {
   return (
     <ReaderShell theme={settings.theme} className="reader-shell--story">
       <header className="reader-header">
-        <BackButton to="/stories" />
+        <BackButton to="/library/stories" />
         <div className="reader-header__title"><span>Рассказ {String(story.order).padStart(2, "0")} · {story.level ?? "A1"}</span><strong>{story.title}</strong></div>
         <ReaderControls />
       </header>

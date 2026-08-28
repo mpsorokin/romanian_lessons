@@ -17,6 +17,7 @@
 
 @import "./components/shell.css" layer(components);
 @import "./components/overview.css" layer(components);
+@import "./components/library.css" layer(components);
 @import "./components/content-list.css" layer(components);
 @import "./components/cards.css" layer(components);
 @import "./components/profile.css" layer(components);

@@ -21,7 +21,7 @@ export function GrammarArticlePage() {
   return (
     <ReaderShell theme={settings.theme} className="reader-shell--grammar">
       <header className="reader-header">
-        <BackButton to="/grammar" label="К списку грамматики" />
+        <BackButton to="/library/grammar" label="К списку грамматики" />
         <div className="reader-header__title">
           <span>{getGrammarCategory(topic.category).label} · {topic.level ?? "A1"}</span>
           <strong>{topic.title}</strong>

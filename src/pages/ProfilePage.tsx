@@ -1,10 +1,18 @@
-import { ArrowRight, BookOpenText, Books, CardsThree, Gear, Stack, UserCircle } from "@phosphor-icons/react";
+import { ArrowRight, BookOpenText, Books, CardsThree, Gear, Stack } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProgressRing } from "@/components/ui/ProgressRing";
-import { lessonContent, storyContent, allContent, getCurrentLevel, getLessonLengthLabel } from "@/lib/content";
-import { completedLessonCount, completedMaterialCount, completedStoryCount, overallProgress, getNextLesson } from "@/features/reading/metrics";
+import { lessonContent, storyContent, allContent, getCurrentLevel } from "@/lib/content";
+import {
+  averageStoryLength,
+  completedLessonCount,
+  completedMaterialCount,
+  completedStoryCount,
+  estimatedWordsRead,
+  getLastTouched,
+  overallProgress,
+} from "@/features/reading/metrics";
 import { useProgress } from "@/features/reading/useProgress";
 import { useCardProgressState } from "@/features/cards/useCardProgress";
 import { getTotalCardProgress } from "@/features/cards/cardStats";
@@ -15,24 +23,99 @@ export function ProfilePage() {
   const lessonsDone = completedLessonCount(progress);
   const storiesDone = completedStoryCount(progress);
   const materialsDone = completedMaterialCount(progress);
-  const nextLesson = getNextLesson(lessonContent, progress);
+  const courseProgress = overallProgress(progress, allContent);
   const cardsDone = getTotalCardProgress(cardProgress);
+  const lastLesson = getLastTouched(lessonContent, progress, "lesson");
+  const lastStory = getLastTouched(storyContent, progress, "story");
 
   return (
-    <AppShell className="profile-shell">
-      <div className="profile-heading-row"><h1>Профиль</h1></div>
-      <section className="profile-identity"><div className="avatar-mark">C</div><div><h2>Локальный профиль</h2><p>Добро пожаловать<br />в Calea.</p></div></section>
+    <AppShell title="Профиль" className="profile-shell">
+      <section className="profile-identity">
+        <div className="avatar-mark">C</div>
+        <div>
+          <h2>Локальный профиль</h2>
+          <p>
+            Добро пожаловать
+            <br />в Calea.
+          </p>
+        </div>
+      </section>
+
       <section className="dark-card profile-progress-card">
         <p className="eyebrow">ПРОГРЕСС КУРСА</p>
-        <div className="profile-progress-top"><ProgressRing value={overallProgress(progress, allContent)} label="Общий прогресс" /><div><strong>Общий прогресс</strong><span>Вы на верном пути.</span><ProgressBar value={overallProgress(progress, allContent)} /></div></div>
-        <div className="profile-stat-row"><BookOpenText size={19} /><span>Пройдено уроков</span><strong>{lessonsDone} из {lessonContent.length}</strong></div>
-        <div className="profile-stat-row"><Books size={19} /><span>Прочитано рассказов</span><strong>{storiesDone} из {storyContent.length}</strong></div>
-        <div className="profile-stat-row"><CardsThree size={19} /><span>Закреплено карточек</span><strong>{cardsDone.known} из {cardsDone.total}</strong></div>
-        <div className="profile-stat-row"><Stack size={19} /><span>Текущий уровень</span><strong>{getCurrentLevel()}</strong></div>
+        <div className="profile-progress-top">
+          <ProgressRing value={courseProgress} label="Общий прогресс" />
+          <div>
+            <strong>Общий прогресс</strong>
+            <span>
+              {materialsDone} из {allContent.length} материалов
+            </span>
+            <ProgressBar value={courseProgress} />
+          </div>
+        </div>
+        <div className="profile-stat-row">
+          <BookOpenText size={19} />
+          <span>Пройдено уроков</span>
+          <strong>
+            {lessonsDone} из {lessonContent.length}
+          </strong>
+        </div>
+        <div className="profile-stat-row">
+          <Books size={19} />
+          <span>Прочитано рассказов</span>
+          <strong>
+            {storiesDone} из {storyContent.length}
+          </strong>
+        </div>
+        <div className="profile-stat-row">
+          <CardsThree size={19} />
+          <span>Закреплено карточек</span>
+          <strong>
+            {cardsDone.known} из {cardsDone.total}
+          </strong>
+        </div>
+        <div className="profile-stat-row">
+          <Stack size={19} />
+          <span>Текущий уровень</span>
+          <strong>{getCurrentLevel()}</strong>
+        </div>
       </section>
-      <section className="profile-next-section"><p className="eyebrow">ПРОДОЛЖИТЬ ОБУЧЕНИЕ</p>{nextLesson ? <Link to={`/lessons/${nextLesson.id}`} className="next-card"><div><span>Урок {String(nextLesson.order).padStart(2, "0")} · {nextLesson.level ?? "A1"}</span><strong>{nextLesson.title}</strong><small>{getLessonLengthLabel(nextLesson)}</small></div><ArrowRight size={22} /></Link> : <p className="empty-copy">Все уроки пройдены.</p>}</section>
-      <div className="profile-links"><Link to="/stats"><span><UserCircle size={18} /> Статистика</span><ArrowRight size={17} /></Link><Link to="/settings"><span><Gear size={18} /> Настройки</span><ArrowRight size={17} /></Link></div>
-      <p className="profile-total">Всего материалов: {materialsDone} / {allContent.length}</p>
+
+      <section className="stats-section profile-details-section">
+        <p className="eyebrow">ДЕТАЛИ</p>
+        <div className="dark-card detail-card">
+          <DetailRow label="Последний урок" value={lastLesson?.title ?? "Пока нет"} to={lastLesson ? `/lessons/${lastLesson.id}` : undefined} />
+          <DetailRow label="Последний рассказ" value={lastStory?.title ?? "Пока нет"} to={lastStory ? `/stories/${lastStory.id}` : undefined} />
+          <DetailRow label="Средняя длина рассказов" value={`${averageStoryLength(storyContent)} слов`} />
+          <DetailRow label="Примерно прочитано" value={`${estimatedWordsRead(storyContent, progress)} слов`} />
+        </div>
+      </section>
+
+      <div className="profile-links">
+        <Link to="/settings">
+          <span>
+            <Gear size={18} /> Настройки
+          </span>
+          <ArrowRight size={17} />
+        </Link>
+      </div>
     </AppShell>
+  );
+}
+
+function DetailRow({ label, value, to }: { label: string; value: string; to?: string }) {
+  const content = (
+    <>
+      <span>{label}</span>
+      <strong>{value}</strong>
+      {to && <ArrowRight size={16} />}
+    </>
+  );
+  return to ? (
+    <Link className="detail-row" to={to}>
+      {content}
+    </Link>
+  ) : (
+    <div className="detail-row">{content}</div>
   );
 }

@@ -5,7 +5,10 @@ export function ReaderNotFoundPage({ kind }: { kind: "урок" | "расска�
     <NotFound
       title={`Этот ${kind} не найден`}
       description="Проверьте ссылку или вернитесь к списку материалов."
-      action={{ to: kind === "урок" ? "/lessons" : kind === "рассказ" ? "/stories" : "/grammar", label: "К списку" }}
+      action={{
+        to: kind === "урок" ? "/library/lessons" : kind === "рассказ" ? "/library/stories" : "/library/grammar",
+        label: "К списку",
+      }}
     />
   );
 }

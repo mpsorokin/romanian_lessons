@@ -21,7 +21,9 @@ export function AppShell({
   className?: string;
 }) {
   const navigate = useNavigate();
-  const titled = Boolean(title && showBack);
+  const tabRoot = Boolean(title && !showBack);
+  const titled = Boolean(title && (showBack || tabRoot));
+  const isHome = !title && !showBack;
 
   return (
     <div className="app-background app-background--dark">
@@ -31,6 +33,8 @@ export function AppShell({
             <button className="icon-button" type="button" aria-label="Назад" onClick={() => navigate(-1)}>
               <ArrowLeft size={21} aria-hidden="true" />
             </button>
+          ) : tabRoot ? (
+            <span />
           ) : (
             <Link to="/" className="brand-mark">
               Calea
@@ -38,12 +42,14 @@ export function AppShell({
           )}
           {titled && <h1>{title}</h1>}
           {right ??
-            (showBack ? (
+            (showBack || tabRoot ? (
               <span />
-            ) : (
+            ) : isHome ? (
               <Link className="icon-button" to="/settings" aria-label="Настройки">
                 <Gear size={21} />
               </Link>
+            ) : (
+              <span />
             ))}
         </header>
         <main className="shell-main">{children}</main>

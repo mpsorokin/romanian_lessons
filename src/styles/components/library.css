@@ -1,0 +1,40 @@
+/* Library hub: segmented control for lessons, stories and grammar. */
+
+.library-segments {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: -6px 0 18px;
+  padding: 4px;
+  border: 1px solid var(--color-hairline);
+  border-radius: 14px;
+  background: var(--color-surface);
+}
+
+.library-segments a {
+  min-height: 36px;
+  display: grid;
+  place-items: center;
+  padding: 8px 6px;
+  border-radius: 10px;
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.library-segments a.active {
+  color: var(--color-text);
+  background: var(--color-track);
+}
+
+.library-shell .grammar-intro {
+  margin-bottom: 14px;
+}
+
+.library-shell .grammar-intro p:last-child {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}

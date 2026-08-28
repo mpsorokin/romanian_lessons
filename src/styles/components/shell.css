@@ -15,7 +15,7 @@
 .app-header > .icon-button:last-child { justify-self: end; }
 .eyebrow { margin: 0 0 8px; color: var(--color-muted); font-size: 10px; font-weight: 600; letter-spacing: 0.18em; line-height: 1.2; }
 
-.bottom-nav { display: grid; grid-template-columns: repeat(5, 1fr); min-height: 77px; padding: 10px 10px max(10px, env(safe-area-inset-bottom)); border-top: 1px solid var(--color-hairline); background: var(--color-nav); flex-shrink: 0; }
+.bottom-nav { display: grid; grid-template-columns: repeat(4, 1fr); min-height: 77px; padding: 10px 10px max(10px, env(safe-area-inset-bottom)); border-top: 1px solid var(--color-hairline); background: var(--color-nav); flex-shrink: 0; }
 .bottom-nav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--color-faint); font-size: 10px; }
 .bottom-nav a.active { color: var(--color-gold-bright); }
 .bottom-nav a.active svg { stroke-width: 1.8; }

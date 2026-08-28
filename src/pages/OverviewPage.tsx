@@ -1,89 +1,104 @@
-import { BookOpenText, Books, ArrowUpRight } from "@phosphor-icons/react";
+import { BookOpenText, Books, CardsThree, TextT } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
-import { ContinueArrow, LessonRow } from "@/features/reading/components/ContentRow";
+import { ContinueArrow } from "@/features/reading/components/ContentRow";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-
-import { ProgressRing } from "@/components/ui/ProgressRing";
-import { lessonContent, storyContent, allContent } from "@/lib/content";
-import { completedLessonCount, completedMaterialCount, completedStoryCount, getActiveStory, getNextLesson, getRecentLessons, overallProgress } from "@/features/reading/metrics";
+import { lessonContent, storyContent } from "@/lib/content";
+import { completedLessonCount, completedStoryCount, getActiveStory, getNextLesson } from "@/features/reading/metrics";
 import { useProgress } from "@/features/reading/useProgress";
+import { useCardProgressState } from "@/features/cards/useCardProgress";
+import { getTotalCardProgress } from "@/features/cards/cardStats";
 
 export function OverviewPage() {
-  const { progress, getLessonStatus, getStoryProgress } = useProgress();
+  const { progress, getStoryProgress } = useProgress();
+  const cardProgress = useCardProgressState();
   const completedLessons = completedLessonCount(progress);
   const completedStories = completedStoryCount(progress);
-  const completedMaterials = completedMaterialCount(progress);
-  const courseProgress = overallProgress(progress, allContent);
+  const cardsDone = getTotalCardProgress(cardProgress);
   const nextLesson = getNextLesson(lessonContent, progress);
   const activeStory = getActiveStory(storyContent, progress);
-  const recentLessons = getRecentLessons(lessonContent, progress);
 
   return (
     <AppShell className="dashboard-shell">
-      <section className="dashboard-intro">
-        <div>
-          <p className="eyebrow">STUDIO DE LECTURĂ</p>
-          <h2>Calea</h2>
-          <p className="intro-copy">Румынский через чтение. Короткие уроки и рассказы — с прогрессом по каждому тексту.</p>
-        </div>
-        <div className="dashboard-ring">
-          <ProgressRing value={courseProgress} label="Общий прогресс курса" />
-          <span>из {allContent.length}</span>
-        </div>
-      </section>
-
       <section className="continue-card" aria-label="Продолжить обучение">
         <p className="eyebrow">ПРОДОЛЖИТЬ</p>
         {nextLesson ? (
           <Link to={`/lessons/${nextLesson.id}`} className="continue-card__link">
             <div>
               <h3>{nextLesson.title}</h3>
-              <p>Урок {String(nextLesson.order).padStart(2, "0")} · {nextLesson.level ?? "A1"}</p>
+              <p>
+                Урок {String(nextLesson.order).padStart(2, "0")} · {nextLesson.level ?? "A1"}
+              </p>
             </div>
-            <span className="outline-button">Продолжить <ContinueArrow /></span>
+            <span className="outline-button">
+              Продолжить <ContinueArrow />
+            </span>
           </Link>
         ) : (
           <p className="empty-copy">Все уроки пройдены. Можно перечитать любой текст.</p>
         )}
-        {nextLesson && <ProgressBar value={progress.lessons[nextLesson.id]?.resumePosition ?? 0} label="Позиция урока для продолжения" />}
-      </section>
-
-      <section className="metric-grid" aria-label="Прогресс материалов">
-        <div className="metric-card">
-          <BookOpenText size={25} weight="regular" aria-hidden="true" />
-          <div><p className="eyebrow">УРОКИ</p><strong>{completedLessons} <span>/ {lessonContent.length}</span></strong><small>Пройдено</small></div>
-          <ProgressBar value={lessonContent.length ? completedLessons / lessonContent.length : 0} />
-        </div>
-        <div className="metric-card">
-          <Books size={25} weight="regular" aria-hidden="true" />
-          <div><p className="eyebrow">РАССКАЗЫ</p><strong>{completedStories} <span>/ {storyContent.length}</span></strong><small>Прочитано</small></div>
-          <ProgressBar value={storyContent.length ? completedStories / storyContent.length : 0} />
-        </div>
+        {nextLesson && (
+          <ProgressBar
+            value={progress.lessons[nextLesson.id]?.resumePosition ?? 0}
+            label="Позиция урока для продолжения"
+          />
+        )}
       </section>
 
       {activeStory && (
-        <section className="continue-card" aria-label="Продолжить чтение">
-          <p className="eyebrow">ПРОДОЛЖИТЬ ЧТЕНИЕ</p>
-          <Link to={`/stories/${activeStory.id}`} className="continue-card__link">
-            <div>
-              <h3>{activeStory.title}</h3>
-              <p>{Math.round(getStoryProgress(activeStory.id).maxProgress * 100)}% прочитано</p>
-            </div>
-            <span className="outline-button">Продолжить <ContinueArrow /></span>
-          </Link>
-          <ProgressBar value={getStoryProgress(activeStory.id).maxProgress} label="Прогресс чтения" />
-        </section>
+        <Link to={`/stories/${activeStory.id}`} className="resume-story-row" aria-label="Продолжить чтение рассказа">
+          <div>
+            <p className="eyebrow">ПРОДОЛЖИТЬ ЧТЕНИЕ</p>
+            <strong>{activeStory.title}</strong>
+            <span>{Math.round(getStoryProgress(activeStory.id).maxProgress * 100)}% прочитано</span>
+          </div>
+          <ContinueArrow />
+        </Link>
       )}
 
-      <section className="section-block">
-        <div className="section-heading"><h3>Последние уроки</h3><Link to="/lessons">Все уроки <ArrowUpRight size={15} /></Link></div>
-        <div className="content-list content-list--compact">
-          {recentLessons.map((lesson) => <LessonRow key={lesson.id} lesson={lesson} status={getLessonStatus(lesson.id)} />)}
-        </div>
+      <section className="launcher-grid" aria-label="Разделы приложения">
+        <Link to="/library/lessons" className="launcher-card">
+          <BookOpenText size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <p className="eyebrow">УРОКИ</p>
+            <strong>
+              {completedLessons} <span>/ {lessonContent.length}</span>
+            </strong>
+            <small>Пройдено</small>
+          </div>
+          <ProgressBar value={lessonContent.length ? completedLessons / lessonContent.length : 0} />
+        </Link>
+        <Link to="/library/stories" className="launcher-card">
+          <Books size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <p className="eyebrow">РАССКАЗЫ</p>
+            <strong>
+              {completedStories} <span>/ {storyContent.length}</span>
+            </strong>
+            <small>Прочитано</small>
+          </div>
+          <ProgressBar value={storyContent.length ? completedStories / storyContent.length : 0} />
+        </Link>
+        <Link to="/cards" className="launcher-card">
+          <CardsThree size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <p className="eyebrow">КАРТОЧКИ</p>
+            <strong>
+              {cardsDone.known} <span>/ {cardsDone.total}</span>
+            </strong>
+            <small>Закреплено</small>
+          </div>
+          <ProgressBar value={cardsDone.percent} />
+        </Link>
+        <Link to="/library/grammar" className="launcher-card">
+          <TextT size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <p className="eyebrow">ГРАММАТИКА</p>
+            <strong>Справочник</strong>
+            <small>Правила и таблицы</small>
+          </div>
+        </Link>
       </section>
-
-      <div className="dashboard-footer-stat"><span>Всего материалов</span><strong>{completedMaterials} / {allContent.length}</strong></div>
     </AppShell>
   );
 }

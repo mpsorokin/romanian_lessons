@@ -7,11 +7,9 @@ import { NotFoundPage } from "@/pages/NotFoundPage";
 // The overview is the entry point and stays in the main chunk; everything else —
 // above all the markdown reader — is split off so it never blocks the first paint.
 const LessonPage = lazy(() => import("@/features/reading/pages/LessonPage").then((m) => ({ default: m.LessonPage })));
-const LessonsPage = lazy(() => import("@/features/reading/pages/LessonsPage").then((m) => ({ default: m.LessonsPage })));
-const StoriesPage = lazy(() => import("@/features/reading/pages/StoriesPage").then((m) => ({ default: m.StoriesPage })));
 const StoryPage = lazy(() => import("@/features/reading/pages/StoryPage").then((m) => ({ default: m.StoryPage })));
-const GrammarPage = lazy(() => import("@/features/grammar/pages/GrammarPage").then((m) => ({ default: m.GrammarPage })));
 const GrammarArticlePage = lazy(() => import("@/features/grammar/pages/GrammarArticlePage").then((m) => ({ default: m.GrammarArticlePage })));
+const LibraryPage = lazy(() => import("@/pages/LibraryPage").then((m) => ({ default: m.LibraryPage })));
 const CardsPage = lazy(() => import("@/features/cards/pages/CardsPage").then((m) => ({ default: m.CardsPage })));
 const CardDeckPage = lazy(() => import("@/features/cards/pages/CardDeckPage").then((m) => ({ default: m.CardDeckPage })));
 const ReaderSettingsPage = lazy(() =>
@@ -19,7 +17,6 @@ const ReaderSettingsPage = lazy(() =>
 );
 const ProfilePage = lazy(() => import("@/pages/ProfilePage").then((m) => ({ default: m.ProfilePage })));
 const SettingsPage = lazy(() => import("@/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })));
-const StatsPage = lazy(() => import("@/pages/StatsPage").then((m) => ({ default: m.StatsPage })));
 
 export function App() {
   return (
@@ -27,16 +24,18 @@ export function App() {
       <Providers>
         <Routes>
           <Route path="/" element={<OverviewPage />} />
-          <Route path="/lessons" element={<LessonsPage />} />
+          <Route path="/library" element={<Navigate to="/library/lessons" replace />} />
+          <Route path="/library/:section" element={<LibraryPage />} />
+          <Route path="/lessons" element={<Navigate to="/library/lessons" replace />} />
           <Route path="/lessons/:id" element={<LessonPage />} />
-          <Route path="/stories" element={<StoriesPage />} />
+          <Route path="/stories" element={<Navigate to="/library/stories" replace />} />
           <Route path="/stories/:id" element={<StoryPage />} />
-          <Route path="/grammar" element={<GrammarPage />} />
+          <Route path="/grammar" element={<Navigate to="/library/grammar" replace />} />
           <Route path="/grammar/:id" element={<GrammarArticlePage />} />
           <Route path="/cards" element={<CardsPage />} />
           <Route path="/cards/:deckId" element={<CardDeckPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/stats" element={<StatsPage />} />
+          <Route path="/stats" element={<Navigate to="/profile" replace />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/settings/reader" element={<ReaderSettingsPage />} />
           <Route path="/not-found" element={<NotFoundPage />} />

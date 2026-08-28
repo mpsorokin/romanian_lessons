@@ -56,7 +56,7 @@ export function LessonPage() {
   return (
     <ReaderShell theme={settings.theme} className="reader-shell--lesson">
       <header className="reader-header">
-        <BackButton to="/lessons" />
+        <BackButton to="/library/lessons" />
         <div className="reader-header__title"><span>Урок {String(lesson.order).padStart(2, "0")} · {lesson.level ?? "A1"}</span><strong>{lesson.title}</strong></div>
         <ReaderControls />
       </header>

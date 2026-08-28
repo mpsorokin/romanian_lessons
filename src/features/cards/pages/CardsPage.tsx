@@ -8,7 +8,7 @@ export function CardsPage() {
   const progress = useCardProgressState();
 
   return (
-    <AppShell title="Карточки" showBack className="cards-shell">
+    <AppShell title="Карточки" className="cards-shell">
       <div className="cards-intro">
         <p className="eyebrow">АКТИВНОЕ ВОСПОИЗВЕДЕНИЕ</p>
         <p>Вспоминайте русскую подсказку по-румынски и отмечайте фразы, которые уже закрепились.</p>
