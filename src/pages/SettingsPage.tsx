@@ -1,4 +1,4 @@
-import { ArrowRight, Database, GithubLogo, Globe, Moon, SlidersHorizontal, Tag, Trash, TextAa } from "@phosphor-icons/react";
+import { ArrowRight, Database, Globe, Moon, SlidersHorizontal, Tag, Trash, TextAa } from "@phosphor-icons/react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
@@ -110,12 +110,6 @@ export function SettingsPage() {
               <Tag size={18} /> {t("common.version")}
             </span>
             <strong>{__APP_VERSION__}</strong>
-          </div>
-          <div>
-            <span>
-              <GithubLogo size={18} /> {t("common.github")}
-            </span>
-            <strong>{t("common.soon")}</strong>
           </div>
         </div>
       </section>

@@ -24,6 +24,7 @@ export function CardsPage() {
             deck.kind === "recall"
               ? t("cards.recallSource", { orders: sourceLessons.map((item) => item?.order).join("–") })
               : (lesson.subtitle ?? t("cards.lessonDeckFallback"));
+          const progressSummary = getCardDeckProgress(deck.id, progress);
           return (
             <CardDeckRow
               key={deck.id}
@@ -32,7 +33,10 @@ export function CardsPage() {
               title={lesson.title}
               level={lesson.level}
               sourceLabel={sourceLabel}
-              summary={getCardDeckProgress(deck.id, progress)}
+              known={progressSummary.known}
+              total={progressSummary.total}
+              learning={progressSummary.learning}
+              percent={progressSummary.percent}
             />
           );
         })}

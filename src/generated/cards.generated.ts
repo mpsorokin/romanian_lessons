@@ -16,8 +16,6 @@ export interface GeneratedCardDeck {
   sourceLessonIds: string[];
 }
 
-export const generatedCardCount = 640;
-
 export const generatedStudyCards: GeneratedStudyCard[] = [
   {
     "id": "lesson-01:card-01",

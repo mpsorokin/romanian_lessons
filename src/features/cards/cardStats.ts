@@ -1,4 +1,4 @@
-import { generatedCardCount } from "@/generated/cards.generated";
+import { generatedCardCount } from "@/generated/cards.count";
 import type { CardProgressState } from "@/features/cards/cardProgress.types";
 
 export interface CardDeckProgress {

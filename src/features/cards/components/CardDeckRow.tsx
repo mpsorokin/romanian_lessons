@@ -3,7 +3,6 @@ import { ArrowRight } from "@phosphor-icons/react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import type { CardDeckProgress } from "@/features/cards/cards";
 
 // Primitive props on purpose, like the lesson and story rows: passing the deck
 // and the summary as objects would rebuild them every render and defeat `memo`.
@@ -13,21 +12,27 @@ export const CardDeckRow = memo(function CardDeckRow({
   title,
   level,
   sourceLabel,
-  summary,
+  known,
+  total,
+  learning,
+  percent,
 }: {
   deckId: string;
   order: number;
   title: string;
   level?: string;
   sourceLabel: string;
-  summary: CardDeckProgress;
+  known: number;
+  total: number;
+  learning: number;
+  percent: number;
 }) {
   const { t } = useTranslation();
   const status =
-    summary.percent === 1
+    percent === 1
       ? t("cards.deckMastered")
-      : summary.learning
-        ? t("cards.deckLearning", { count: summary.learning })
+      : learning
+        ? t("cards.deckLearning", { count: learning })
         : t("cards.deckNew");
 
   return (
@@ -38,11 +43,11 @@ export const CardDeckRow = memo(function CardDeckRow({
         <small>
           {level} · {sourceLabel}
         </small>
-        <ProgressBar value={summary.percent} label={t("cards.deckProgress", { known: summary.known, total: summary.total })} />
+        <ProgressBar value={percent} label={t("cards.deckProgress", { known, total })} />
       </span>
       <span className="card-deck-row__meta">
         <b>
-          {summary.known}/{summary.total}
+          {known}/{total}
         </b>
         <small>{status}</small>
       </span>

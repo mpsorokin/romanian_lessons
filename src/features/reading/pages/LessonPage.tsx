@@ -19,7 +19,7 @@ export function LessonPage() {
   const { id = "" } = useParams();
   const lesson = findContent("lesson", id);
   const { settings } = useReaderSettings();
-  const { getProgressSnapshot, openLesson, saveLessonPosition, completeLesson, resetLesson } = useProgressActions();
+  const { getProgressSnapshot, openLesson, saveLessonPosition, completeLesson, resetLesson, syncProgressState } = useProgressActions();
   const { body, error } = useContentBody(lesson);
   const [completed, setCompleted] = useState(false);
 
@@ -37,13 +37,13 @@ export function LessonPage() {
   }, [lesson, openLesson, getProgressSnapshot]);
 
   const savePosition = useCallback(
-    (position: number) => {
-      if (lesson) saveLessonPosition(lesson.id, position);
+    (position: number, options?: { force?: boolean }) => {
+      if (lesson) saveLessonPosition(lesson.id, position, options);
     },
     [lesson, saveLessonPosition],
   );
 
-  const scrollRef = useReaderScroll(lesson?.id ?? "missing", initialPosition, savePosition, body !== null);
+  const scrollRef = useReaderScroll(lesson?.id ?? "missing", initialPosition, savePosition, body !== null, syncProgressState);
 
   const handleComplete = () => {
     if (!lesson) return;

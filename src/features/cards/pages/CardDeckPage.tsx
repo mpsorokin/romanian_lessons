@@ -1,13 +1,14 @@
-import { useCallback, useMemo, useReducer } from "react";
+import { useCallback, useMemo, useReducer, type Dispatch } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { DeckOverview } from "@/features/cards/components/DeckOverview";
 import { SessionSummary } from "@/features/cards/components/SessionSummary";
 import { StudySession } from "@/features/cards/components/StudySession";
-import { useCardProgress, useCardProgressState } from "@/features/cards/useCardProgress";
-import { findCardDeck, getCardDeckProgress, getCardsForDeck, type StudyCard } from "@/features/cards/cards";
+import { useCardProgressActions, useCardProgressState } from "@/features/cards/useCardProgress";
+import { findCardDeck, getCardDeckProgress, getCardsForDeck, type CardDeck, type StudyCard } from "@/features/cards/cards";
 import type { CardResult } from "@/features/cards/cardProgress.types";
+import type { Lesson } from "@/lib/content";
 import { findContent } from "@/lib/content";
 import { CardNotFoundPage } from "@/features/cards/pages/CardNotFoundPage";
 
@@ -72,27 +73,17 @@ function sessionReducer(state: SessionState, event: SessionEvent): SessionState 
   }
 }
 
-export function CardDeckPage() {
+function CardDeckStudySession({
+  lessonTitle,
+  session,
+  dispatch,
+}: {
+  lessonTitle: string;
+  session: SessionState;
+  dispatch: Dispatch<SessionEvent>;
+}) {
   const { t } = useTranslation();
-  const { deckId = "" } = useParams();
-  const deck = findCardDeck(deckId);
-  const lesson = deck ? findContent("lesson", deck.lessonId) : undefined;
-  const progress = useCardProgressState();
-  const { markCard } = useCardProgress();
-  const [session, dispatch] = useReducer(sessionReducer, IDLE);
-
-  const deckCards = useMemo(() => (deck ? getCardsForDeck(deck.id) : []), [deck]);
-  const deckProgress = deck ? getCardDeckProgress(deck.id, progress) : null;
-
-  const startSession = useCallback(
-    (mode: "adaptive" | "all", selected?: StudyCard[]) => {
-      const source =
-        selected ?? (mode === "all" ? deckCards : deckCards.filter((card) => progress.cards[card.id]?.status !== "known"));
-      // Nothing left to learn: fall back to the whole deck rather than an empty session.
-      dispatch({ type: "start", cards: source.length ? source : deckCards });
-    },
-    [deckCards, progress.cards],
-  );
+  const { markCard } = useCardProgressActions();
 
   const handleAnswer = useCallback(
     (result: CardResult) => {
@@ -101,27 +92,54 @@ export function CardDeckPage() {
       markCard(card.id, result);
       dispatch({ type: "answer", result, card });
     },
-    [markCard, session.cards, session.index],
+    [dispatch, markCard, session.cards, session.index],
   );
 
-  if (!deck || !lesson || !deckProgress) return <CardNotFoundPage />;
+  if (!session.cards) return null;
 
-  if (session.cards) {
-    return (
-      <AppShell title={t("cards.title")} showBack right={<span />} className="card-session-shell">
-        <StudySession
-          lessonTitle={lesson.title}
-          card={session.cards[session.index]}
-          index={session.index}
-          total={session.cards.length}
-          revealed={session.revealed}
-          onReveal={() => dispatch({ type: "reveal" })}
-          onAnswer={handleAnswer}
-          onLeave={() => dispatch({ type: "leave" })}
-        />
-      </AppShell>
-    );
-  }
+  return (
+    <AppShell title={t("cards.title")} showBack right={<span />} className="card-session-shell">
+      <StudySession
+        lessonTitle={lessonTitle}
+        card={session.cards[session.index]}
+        index={session.index}
+        total={session.cards.length}
+        revealed={session.revealed}
+        onReveal={() => dispatch({ type: "reveal" })}
+        onAnswer={handleAnswer}
+        onLeave={() => dispatch({ type: "leave" })}
+      />
+    </AppShell>
+  );
+}
+
+function CardDeckIdleView({
+  deck,
+  lesson,
+  deckCards,
+  session,
+  dispatch,
+}: {
+  deck: CardDeck;
+  lesson: Lesson;
+  deckCards: StudyCard[];
+  session: SessionState;
+  dispatch: Dispatch<SessionEvent>;
+}) {
+  const { t } = useTranslation();
+  const progress = useCardProgressState();
+  const { getCardStatus } = useCardProgressActions();
+  const deckProgress = getCardDeckProgress(deck.id, progress);
+
+  const startSession = useCallback(
+    (mode: "adaptive" | "all", selected?: StudyCard[]) => {
+      const source =
+        selected ?? (mode === "all" ? deckCards : deckCards.filter((card) => getCardStatus(card.id) !== "known"));
+      // Nothing left to learn: fall back to the whole deck rather than an empty session.
+      dispatch({ type: "start", cards: source.length ? source : deckCards });
+    },
+    [deckCards, dispatch, getCardStatus],
+  );
 
   if (session.summaryVisible) {
     return (
@@ -156,4 +174,21 @@ export function CardDeckPage() {
       />
     </AppShell>
   );
+}
+
+export function CardDeckPage() {
+  const { deckId = "" } = useParams();
+  const deck = findCardDeck(deckId);
+  const lesson = deck ? findContent("lesson", deck.lessonId) : undefined;
+  const [session, dispatch] = useReducer(sessionReducer, IDLE);
+
+  const deckCards = useMemo(() => (deck ? getCardsForDeck(deck.id) : []), [deck]);
+
+  if (!deck || !lesson) return <CardNotFoundPage />;
+
+  if (session.cards) {
+    return <CardDeckStudySession lessonTitle={lesson.title} session={session} dispatch={dispatch} />;
+  }
+
+  return <CardDeckIdleView deck={deck} lesson={lesson} deckCards={deckCards} session={session} dispatch={dispatch} />;
 }

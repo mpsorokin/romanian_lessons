@@ -19,6 +19,18 @@ export default defineConfig({
   },
   build: {
     outDir: "dist/client",
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "markdown",
+              test: /node_modules[/\\](react-markdown|remark-|rehype-|micromark|mdast-|unist-|unified|vfile|bail|is-plain|devlop|trough|property-information|space-separated-tokens|comma-separated-tokens|hast-|estree-|character-entities)/,
+            },
+          ],
+        },
+      },
+    },
   },
   optimizeDeps: {
     include: ["react", "react-dom/client", "@phosphor-icons/react", "i18next", "react-i18next"],

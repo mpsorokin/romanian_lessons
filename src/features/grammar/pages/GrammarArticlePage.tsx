@@ -20,7 +20,7 @@ export function GrammarArticlePage() {
   const { id = "" } = useParams();
   const topic = findContent("grammar", id);
   const { settings } = useReaderSettings();
-  const { getProgressSnapshot, saveGrammarPosition } = useProgressActions();
+  const { getProgressSnapshot, saveGrammarPosition, syncProgressState } = useProgressActions();
   const { body, error } = useContentBody(topic);
 
   const initial = useRef<{ id: string; position: number } | null>(null);
@@ -30,13 +30,13 @@ export function GrammarArticlePage() {
   const initialPosition = initial.current?.position ?? 0;
 
   const savePosition = useCallback(
-    (position: number) => {
-      if (topic) saveGrammarPosition(topic.id, position);
+    (position: number, options?: { force?: boolean }) => {
+      if (topic) saveGrammarPosition(topic.id, position, options);
     },
     [topic, saveGrammarPosition],
   );
 
-  const scrollRef = useReaderScroll(topic?.id ?? "missing", initialPosition, savePosition, body !== null);
+  const scrollRef = useReaderScroll(topic?.id ?? "missing", initialPosition, savePosition, body !== null, syncProgressState);
 
   if (!topic) return <ReaderNotFoundPage kind="grammar" />;
 

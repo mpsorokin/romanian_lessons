@@ -2,16 +2,23 @@ import { createContext, useCallback, useMemo, useRef, useState, type PropsWithCh
 import { clearProgress, readProgress, writeProgress } from "@/features/reading/progress.storage";
 import { createInitialProgress, type ProgressState } from "@/features/reading/progress.types";
 
+export interface ProgressSaveOptions {
+  /** Bypass the 1% position quantizer — used on `pagehide` and reader unmount. */
+  force?: boolean;
+}
+
 export interface ProgressActions {
   /** Reads the current state without subscribing to it. */
   getProgressSnapshot: () => ProgressState;
+  /** Pushes the in-memory ref into React state after silent scroll saves. */
+  syncProgressState: () => void;
   openLesson: (id: string) => void;
-  saveLessonPosition: (id: string, position: number) => void;
+  saveLessonPosition: (id: string, position: number, options?: ProgressSaveOptions) => void;
   completeLesson: (id: string) => void;
   resetLesson: (id: string) => void;
-  saveStoryPosition: (id: string, currentProgress: number, resumePosition?: number) => void;
+  saveStoryPosition: (id: string, currentProgress: number, resumePosition?: number, options?: ProgressSaveOptions) => void;
   completeStory: (id: string) => void;
-  saveGrammarPosition: (id: string, position: number) => void;
+  saveGrammarPosition: (id: string, position: number, options?: ProgressSaveOptions) => void;
   resetProgress: () => void;
 }
 
@@ -20,6 +27,10 @@ export const ProgressActionsContext = createContext<ProgressActions | null>(null
 
 const clamp = (value: number) => Math.min(1, Math.max(0, Number.isFinite(value) ? value : 0));
 const now = () => new Date().toISOString();
+const POSITION_EPSILON = 0.01;
+
+const positionMoved = (previous: number, next: number, force = false) =>
+  force || Math.abs(next - previous) >= POSITION_EPSILON;
 
 export function ProgressProvider({ children }: PropsWithChildren) {
   const [progress, setProgress] = useState<ProgressState>(() => readProgress());
@@ -29,20 +40,25 @@ export function ProgressProvider({ children }: PropsWithChildren) {
    * Persists synchronously instead of from an effect: the reader flushes its
    * scroll position on `pagehide`, where a passive effect would never run.
    */
-  const apply = useCallback((update: (current: ProgressState) => ProgressState) => {
+  const commit = useCallback((update: (current: ProgressState) => ProgressState, broadcast = true) => {
     const next = update(progressRef.current);
     if (next === progressRef.current) return;
     progressRef.current = next;
     writeProgress(next);
-    setProgress(next);
+    if (broadcast) setProgress(next);
+  }, []);
+
+  const syncProgressState = useCallback(() => {
+    setProgress(progressRef.current);
   }, []);
 
   const actions = useMemo<ProgressActions>(() => {
     return {
       getProgressSnapshot: () => progressRef.current,
+      syncProgressState,
 
       openLesson: (id) =>
-        apply((current) => {
+        commit((current) => {
           const existing = current.lessons[id];
           if (existing?.status === "completed") return current;
           return {
@@ -54,12 +70,17 @@ export function ProgressProvider({ children }: PropsWithChildren) {
           };
         }),
 
-      saveLessonPosition: (id, position) =>
-        apply((current) => {
+      saveLessonPosition: (id, position, options) =>
+        commit((current) => {
           const existing = current.lessons[id];
           if (existing?.status === "completed") return current;
           const nextPosition = clamp(position);
-          if (existing?.status === "in-progress" && existing.resumePosition === nextPosition) return current;
+          if (
+            existing?.status === "in-progress" &&
+            !positionMoved(existing.resumePosition, nextPosition, options?.force)
+          ) {
+            return current;
+          }
           return {
             ...current,
             lessons: {
@@ -67,10 +88,10 @@ export function ProgressProvider({ children }: PropsWithChildren) {
               [id]: { status: "in-progress", resumePosition: nextPosition, updatedAt: now() },
             },
           };
-        }),
+        }, false),
 
       completeLesson: (id) =>
-        apply((current) => ({
+        commit((current) => ({
           ...current,
           lessons: {
             ...current.lessons,
@@ -84,24 +105,28 @@ export function ProgressProvider({ children }: PropsWithChildren) {
         })),
 
       resetLesson: (id) =>
-        apply((current) => {
+        commit((current) => {
           if (!current.lessons[id]) return current;
           const { [id]: _removed, ...lessons } = current.lessons;
           return { ...current, lessons };
         }),
 
-      saveStoryPosition: (id, currentProgress, resumePosition = currentProgress) =>
-        apply((current) => {
-          const existing = current.stories[id];
+      saveStoryPosition: (id, currentProgress, resumePosition = currentProgress, options) => {
+        const existing = progressRef.current.stories[id];
+        const nextProgress = clamp(currentProgress);
+        const wasComplete = existing?.completed === true;
+        const shouldComplete = wasComplete || nextProgress >= 0.96;
+        const broadcast = shouldComplete && !wasComplete;
+
+        commit((current) => {
+          const entry = current.stories[id];
           const nextCurrent = clamp(resumePosition);
-          const nextProgress = clamp(currentProgress);
-          const shouldComplete = existing?.completed === true || nextProgress >= 0.96;
-          const nextMaxProgress = shouldComplete ? 1 : nextProgress;
+          const nextMax = shouldComplete ? 1 : nextProgress;
           if (
-            existing &&
-            existing.resumePosition === nextCurrent &&
-            existing.maxProgress === nextMaxProgress &&
-            existing.completed === shouldComplete
+            entry &&
+            !positionMoved(entry.resumePosition, nextCurrent, options?.force) &&
+            !positionMoved(entry.maxProgress, nextMax, options?.force) &&
+            entry.completed === shouldComplete
           ) {
             return current;
           }
@@ -110,18 +135,19 @@ export function ProgressProvider({ children }: PropsWithChildren) {
             stories: {
               ...current.stories,
               [id]: {
-                maxProgress: nextMaxProgress,
+                maxProgress: nextMax,
                 resumePosition: nextCurrent,
                 completed: shouldComplete,
                 updatedAt: now(),
-                ...(shouldComplete ? { completedAt: existing?.completedAt ?? now() } : {}),
+                ...(shouldComplete ? { completedAt: entry?.completedAt ?? now() } : {}),
               },
             },
           };
-        }),
+        }, broadcast);
+      },
 
       completeStory: (id) =>
-        apply((current) => ({
+        commit((current) => ({
           ...current,
           stories: {
             ...current.stories,
@@ -135,12 +161,18 @@ export function ProgressProvider({ children }: PropsWithChildren) {
           },
         })),
 
-      saveGrammarPosition: (id, position) =>
-        apply((current) => {
+      saveGrammarPosition: (id, position, options) =>
+        commit((current) => {
           const existing = current.grammar[id];
           const nextPosition = clamp(position);
           const nextMaxProgress = Math.max(existing?.maxProgress ?? 0, nextPosition);
-          if (existing?.resumePosition === nextPosition && existing.maxProgress === nextMaxProgress) return current;
+          if (
+            existing &&
+            !positionMoved(existing.resumePosition, nextPosition, options?.force) &&
+            !positionMoved(existing.maxProgress, nextMaxProgress, options?.force)
+          ) {
+            return current;
+          }
           return {
             ...current,
             grammar: {
@@ -148,7 +180,7 @@ export function ProgressProvider({ children }: PropsWithChildren) {
               [id]: { resumePosition: nextPosition, maxProgress: nextMaxProgress, updatedAt: now() },
             },
           };
-        }),
+        }, false),
 
       resetProgress: () => {
         const initial = createInitialProgress();
@@ -157,7 +189,7 @@ export function ProgressProvider({ children }: PropsWithChildren) {
         setProgress(initial);
       },
     };
-  }, [apply]);
+  }, [commit, syncProgressState]);
 
   return (
     <ProgressActionsContext.Provider value={actions}>

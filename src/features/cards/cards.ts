@@ -25,6 +25,16 @@ for (const card of studyCards) {
 const cardsById = new Map(studyCards.map((card) => [card.id, card]));
 const decksById = new Map(cardDecks.map((deck) => [deck.id, deck]));
 
+const cardsByDeck = new Map<string, StudyCard[]>();
+for (const deck of cardDecks) {
+  const cards: StudyCard[] = [];
+  for (const lessonId of deck.sourceLessonIds) {
+    const lessonCards = cardsByLesson.get(lessonId);
+    if (lessonCards) cards.push(...lessonCards);
+  }
+  cardsByDeck.set(deck.id, cards);
+}
+
 function assertCardData() {
   if (cardsById.size !== studyCards.length) throw new Error("Card IDs must be unique.");
   if (new Set(cardDecks.map((deck) => deck.id)).size !== cardDecks.length) throw new Error("Card deck IDs must be unique.");
@@ -63,10 +73,7 @@ export function findCardDeck(id: string): CardDeck | undefined {
 }
 
 export function getCardsForDeck(deckId: string): StudyCard[] {
-  const deck = decksById.get(deckId);
-  if (!deck) return [];
-  const sourceIds = new Set(deck.sourceLessonIds);
-  return studyCards.filter((card) => sourceIds.has(card.lessonId));
+  return cardsByDeck.get(deckId) ?? [];
 }
 
 export function getCardsForLesson(lessonId: string): StudyCard[] {
