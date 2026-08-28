@@ -12,3 +12,4 @@ Build app UI in `src/`. Keep `.openai/hosting.json`, `worker/index.js`, `scripts
 
 - Use the Calea app mark as a gold (`#E0BC79`) monoline "C" shaped like a path on a near-black (`#111210`) field.
 - Keep the install experience manifest-based and online-only: no service worker, offline cache, or custom install prompt unless explicitly requested later.
+- Keep Cards as a standalone fifth navigation area with Russian-to-Romanian active recall, immediate deck availability, and progress stored independently from lesson/story reading.
