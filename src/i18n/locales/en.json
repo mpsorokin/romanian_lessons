@@ -194,8 +194,16 @@
     "cardProgress": "Card {{current}} of {{total}}",
     "sessionProgress": "Session progress",
     "translatePrompt": "Translate into Romanian",
-    "showAnswer": "Show answer",
-    "needReview": "Need to review",
+  "showAnswer": "Show answer",
+  "gender": "Gender",
+  "genderValues": {
+    "masculine": "masculine",
+    "feminine": "feminine",
+    "neuter": "neuter"
+  },
+  "plural": "Plural",
+  "pluralPronunciation": "Plural pronunciation",
+  "needReview": "Need to review",
     "remembered": "Got it",
     "backToDeck": "Back to deck",
     "sessionDoneEyebrow": "Session complete",

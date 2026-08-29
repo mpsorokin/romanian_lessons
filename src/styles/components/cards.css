@@ -43,6 +43,10 @@
 .study-card__answer strong { font-family: var(--font-serif); font-size: 23px; font-weight: 500; line-height: 1.3; }
 .study-card__answer span { color: var(--color-muted); font-size: 13px; }
 .study-card__answer small { color: var(--color-soft); font-size: 11px; line-height: 1.45; }
+.study-card__noun { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 4px 0 0; padding-top: 11px; border-top: 1px solid var(--color-hairline); }
+.study-card__noun > div { display: flex; flex-direction: column; gap: 3px; min-width: 90px; }
+.study-card__noun dt { color: var(--color-muted); font-size: 9px; line-height: 1.2; }
+.study-card__noun dd { margin: 0; color: var(--color-text); font-size: 12px; line-height: 1.3; }
 .study-card__actions { display: grid; gap: 9px; margin-top: 25px; }
 .card-session-back { margin: 18px 2px 0; }
 .card-summary { padding: 54px 4px 20px; text-align: center; }

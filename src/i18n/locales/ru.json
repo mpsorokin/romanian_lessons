@@ -210,8 +210,16 @@
     "cardProgress": "Карточка {{current}} из {{total}}",
     "sessionProgress": "Прогресс сессии",
     "translatePrompt": "Переведи на румынский",
-    "showAnswer": "Показать ответ",
-    "needReview": "Нужно повторить",
+  "showAnswer": "Показать ответ",
+  "gender": "Род",
+  "genderValues": {
+    "masculine": "мужской",
+    "feminine": "женский",
+    "neuter": "средний"
+  },
+  "plural": "Множественное число",
+  "pluralPronunciation": "Транскрипция множественного числа",
+  "needReview": "Нужно повторить",
     "remembered": "Вспомнил",
     "backToDeck": "К колоде",
     "sessionDoneEyebrow": "Сессия завершена",

@@ -48,6 +48,22 @@ export function StudySession({
               <strong>{card.answerRo}</strong>
               <span>{card.pronunciation}</span>
               {card.note && <small>{card.note}</small>}
+              {card.noun && (
+                <dl className="study-card__noun">
+                  <div>
+                    <dt>{t("cards.gender")}</dt>
+                    <dd>{t(`cards.genderValues.${card.noun.gender}`)}</dd>
+                  </div>
+                  <div>
+                    <dt>{t("cards.plural")}</dt>
+                    <dd>{card.noun.plural}</dd>
+                  </div>
+                  <div>
+                    <dt>{t("cards.pluralPronunciation")}</dt>
+                    <dd>{card.noun.pluralPronunciation}</dd>
+                  </div>
+                </dl>
+              )}
             </div>
             <div className="study-card__actions">
               <button className="secondary-button" type="button" onClick={() => onAnswer("repeat")}>

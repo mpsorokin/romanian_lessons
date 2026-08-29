@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 
 const root = process.cwd();
 const lessonsDir = join(root, "src", "content", "lessons");
+const nounMetadataPath = join(root, "src", "content", "cards", "nouns.json");
 const generatedPath = join(root, "src", "generated", "cards.generated.ts");
 
 function readGeneratedArray(source, name) {
@@ -27,6 +28,7 @@ function parseFrontmatter(raw) {
 const generated = await readFile(generatedPath, "utf8");
 const cards = readGeneratedArray(generated, "generatedStudyCards");
 const decks = readGeneratedArray(generated, "generatedCardDecks");
+const nounMetadata = JSON.parse(await readFile(nounMetadataPath, "utf8"));
 const lessonFiles = (await readdir(lessonsDir)).filter((file) => file.endsWith(".md"));
 const lessons = [];
 for (const file of lessonFiles) {
@@ -90,5 +92,34 @@ test("Recall decks reference the previous four ordinary lessons without duplicat
       const deckCards = cards.filter((card) => deck.sourceLessonIds.includes(card.lessonId));
       assert.equal(new Set(deckCards.map((card) => card.id)).size, expectedCards);
     }
+  }
+});
+
+test("noun metadata is complete, sourced, and attached to existing cards", () => {
+  const validGenders = new Set(["masculine", "feminine", "neuter"]);
+  const cardsByKey = new Map(cards.map((card) => [`${card.lessonId}:${card.answerRo.toLocaleLowerCase("ro-RO")}`, card]));
+  const nounCards = cards.filter((card) => card.noun);
+
+  assert.ok(Array.isArray(nounMetadata));
+  assert.equal(nounCards.length, nounMetadata.length, "Every registry entry should produce one noun card.");
+
+  for (const noun of nounMetadata) {
+    for (const field of ["lessonId", "answerRo", "lemma", "gender", "plural", "pluralPronunciation", "sourceUrl"]) {
+      assert.equal(typeof noun[field], "string", `${field} must be a string for ${noun.lessonId}/${noun.answerRo}`);
+      assert.ok(noun[field].trim(), `${field} must not be empty for ${noun.lessonId}/${noun.answerRo}`);
+    }
+    assert.ok(validGenders.has(noun.gender), `Invalid gender for ${noun.lessonId}/${noun.answerRo}`);
+    assert.match(noun.pluralPronunciation, /[А-Яа-яЁё]/, `Missing transcription for ${noun.lessonId}/${noun.answerRo}`);
+    assert.match(noun.sourceUrl, /^https:\/\//, `Source must use HTTPS for ${noun.lessonId}/${noun.answerRo}`);
+
+    const card = cardsByKey.get(`${noun.lessonId}:${noun.answerRo.toLocaleLowerCase("ro-RO")}`);
+    assert.ok(card, `No generated card for ${noun.lessonId}/${noun.answerRo}`);
+    assert.deepEqual(card.noun, {
+      lemma: noun.lemma,
+      gender: noun.gender,
+      plural: noun.plural,
+      pluralPronunciation: noun.pluralPronunciation,
+      sourceUrl: noun.sourceUrl,
+    });
   }
 });
