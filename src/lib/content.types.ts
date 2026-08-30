@@ -13,6 +13,27 @@ export interface Lesson extends ContentMeta {
   type: "lesson";
 }
 
+export interface LessonReference extends ContentMeta {
+  lessonId: string;
+  type: "lesson-reference";
+}
+
+export interface LessonReferenceNoun {
+  gender: "masculine" | "feminine" | "neuter";
+  plural: string;
+  pluralPronunciation: string;
+  sourceUrl: string;
+}
+
+export interface LessonReferenceWord {
+  lessonId: string;
+  order: number;
+  word: string;
+  pronunciation: string;
+  meaning: string;
+  noun?: LessonReferenceNoun;
+}
+
 export interface Story extends ContentMeta {
   type: "story";
 }
@@ -33,4 +54,4 @@ export interface Grammar {
   type: "grammar";
 }
 
-export type ReadableContent = Content | Grammar;
+export type ReadableContent = Content | Grammar | LessonReference;

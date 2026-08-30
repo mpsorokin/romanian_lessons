@@ -7,6 +7,10 @@ import { NotFoundPage } from "@/pages/NotFoundPage";
 // The overview is the entry point and stays in the main chunk; everything else —
 // above all the markdown reader — is split off so it never blocks the first paint.
 const LessonPage = lazy(() => import("@/features/reading/pages/LessonPage").then((m) => ({ default: m.LessonPage })));
+const LessonsRefPage = lazy(() => import("@/features/lesson-reference/pages/LessonsRefPage").then((m) => ({ default: m.LessonsRefPage })));
+const LessonReferenceArticlePage = lazy(() =>
+  import("@/features/lesson-reference/pages/LessonReferenceArticlePage").then((m) => ({ default: m.LessonReferenceArticlePage })),
+);
 const StoryPage = lazy(() => import("@/features/reading/pages/StoryPage").then((m) => ({ default: m.StoryPage })));
 const GrammarArticlePage = lazy(() => import("@/features/grammar/pages/GrammarArticlePage").then((m) => ({ default: m.GrammarArticlePage })));
 const LibraryPage = lazy(() => import("@/pages/LibraryPage").then((m) => ({ default: m.LibraryPage })));
@@ -28,6 +32,8 @@ export function App() {
           <Route path="/library/:section" element={<LibraryPage />} />
           <Route path="/lessons" element={<Navigate to="/library/lessons" replace />} />
           <Route path="/lessons/:id" element={<LessonPage />} />
+          <Route path="/lessons-ref" element={<LessonsRefPage />} />
+          <Route path="/lessons-ref/:id" element={<LessonReferenceArticlePage />} />
           <Route path="/stories" element={<Navigate to="/library/stories" replace />} />
           <Route path="/stories/:id" element={<StoryPage />} />
           <Route path="/grammar" element={<Navigate to="/library/grammar" replace />} />

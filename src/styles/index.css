@@ -24,6 +24,7 @@
 @import "./components/stats-settings.css" layer(components);
 @import "./components/reader.css" layer(components);
 @import "./components/grammar.css" layer(components);
+@import "./components/lesson-reference.css" layer(components);
 @import "./components/reader-settings.css" layer(components);
 @import "./components/feedback.css" layer(components);
 @import "./responsive.css" layer(components);

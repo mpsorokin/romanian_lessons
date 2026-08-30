@@ -8,6 +8,7 @@ const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?[\s\S]*$/;
 
 const GROUPS = [
   { type: "lesson", dir: "lessons" },
+  { type: "lesson-reference", dir: "lesson-references" },
   { type: "story", dir: "stories" },
   { type: "grammar", dir: "grammar" },
 ];
@@ -72,6 +73,8 @@ async function readGroup(contentRoot, group) {
         item.category = asRequiredString(frontmatter.category, "category", source);
         item.tags = asOptionalStringArray(frontmatter.tags, "tags", source);
         item.related = asOptionalStringArray(frontmatter.related, "related", source);
+      } else if (group.type === "lesson-reference") {
+        item.lessonId = asRequiredString(frontmatter.lessonId, "lessonId", source);
       } else {
         item.wordCount =
           frontmatter.wordCount === undefined || frontmatter.wordCount === null
@@ -119,11 +122,31 @@ function assertKnownGrammarRelations(grammar) {
 }
 
 async function buildIndex(contentRoot) {
-  const [lessons, stories, grammar] = await Promise.all(GROUPS.map((group) => readGroup(contentRoot, group)));
-  assertUniqueIds([...lessons, ...stories, ...grammar]);
+  const [lessons, lessonReferences, stories, grammar] = await Promise.all(GROUPS.map((group) => readGroup(contentRoot, group)));
+  assertUniqueIds([...lessons, ...lessonReferences, ...stories, ...grammar]);
   assertKnownGrammarRelations(grammar);
+  const lessonsById = new Map(lessons.map((lesson) => [lesson.id, lesson]));
+  const referenceLessons = new Map();
+  for (const reference of lessonReferences) {
+    const lesson = lessonsById.get(reference.lessonId);
+    if (!lesson) {
+      throw new Error(`Unknown lesson "${reference.lessonId}" in ${reference.file}.`);
+    }
+    if (!lesson.wordCount) {
+      throw new Error(`Lesson reference "${reference.file}" cannot target recall lesson "${reference.lessonId}".`);
+    }
+    if (reference.order !== lesson.order) {
+      throw new Error(`Lesson reference "${reference.file}" order must match lesson "${reference.lessonId}".`);
+    }
+    const previous = referenceLessons.get(reference.lessonId);
+    if (previous) {
+      throw new Error(`Duplicate lesson reference for "${reference.lessonId}" in ${previous} and ${reference.file}.`);
+    }
+    referenceLessons.set(reference.lessonId, reference.file);
+  }
   return [
     `export const lessonIndex = ${JSON.stringify(lessons)};`,
+    `export const lessonReferenceIndex = ${JSON.stringify(lessonReferences)};`,
     `export const storyIndex = ${JSON.stringify(stories)};`,
     `export const grammarIndex = ${JSON.stringify(grammar)};`,
     "",

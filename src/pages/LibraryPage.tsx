@@ -1,4 +1,4 @@
-import { BookOpenText, Books, MagnifyingGlass, TextT, X } from "@phosphor-icons/react";
+import { BookOpenText, Books, MagnifyingGlass, Notebook, TextT, X } from "@phosphor-icons/react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, NavLink, Navigate, useParams } from "react-router-dom";
@@ -83,6 +83,15 @@ function LibraryHome() {
           <div>
             <strong>{t("library.grammar")}</strong>
             <span>{t("library.grammarCount", { count: grammarContent.length })}</span>
+          </div>
+          <ContinueArrow />
+        </Link>
+
+        <Link to="/lessons-ref" className="library-collection-card">
+          <Notebook size={24} weight="regular" aria-hidden="true" />
+          <div>
+            <strong>{t("library.lessonReferenceTitle")}</strong>
+            <span>{t("library.lessonReferenceSubtitle")}</span>
           </div>
           <ContinueArrow />
         </Link>

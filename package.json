@@ -1,6 +1,6 @@
 {
   "name": "romanian-learn",
-  "version": "4.7.0",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "npm run generate:cards && vite build && node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
     "test:sites": "node --test tests/sites-worker.test.mjs",
+    "test:lesson-references": "node --test tests/lesson-references.test.mjs",
     "test:cards": "npm run generate:cards && node --test tests/cards.test.mjs",
     "test:i18n": "node --test tests/i18n.test.mjs",
     "typecheck": "tsc --noEmit",

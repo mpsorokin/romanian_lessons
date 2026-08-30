@@ -1,0 +1,88 @@
+[
+  { "lessonId": "lesson-01", "order": 1, "word": "a fi", "pronunciation": "а фи", "meaning": "быть" },
+  { "lessonId": "lesson-01", "order": 2, "word": "a avea", "pronunciation": "а авя", "meaning": "иметь; у кого-то есть" },
+  { "lessonId": "lesson-01", "order": 3, "word": "a ști", "pronunciation": "а шти", "meaning": "знать" },
+  { "lessonId": "lesson-01", "order": 4, "word": "nu", "pronunciation": "ну", "meaning": "не / нет" },
+  { "lessonId": "lesson-01", "order": 5, "word": "da", "pronunciation": "да", "meaning": "да" },
+  { "lessonId": "lesson-01", "order": 6, "word": "ce", "pronunciation": "че", "meaning": "что" },
+  { "lessonId": "lesson-01", "order": 7, "word": "cine", "pronunciation": "чи́не", "meaning": "кто" },
+  { "lessonId": "lesson-01", "order": 8, "word": "unde", "pronunciation": "у́нде", "meaning": "где" },
+  { "lessonId": "lesson-01", "order": 9, "word": "aici", "pronunciation": "аи́чь", "meaning": "здесь" },
+  { "lessonId": "lesson-01", "order": 10, "word": "acolo", "pronunciation": "ако́ло", "meaning": "там" },
+  { "lessonId": "lesson-01", "order": 11, "word": "acum", "pronunciation": "аку́м", "meaning": "сейчас" },
+  { "lessonId": "lesson-01", "order": 12, "word": "azi", "pronunciation": "азь", "meaning": "сегодня" },
+  { "lessonId": "lesson-01", "order": 13, "word": "acasă", "pronunciation": "ака́сэ", "meaning": "дома / домой" },
+  { "lessonId": "lesson-01", "order": 14, "word": "bine", "pronunciation": "би́не", "meaning": "хорошо / нормально" },
+  { "lessonId": "lesson-01", "order": 15, "word": "gata", "pronunciation": "га́та", "meaning": "готово / всё" },
+  { "lessonId": "lesson-01", "order": 16, "word": "puțin", "pronunciation": "пуци́н", "meaning": "немного / мало" },
+  { "lessonId": "lesson-01", "order": 17, "word": "ceva", "pronunciation": "чева́", "meaning": "что-то / что-нибудь" },
+
+  { "lessonId": "lesson-02", "order": 1, "word": "a face", "pronunciation": "а фа́че", "meaning": "делать" },
+  { "lessonId": "lesson-02", "order": 2, "word": "a merge", "pronunciation": "а ме́рдже", "meaning": "идти / ехать" },
+  { "lessonId": "lesson-02", "order": 3, "word": "a veni", "pronunciation": "а вени́", "meaning": "приходить / приезжать" },
+  { "lessonId": "lesson-02", "order": 4, "word": "a pleca", "pronunciation": "а плека́", "meaning": "уходить / уезжать" },
+  { "lessonId": "lesson-02", "order": 5, "word": "a vrea", "pronunciation": "а вря", "meaning": "хотеть" },
+  { "lessonId": "lesson-02", "order": 6, "word": "a putea", "pronunciation": "а путя́", "meaning": "мочь" },
+  {
+    "lessonId": "lesson-02",
+    "order": 7,
+    "word": "magazin",
+    "pronunciation": "магази́н",
+    "meaning": "магазин",
+    "noun": {
+      "gender": "neuter",
+      "plural": "magazine",
+      "pluralPronunciation": "магазíне",
+      "sourceUrl": "https://dexonline.ro/intrare/magazin/32104"
+    }
+  },
+  {
+    "lessonId": "lesson-02",
+    "order": 8,
+    "word": "cafea",
+    "pronunciation": "кафе́а",
+    "meaning": "кофе",
+    "noun": {
+      "gender": "feminine",
+      "plural": "cafele",
+      "pluralPronunciation": "кафе́ле",
+      "sourceUrl": "https://dexonline.ro/intrare/cafea/7596"
+    }
+  },
+  { "lessonId": "lesson-02", "order": 9, "word": "după", "pronunciation": "ду́пэ", "meaning": "после / потом" },
+  { "lessonId": "lesson-02", "order": 10, "word": "dar", "pronunciation": "дар", "meaning": "но" },
+
+  { "lessonId": "lesson-03", "order": 1, "word": "trebuie", "pronunciation": "трэ́буе", "meaning": "нужно / необходимо" },
+  { "lessonId": "lesson-03", "order": 2, "word": "hai", "pronunciation": "хай", "meaning": "давай / пошли" },
+  { "lessonId": "lesson-03", "order": 3, "word": "a lucra", "pronunciation": "а лукра́", "meaning": "работать" },
+  { "lessonId": "lesson-03", "order": 4, "word": "a mânca", "pronunciation": "а мынка́", "meaning": "есть" },
+  { "lessonId": "lesson-03", "order": 5, "word": "a bea", "pronunciation": "а бя", "meaning": "пить" },
+  { "lessonId": "lesson-03", "order": 6, "word": "a cumpăra", "pronunciation": "а кумпэра́", "meaning": "покупать" },
+  { "lessonId": "lesson-03", "order": 7, "word": "a vedea", "pronunciation": "а ведя́", "meaning": "видеть" },
+  { "lessonId": "lesson-03", "order": 8, "word": "a vorbi", "pronunciation": "а ворби́", "meaning": "говорить" },
+  {
+    "lessonId": "lesson-03",
+    "order": 9,
+    "word": "serviciu",
+    "pronunciation": "серви́чиу",
+    "meaning": "работа / служба",
+    "noun": {
+      "gender": "neuter",
+      "plural": "servicii",
+      "pluralPronunciation": "серви́чий",
+      "sourceUrl": "https://dexonline.ro/intrare/serviciu/51673"
+    }
+  },
+  { "lessonId": "lesson-03", "order": 10, "word": "mâine", "pronunciation": "мы́йне", "meaning": "завтра" },
+  { "lessonId": "lesson-03", "order": 11, "word": "împreună", "pronunciation": "ымпреу́нэ", "meaning": "вместе" },
+
+  { "lessonId": "lesson-04", "order": 1, "word": "a crede", "pronunciation": "а кре́де", "meaning": "думать / считать / верить" },
+  { "lessonId": "lesson-04", "order": 2, "word": "că", "pronunciation": "кэ", "meaning": "что" },
+  { "lessonId": "lesson-04", "order": 3, "word": "dacă", "pronunciation": "да́кэ", "meaning": "если / ли" },
+  { "lessonId": "lesson-04", "order": 4, "word": "poate", "pronunciation": "по́ате", "meaning": "может быть" },
+  { "lessonId": "lesson-04", "order": 5, "word": "când", "pronunciation": "кынд", "meaning": "когда" },
+  { "lessonId": "lesson-04", "order": 6, "word": "cum", "pronunciation": "кум", "meaning": "как" },
+  { "lessonId": "lesson-04", "order": 7, "word": "și", "pronunciation": "ши", "meaning": "и" },
+  { "lessonId": "lesson-04", "order": 8, "word": "sau", "pronunciation": "сау", "meaning": "или" },
+  { "lessonId": "lesson-04", "order": 9, "word": "până", "pronunciation": "пы́нэ", "meaning": "до" }
+]
