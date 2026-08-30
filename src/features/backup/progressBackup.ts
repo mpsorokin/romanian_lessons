@@ -1,7 +1,7 @@
 import { parseCardProgressState } from "@/features/cards/cardProgress.storage";
 import type { CardProgressState } from "@/features/cards/cardProgress.types";
-import { parseProgressState } from "@/features/reading/progress.storage";
-import type { ProgressState } from "@/features/reading/progress.types";
+import { parseProgressState } from "@/features/progress/progress.storage";
+import type { ProgressState } from "@/features/progress/progress.types";
 
 export const PROGRESS_BACKUP_KIND = "calea-progress";
 export const PROGRESS_BACKUP_VERSION = 1;
@@ -50,12 +50,23 @@ export function progressBackupFilename(date = new Date()): string {
   return `calea-progress-${day}.json`;
 }
 
+/**
+ * The anchor has to live in the document and the blob URL has to outlive the
+ * click: Firefox and Safari cancel a download whose object URL is revoked in the
+ * same tick, which silently loses the only backup the learner can make.
+ */
 export function downloadProgressBackup(backup: ProgressBackup): void {
   const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
   anchor.download = progressBackupFilename();
+  anchor.rel = "noopener";
+  anchor.style.display = "none";
+  document.body.appendChild(anchor);
   anchor.click();
-  URL.revokeObjectURL(url);
+  window.setTimeout(() => {
+    anchor.remove();
+    URL.revokeObjectURL(url);
+  }, 0);
 }

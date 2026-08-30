@@ -16,70 +16,10 @@ import {
   type StudyCard,
 } from "@/features/cards/cards";
 import type { CardResult } from "@/features/cards/cardProgress.types";
+import { IDLE, sessionReducer, type SessionEvent, type SessionState } from "@/features/cards/studySession.state";
 import type { Lesson } from "@/lib/content";
 import { findContent } from "@/lib/content";
 import { CardNotFoundPage } from "@/features/cards/pages/CardNotFoundPage";
-
-interface SessionState {
-  /** `null` means no session is running — the deck overview or summary shows instead. */
-  cards: StudyCard[] | null;
-  index: number;
-  revealed: boolean;
-  remembered: number;
-  repeat: number;
-  /** Cards graded "repeat" so far in the running session. */
-  difficult: StudyCard[];
-  /** Difficult cards of the session being summarised; feeds "Повторить сложные". */
-  lastDifficult: StudyCard[];
-  summaryVisible: boolean;
-}
-
-type SessionEvent =
-  | { type: "start"; cards: StudyCard[] }
-  | { type: "reveal" }
-  | { type: "answer"; result: CardResult; card: StudyCard }
-  | { type: "leave" };
-
-const IDLE: SessionState = {
-  cards: null,
-  index: 0,
-  revealed: false,
-  remembered: 0,
-  repeat: 0,
-  difficult: [],
-  lastDifficult: [],
-  summaryVisible: false,
-};
-
-/**
- * One reducer rather than seven `useState`s: answering a card has to move the
- * index, the counters, the difficult list and the reveal flag together, and
- * keeping those in separate setters is what let the previous "finish" and
- * "leave" paths drift apart.
- */
-function sessionReducer(state: SessionState, event: SessionEvent): SessionState {
-  switch (event.type) {
-    case "start":
-      return { ...IDLE, lastDifficult: state.lastDifficult, cards: event.cards };
-
-    case "reveal":
-      return { ...state, revealed: true };
-
-    case "answer": {
-      if (!state.cards) return state;
-      const remembered = state.remembered + (event.result === "remembered" ? 1 : 0);
-      const repeat = state.repeat + (event.result === "repeat" ? 1 : 0);
-      const difficult = event.result === "repeat" ? [...state.difficult, event.card] : state.difficult;
-      if (state.index >= state.cards.length - 1) {
-        return { ...state, cards: null, remembered, repeat, difficult: [], lastDifficult: difficult, summaryVisible: true };
-      }
-      return { ...state, index: state.index + 1, revealed: false, remembered, repeat, difficult };
-    }
-
-    case "leave":
-      return IDLE;
-  }
-}
 
 function CardDeckStudySession({
   lessonTitle,
@@ -202,7 +142,7 @@ function CardDeckIdleView({
   const { t } = useTranslation();
   const progress = useCardProgressState();
   const { getCardStatus } = useCardProgressActions();
-  const deckProgress = getCardDeckProgress(deck.id, progress);
+  const deckProgress = useMemo(() => getCardDeckProgress(deck.id, progress), [deck.id, progress]);
 
   const startSession = useCallback(
     (mode: "adaptive" | "all", selected?: StudyCard[]) => {
@@ -245,8 +185,17 @@ function CardDeckIdleView({
   );
 }
 
+/**
+ * Keyed by `deckId` so the session reducer starts fresh for each deck: React
+ * reuses this component when only the route param changes, which would
+ * otherwise carry one deck's summary and counters over to the next.
+ */
 export function CardDeckPage() {
   const { deckId = "" } = useParams();
+  return <CardDeckRoute key={deckId} deckId={deckId} />;
+}
+
+function CardDeckRoute({ deckId }: { deckId: string }) {
   const [session, dispatch] = useReducer(sessionReducer, IDLE);
   const deck = findCardDeck(deckId);
   const lesson = deck ? findContent("lesson", deck.lessonId) : undefined;

@@ -1,5 +1,6 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { lessonReferenceWords } from "@/lib/content";
+import { getLessonReferenceWords } from "@/lib/content";
 import type { LessonReferenceWord } from "@/lib/content.types";
 
 interface LessonWordRow {
@@ -16,8 +17,7 @@ function getWordRows(
   genderLabel: (gender: NonNullable<LessonReferenceWord["noun"]>["gender"]) => string,
   pluralLabel: (word: string) => string,
 ) {
-  const words = lessonReferenceWords.filter((word) => word.lessonId === lessonId);
-  return words.flatMap<LessonWordRow>((word) => {
+  return getLessonReferenceWords(lessonId).flatMap<LessonWordRow>((word) => {
     const rows: LessonWordRow[] = [
       {
         key: `${word.lessonId}:${word.order}`,
@@ -44,10 +44,14 @@ function getWordRows(
 
 export function LessonWordsTable({ lessonId }: { lessonId: string }) {
   const { t } = useTranslation();
-  const rows = getWordRows(
-    lessonId,
-    (gender) => t(`cards.genderValues.${gender}`),
-    (word) => t("lessonReference.wordsPluralOf", { word }),
+  const rows = useMemo(
+    () =>
+      getWordRows(
+        lessonId,
+        (gender) => t(`cards.genderValues.${gender}`),
+        (word) => t("lessonReference.wordsPluralOf", { word }),
+      ),
+    [lessonId, t],
   );
 
   return (

@@ -5,6 +5,7 @@ import { ReaderShell } from "@/components/layout/ReaderShell";
 import { ReaderControls } from "@/features/reader/ReaderControls";
 import { MarkdownViewer } from "@/features/reader/MarkdownViewer";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
+import { ReaderScrollArea } from "@/features/reader/ReaderScrollArea";
 import { useContentBody } from "@/features/reader/useContentBody";
 import { ReaderNotFoundPage } from "@/features/reading/pages/ReaderNotFoundPage";
 import { LessonWordsTable } from "@/features/lesson-reference/components/LessonWordsTable";
@@ -34,10 +35,7 @@ export function LessonReferenceArticlePage() {
         </div>
         <ReaderControls />
       </header>
-      <div
-        className="reader-scroll"
-        style={{ "--reader-size": `${settings.fontSize}px`, "--reader-line-height": settings.lineHeight } as React.CSSProperties}
-      >
+      <ReaderScrollArea settings={settings}>
         <article className="reader-article grammar-reader-article lesson-reference-article">
           {reference.subtitle && <p className="grammar-article-subtitle">{reference.subtitle}</p>}
           {body !== null ? (
@@ -47,7 +45,7 @@ export function LessonReferenceArticlePage() {
           )}
           {body !== null && <LessonWordsTable lessonId={reference.lessonId} />}
         </article>
-      </div>
+      </ReaderScrollArea>
     </ReaderShell>
   );
 }

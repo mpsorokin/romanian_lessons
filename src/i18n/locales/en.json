@@ -13,7 +13,6 @@
   "common": {
     "back": "Back",
     "settings": "Settings",
-    "progress": "Progress",
     "error": "Error",
     "loading": "Loading…",
     "save": "Save",
@@ -225,7 +224,6 @@
     "reviewQueueCount_other": "{{count}} cards waiting for review",
     "reviewQueueStatus": "in review",
     "reviewQueueStart": "Review queue",
-    "reviewQueueEmpty": "No cards are waiting for review.",
     "remembered": "Got it",
     "backToDeck": "Back to deck",
     "sessionDoneEyebrow": "Session complete",

@@ -17,6 +17,15 @@ export interface CardProgressState {
   needToReview: string[];
 }
 
+/** Deck-level (or whole-collection) rollup of card statuses. */
+export interface CardDeckProgress {
+  total: number;
+  known: number;
+  learning: number;
+  newCount: number;
+  percent: number;
+}
+
 export function createInitialCardProgress(): CardProgressState {
   return { version: 1, cards: {}, needToReview: [] };
 }

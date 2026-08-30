@@ -1,5 +1,5 @@
 import { BookOpenText, Check } from "@phosphor-icons/react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { BackButton } from "@/components/ui/BackButton";
@@ -8,10 +8,12 @@ import { ReaderShell } from "@/components/layout/ReaderShell";
 import { MarkdownViewer } from "@/features/reader/MarkdownViewer";
 import { ReaderControls } from "@/features/reader/ReaderControls";
 import { ProgressBar } from "@/components/ui/ProgressBar";
-import { useProgressActions } from "@/features/reading/useProgress";
+import { useProgressActions } from "@/features/progress/useProgress";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
 import { findContent } from "@/lib/content";
+import { ReaderScrollArea } from "@/features/reader/ReaderScrollArea";
 import { useContentBody } from "@/features/reader/useContentBody";
+import { useContentSnapshot } from "@/features/reader/useContentSnapshot";
 import { useReaderScroll } from "@/features/reader/useReaderScroll";
 import { ReaderNotFoundPage } from "@/features/reading/pages/ReaderNotFoundPage";
 
@@ -23,17 +25,12 @@ export function StoryPage() {
   const { getProgressSnapshot, saveStoryPosition, syncProgressState } = useProgressActions();
   const { body, error } = useContentBody(story);
 
-  const initial = useRef<{ id: string; position: number; completed: boolean } | null>(null);
-  if (story && initial.current?.id !== story.id) {
-    const entry = getProgressSnapshot().stories[story.id];
-    initial.current = {
-      id: story.id,
-      position: entry?.resumePosition ?? 0,
-      completed: entry?.completed ?? false,
-    };
-  }
-  const initialPosition = initial.current?.position ?? 0;
-  const initialCompleted = initial.current?.completed ?? false;
+  const initial = useContentSnapshot(story?.id, (id) => {
+    const entry = getProgressSnapshot().stories[id];
+    return { position: entry?.resumePosition ?? 0, completed: entry?.completed ?? false };
+  });
+  const initialPosition = initial?.position ?? 0;
+  const initialCompleted = initial?.completed ?? false;
 
   const [live, setLive] = useState({
     id: story?.id ?? "",
@@ -77,11 +74,7 @@ export function StoryPage() {
         </div>
         <ReaderControls />
       </header>
-      <div
-        className="reader-scroll"
-        ref={scrollRef}
-        style={{ "--reader-size": `${settings.fontSize}px`, "--reader-line-height": settings.lineHeight } as React.CSSProperties}
-      >
+      <ReaderScrollArea settings={settings} scrollRef={scrollRef}>
         {!live.completed && <StoryProgressTop progress={live.progress} wordCount={story.wordCount} />}
         <article className="reader-article">
           {body !== null ? (
@@ -103,7 +96,7 @@ export function StoryPage() {
           onCompleted={() => setLive((prev) => ({ ...prev, progress: 1, completed: true }))}
           onReset={() => setLive({ id: story.id, progress: 0, completed: false })}
         />
-      </div>
+      </ReaderScrollArea>
     </ReaderShell>
   );
 }

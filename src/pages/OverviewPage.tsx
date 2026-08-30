@@ -5,8 +5,8 @@ import { ContinueArrow } from "@/features/reading/components/ContentRow";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { lessonContent, storyContent } from "@/lib/content";
-import { completedLessonCount, completedStoryCount, getActiveStory, getNextLesson } from "@/features/reading/metrics";
-import { useProgress } from "@/features/reading/useProgress";
+import { completedLessonCount, completedStoryCount, getActiveStory, getNextLesson } from "@/features/progress/metrics";
+import { useProgress } from "@/features/progress/useProgress";
 import { useCardProgressState } from "@/features/cards/useCardProgress";
 import { getTotalCardProgress } from "@/features/cards/cardStats";
 

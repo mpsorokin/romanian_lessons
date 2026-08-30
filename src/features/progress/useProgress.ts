@@ -1,6 +1,6 @@
 import { useContext, useMemo } from "react";
-import { ProgressActionsContext, ProgressStateContext, type ProgressActions } from "@/features/reading/ProgressProvider";
-import type { LessonStatus, ProgressState } from "@/features/reading/progress.types";
+import { ProgressActionsContext, ProgressStateContext, type ProgressActions } from "@/features/progress/ProgressProvider";
+import type { LessonStatus, ProgressState } from "@/features/progress/progress.types";
 
 /** Stable mutators; using this alone keeps a component out of every progress re-render. */
 export function useProgressActions(): ProgressActions {

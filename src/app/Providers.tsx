@@ -1,6 +1,6 @@
 import { Suspense, type ReactNode } from "react";
 import { ErrorBoundary } from "@/components/feedback/ErrorBoundary";
-import { ProgressProvider } from "@/features/reading/ProgressProvider";
+import { ProgressProvider } from "@/features/progress/ProgressProvider";
 import { CardProgressProvider } from "@/features/cards/CardProgressProvider";
 import { ReaderSettingsProvider } from "@/features/reader/ReaderSettingsProvider";
 

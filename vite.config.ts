@@ -23,6 +23,14 @@ export default defineConfig({
       output: {
         codeSplitting: {
           groups: [
+            // React first: it is shared between the entry and every lazy route, so
+            // without its own group it lands inside `markdown` and drags the whole
+            // markdown pipeline into the entry's static imports — exactly what the
+            // split below is meant to prevent.
+            {
+              name: "react",
+              test: /node_modules[/\\](react|react-dom|scheduler)[/\\]/,
+            },
             {
               name: "markdown",
               test: /node_modules[/\\](react-markdown|remark-|rehype-|micromark|mdast-|unist-|unified|vfile|bail|is-plain|devlop|trough|property-information|space-separated-tokens|comma-separated-tokens|hast-|estree-|character-entities)/,

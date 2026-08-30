@@ -1,9 +1,16 @@
-import { createContext, useCallback, useMemo, useRef, useState, type PropsWithChildren } from "react";
-import { clearCardProgress, readCardProgress, writeCardProgress } from "@/features/cards/cardProgress.storage";
-import { createInitialCardProgress, type CardProgressRecord, type CardProgressState, type CardResult, type CardStatus } from "@/features/cards/cardProgress.types";
+import { createContext, useCallback, useEffect, useMemo, useRef, useState, type PropsWithChildren } from "react";
+import {
+  CARD_PROGRESS_STORAGE_KEY,
+  clearCardProgress,
+  mergeCardProgress,
+  parseCardProgressState,
+  readCardProgress,
+  writeCardProgress,
+} from "@/features/cards/cardProgress.storage";
+import { subscribeToStorage } from "@/lib/storage";
+import { createInitialCardProgress, type CardProgressState, type CardResult, type CardStatus } from "@/features/cards/cardProgress.types";
 
 export interface CardProgressActions {
-  getCardRecord: (id: string) => CardProgressRecord | undefined;
   getCardStatus: (id: string) => CardStatus | "new";
   markCard: (id: string, result: CardResult) => void;
   removeCardFromReview: (id: string) => void;
@@ -28,8 +35,26 @@ export function CardProgressProvider({ children }: PropsWithChildren) {
     setProgress(next);
   }, []);
 
+  /** Mirrors the reading store: adopt another tab's write instead of clobbering it. */
+  useEffect(
+    () =>
+      subscribeToStorage(CARD_PROGRESS_STORAGE_KEY, (raw) => {
+        let incoming = createInitialCardProgress();
+        if (raw !== null) {
+          try {
+            incoming = parseCardProgressState(JSON.parse(raw) as unknown) ?? incoming;
+          } catch {
+            return; // Unreadable write from elsewhere: keep what we have.
+          }
+        }
+        const merged = mergeCardProgress(progressRef.current, incoming);
+        progressRef.current = merged;
+        setProgress(merged);
+      }),
+    [],
+  );
+
   const actions = useMemo<CardProgressActions>(() => ({
-    getCardRecord: (id) => progressRef.current.cards[id],
     getCardStatus: (id) => progressRef.current.cards[id]?.status ?? "new",
     markCard: (id, result) => apply((current) => {
       const existing = current.cards[id];

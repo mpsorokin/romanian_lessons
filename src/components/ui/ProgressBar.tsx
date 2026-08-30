@@ -1,23 +1,33 @@
-import { useTranslation } from "react-i18next";
-
 interface ProgressBarProps {
   value: number;
   className?: string;
+  /**
+   * Accessible name. Omit it where the same number already sits in adjacent
+   * copy ("12 / 30 done") — the bar is then decorative and is hidden from
+   * assistive tech instead of announcing a second, unnamed progress indicator.
+   */
   label?: string;
 }
 
+/**
+ * Deliberately hook-free: the library screen renders dozens of these, and a
+ * `useTranslation()` in each one subscribed every bar to language changes just
+ * to produce a generic fallback name.
+ */
 export function ProgressBar({ value, className = "", label }: ProgressBarProps) {
-  const { t } = useTranslation();
   const normalized = Math.min(1, Math.max(0, value));
+  const semantics = label
+    ? ({
+        role: "progressbar",
+        "aria-valuemin": 0,
+        "aria-valuemax": 100,
+        "aria-valuenow": Math.round(normalized * 100),
+        "aria-label": label,
+      } as const)
+    : ({ "aria-hidden": true } as const);
+
   return (
-    <div
-      className={`progress-bar ${className}`}
-      role="progressbar"
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={Math.round(normalized * 100)}
-      aria-label={label ?? t("common.progress")}
-    >
+    <div className={`progress-bar ${className}`} {...semantics}>
       <span style={{ width: `${normalized * 100}%` }} />
     </div>
   );

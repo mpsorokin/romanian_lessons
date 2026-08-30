@@ -1,5 +1,5 @@
 import { ArrowRight } from "@phosphor-icons/react";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import { BackButton } from "@/components/ui/BackButton";
@@ -7,9 +7,11 @@ import { ReaderShell } from "@/components/layout/ReaderShell";
 import { MarkdownViewer } from "@/features/reader/MarkdownViewer";
 import { ReaderControls } from "@/features/reader/ReaderControls";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
+import { ReaderScrollArea } from "@/features/reader/ReaderScrollArea";
 import { useContentBody } from "@/features/reader/useContentBody";
+import { useContentSnapshot } from "@/features/reader/useContentSnapshot";
 import { useReaderScroll } from "@/features/reader/useReaderScroll";
-import { useProgressActions } from "@/features/reading/useProgress";
+import { useProgressActions } from "@/features/progress/useProgress";
 import { findContent } from "@/lib/content";
 import { getGrammarCategory } from "@/features/grammar/grammar";
 import { grammarCategoryLabel } from "@/features/grammar/grammarLabels";
@@ -23,11 +25,8 @@ export function GrammarArticlePage() {
   const { getProgressSnapshot, saveGrammarPosition, syncProgressState } = useProgressActions();
   const { body, error } = useContentBody(topic);
 
-  const initial = useRef<{ id: string; position: number } | null>(null);
-  if (topic && initial.current?.id !== topic.id) {
-    initial.current = { id: topic.id, position: getProgressSnapshot().grammar[topic.id]?.resumePosition ?? 0 };
-  }
-  const initialPosition = initial.current?.position ?? 0;
+  const initialPosition =
+    useContentSnapshot(topic?.id, (id) => getProgressSnapshot().grammar[id]?.resumePosition ?? 0) ?? 0;
 
   const savePosition = useCallback(
     (position: number, options?: { force?: boolean }) => {
@@ -54,11 +53,7 @@ export function GrammarArticlePage() {
         </div>
         <ReaderControls />
       </header>
-      <div
-        className="reader-scroll"
-        ref={scrollRef}
-        style={{ "--reader-size": `${settings.fontSize}px`, "--reader-line-height": settings.lineHeight } as React.CSSProperties}
-      >
+      <ReaderScrollArea settings={settings} scrollRef={scrollRef}>
         <article className="reader-article grammar-reader-article">
           {topic.subtitle && <p className="grammar-article-subtitle">{topic.subtitle}</p>}
           {body !== null ? (
@@ -68,7 +63,7 @@ export function GrammarArticlePage() {
           )}
           <RelatedTopics topicId={topic.id} relatedIds={topic.related ?? []} />
         </article>
-      </div>
+      </ReaderScrollArea>
     </ReaderShell>
   );
 }

@@ -1,5 +1,5 @@
 import { BookOpenText, Check } from "@phosphor-icons/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { BackButton } from "@/components/ui/BackButton";
@@ -7,10 +7,12 @@ import { BackButton } from "@/components/ui/BackButton";
 import { ReaderShell } from "@/components/layout/ReaderShell";
 import { MarkdownViewer } from "@/features/reader/MarkdownViewer";
 import { ReaderControls } from "@/features/reader/ReaderControls";
-import { useProgressActions } from "@/features/reading/useProgress";
+import { useProgressActions } from "@/features/progress/useProgress";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
 import { findContent } from "@/lib/content";
+import { ReaderScrollArea } from "@/features/reader/ReaderScrollArea";
 import { useContentBody } from "@/features/reader/useContentBody";
+import { useContentSnapshot } from "@/features/reader/useContentSnapshot";
 import { useReaderScroll } from "@/features/reader/useReaderScroll";
 import { ReaderNotFoundPage } from "@/features/reading/pages/ReaderNotFoundPage";
 
@@ -23,11 +25,8 @@ export function LessonPage() {
   const { body, error } = useContentBody(lesson);
   const [completed, setCompleted] = useState(false);
 
-  const initial = useRef<{ id: string; position: number } | null>(null);
-  if (lesson && initial.current?.id !== lesson.id) {
-    initial.current = { id: lesson.id, position: getProgressSnapshot().lessons[lesson.id]?.resumePosition ?? 0 };
-  }
-  const initialPosition = initial.current?.position ?? 0;
+  const initialPosition =
+    useContentSnapshot(lesson?.id, (id) => getProgressSnapshot().lessons[id]?.resumePosition ?? 0) ?? 0;
 
   useEffect(() => {
     if (lesson) {
@@ -74,11 +73,7 @@ export function LessonPage() {
         </div>
         <ReaderControls />
       </header>
-      <div
-        className="reader-scroll"
-        ref={scrollRef}
-        style={{ "--reader-size": `${settings.fontSize}px`, "--reader-line-height": settings.lineHeight } as React.CSSProperties}
-      >
+      <ReaderScrollArea settings={settings} scrollRef={scrollRef}>
         <article className="reader-article">
           {body !== null ? (
             <MarkdownViewer markdown={body} />
@@ -101,7 +96,7 @@ export function LessonPage() {
             </button>
           )}
         </div>
-      </div>
+      </ReaderScrollArea>
     </ReaderShell>
   );
 }

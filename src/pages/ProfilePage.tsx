@@ -13,8 +13,8 @@ import {
   estimatedWordsRead,
   getLastTouched,
   overallProgress,
-} from "@/features/reading/metrics";
-import { useProgress } from "@/features/reading/useProgress";
+} from "@/features/progress/metrics";
+import { useProgress } from "@/features/progress/useProgress";
 import { useCardProgressState } from "@/features/cards/useCardProgress";
 import { getTotalCardProgress } from "@/features/cards/cardStats";
 

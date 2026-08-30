@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import type { ProgressSaveOptions } from "@/features/reading/ProgressProvider";
+import type { ProgressSaveOptions } from "@/features/progress/ProgressProvider";
 
 function getProgress(element: HTMLElement) {
   const range = element.scrollHeight - element.clientHeight;
@@ -46,8 +46,21 @@ export function useReaderScroll(
     });
     document.fonts?.ready.then(restore).catch(() => undefined);
 
+    /**
+     * Grabbing the scrollbar fires none of the events above, so a reader who
+     * drags it could still be pulled back by a late `fonts.ready`. Only a press
+     * on the scrollbar track counts: it lands on the scroll container itself,
+     * past the content box. An ordinary click in the text must not cancel —
+     * selecting a word is not scrolling.
+     */
+    const stopRestoringOnScrollbar = (event: PointerEvent) => {
+      if (event.target !== element) return;
+      if (event.offsetX > element.clientWidth || event.offsetY > element.clientHeight) stopRestoring();
+    };
+
     element.addEventListener("wheel", stopRestoring, { passive: true, once: true });
     element.addEventListener("touchstart", stopRestoring, { passive: true, once: true });
+    element.addEventListener("pointerdown", stopRestoringOnScrollbar, { passive: true });
     window.addEventListener("keydown", stopRestoring, { once: true });
 
     return () => {
@@ -55,6 +68,7 @@ export function useReaderScroll(
       window.cancelAnimationFrame(frame);
       element.removeEventListener("wheel", stopRestoring);
       element.removeEventListener("touchstart", stopRestoring);
+      element.removeEventListener("pointerdown", stopRestoringOnScrollbar);
       window.removeEventListener("keydown", stopRestoring);
     };
     // `initialPosition` is intentionally read once per content item.

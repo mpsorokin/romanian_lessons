@@ -35,7 +35,7 @@ export function StudySession({
         </div>
         <ProgressBar value={(index + (revealed ? 1 : 0)) / total} label={t("cards.sessionProgress")} />
       </div>
-      <section className={`study-card ${revealed ? "study-card--revealed" : ""}`} aria-live="polite">
+      <section className={`study-card ${revealed ? "study-card--revealed" : ""}`}>
         <p className="eyebrow">{t("cards.translatePrompt")}</p>
         <h1>{card.promptRu}</h1>
         {!revealed ? (
@@ -44,10 +44,9 @@ export function StudySession({
           </button>
         ) : (
           <>
-            <div className="study-card__answer">
+            <div className="study-card__answer" aria-live="polite">
               <strong>{card.answerRo}</strong>
               <span>{card.pronunciation}</span>
-              {card.note && <small>{card.note}</small>}
               {card.noun && (
                 <dl className="study-card__noun">
                   <div>

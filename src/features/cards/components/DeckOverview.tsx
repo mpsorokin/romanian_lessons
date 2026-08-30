@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ProgressRing } from "@/components/ui/ProgressRing";
-import type { CardDeckProgress } from "@/features/cards/cards";
+import type { CardDeckProgress } from "@/features/cards/cardProgress.types";
 
 /** The deck landing screen: how far along the deck is, and how to start. */
 export function DeckOverview({

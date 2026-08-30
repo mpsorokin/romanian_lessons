@@ -1,11 +1,7 @@
+import { isDate, isRecord, mergeRecords, readStored, removeStored, writeStored } from "@/lib/storage";
 import { createInitialCardProgress, type CardProgressRecord, type CardProgressState } from "@/features/cards/cardProgress.types";
 
 export const CARD_PROGRESS_STORAGE_KEY = "calea:cards:v1";
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
-
-const isDate = (value: unknown): value is string => typeof value === "string" && value.length > 0;
 
 const positiveInteger = (value: unknown): number => {
   const number = typeof value === "number" ? value : Number(value);
@@ -49,28 +45,26 @@ export function parseCardProgressState(value: unknown): CardProgressState | null
 }
 
 export function readCardProgress(): CardProgressState {
-  try {
-    const raw = window.localStorage.getItem(CARD_PROGRESS_STORAGE_KEY);
-    if (!raw) return createInitialCardProgress();
-    const parsed: unknown = JSON.parse(raw);
-    return parseCardProgressState(parsed) ?? createInitialCardProgress();
-  } catch {
-    return createInitialCardProgress();
-  }
+  return readStored(CARD_PROGRESS_STORAGE_KEY, parseCardProgressState, createInitialCardProgress);
 }
 
 export function writeCardProgress(progress: CardProgressState): void {
-  try {
-    window.localStorage.setItem(CARD_PROGRESS_STORAGE_KEY, JSON.stringify(progress));
-  } catch {
-    // Private browsing or disabled storage should not prevent card sessions.
-  }
+  writeStored(CARD_PROGRESS_STORAGE_KEY, progress);
 }
 
 export function clearCardProgress(): void {
-  try {
-    window.localStorage.removeItem(CARD_PROGRESS_STORAGE_KEY);
-  } catch {
-    // Private browsing or disabled storage should not prevent resetting memory state.
-  }
+  removeStored(CARD_PROGRESS_STORAGE_KEY);
+}
+
+/**
+ * Same rule as the reading store: the other tab's snapshot decides what exists,
+ * per-card conflicts resolve by `updatedAt`. The review queue is taken wholesale
+ * so that clearing a card there is not undone by this tab remembering it.
+ */
+export function mergeCardProgress(local: CardProgressState, incoming: CardProgressState): CardProgressState {
+  return {
+    version: 1,
+    cards: mergeRecords(local.cards, incoming.cards),
+    needToReview: incoming.needToReview,
+  };
 }

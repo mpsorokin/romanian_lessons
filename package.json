@@ -1,6 +1,6 @@
 {
   "name": "romanian-learn",
-  "version": "5.3.1",
+  "version": "5.4.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,6 +8,8 @@
     "generate:cards": "node scripts/generate-cards.mjs",
     "build": "npm run generate:cards && vite build && node scripts/prepare-sites-build.mjs",
     "preview": "vite preview",
+    "test": "npm run test:cards && npm run test:i18n && npm run test:lesson-references && npm run test:sites && npm run test:unit",
+    "test:unit": "node --import ./tests/support/ts-alias-hooks.mjs --test \"tests/unit/*.test.mjs\"",
     "test:sites": "node --test tests/sites-worker.test.mjs",
     "test:lesson-references": "node --test tests/lesson-references.test.mjs",
     "test:cards": "npm run generate:cards && node --test tests/cards.test.mjs",

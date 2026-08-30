@@ -3,7 +3,7 @@ import { Check, ArrowRight } from "@phosphor-icons/react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import type { Lesson, Story } from "@/lib/content";
-import type { LessonStatus } from "@/features/reading/progress.types";
+import type { LessonStatus } from "@/features/progress/progress.types";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
 function padOrder(order: number) {

@@ -6,15 +6,12 @@ import {
   clampFontSize,
   clampLineHeight,
   type ReaderSettings,
-  type ReaderTheme,
 } from "@/features/reader/readerSettings.types";
 
 interface ReaderSettingsContextValue {
   settings: ReaderSettings;
   updateSettings: (next: ReaderSettings) => void;
   setFontSize: (fontSize: number) => void;
-  setLineHeight: (lineHeight: number) => void;
-  setTheme: (theme: ReaderTheme) => void;
 }
 
 const ReaderSettingsContext = createContext<ReaderSettingsContextValue | null>(null);
@@ -39,8 +36,6 @@ export function ReaderSettingsProvider({ children }: PropsWithChildren) {
           theme: asReaderTheme(next.theme),
         }),
       setFontSize: (fontSize) => apply({ ...settingsRef.current, fontSize: clampFontSize(fontSize) }),
-      setLineHeight: (lineHeight) => apply({ ...settingsRef.current, lineHeight: clampLineHeight(lineHeight) }),
-      setTheme: (theme) => apply({ ...settingsRef.current, theme }),
     }),
     [settings, apply],
   );

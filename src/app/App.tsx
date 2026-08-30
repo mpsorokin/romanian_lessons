@@ -17,10 +17,10 @@ const LibraryPage = lazy(() => import("@/pages/LibraryPage").then((m) => ({ defa
 const CardsPage = lazy(() => import("@/features/cards/pages/CardsPage").then((m) => ({ default: m.CardsPage })));
 const CardDeckPage = lazy(() => import("@/features/cards/pages/CardDeckPage").then((m) => ({ default: m.CardDeckPage })));
 const ReaderSettingsPage = lazy(() =>
-  import("@/features/reader/pages/ReaderSettingsPage").then((m) => ({ default: m.ReaderSettingsPage })),
+  import("@/pages/settings/ReaderSettingsPage").then((m) => ({ default: m.ReaderSettingsPage })),
 );
 const ProfilePage = lazy(() => import("@/pages/ProfilePage").then((m) => ({ default: m.ProfilePage })));
-const SettingsPage = lazy(() => import("@/pages/SettingsPage").then((m) => ({ default: m.SettingsPage })));
+const SettingsPage = lazy(() => import("@/pages/settings/SettingsPage").then((m) => ({ default: m.SettingsPage })));
 
 export function App() {
   return (

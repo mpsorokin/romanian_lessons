@@ -5,11 +5,11 @@ import { Link, NavLink, Navigate, useParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { ContinueArrow, LessonRow, StoryRow } from "@/features/reading/components/ContentRow";
 import { GrammarRow } from "@/features/grammar/components/GrammarRow";
-import { grammarMatches, groupGrammarTopics } from "@/features/grammar/grammar";
+import { filterGrammarTopics, groupGrammarTopics } from "@/features/grammar/grammar";
 import { grammarCategoryLabel } from "@/features/grammar/grammarLabels";
 import { grammarContent, lessonContent, storyContent } from "@/lib/content";
-import { completedLessonCount, completedStoryCount } from "@/features/reading/metrics";
-import { useProgress } from "@/features/reading/useProgress";
+import { completedLessonCount, completedStoryCount } from "@/features/progress/metrics";
+import { useProgress } from "@/features/progress/useProgress";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 
 const segments = [
@@ -106,7 +106,7 @@ function LibrarySectionView({ section }: { section: LibrarySection }) {
   const [query, setQuery] = useState("");
 
   const visibleTopics = useMemo(
-    () => (section === "grammar" ? grammarContent.filter((topic) => grammarMatches(topic, query)) : []),
+    () => (section === "grammar" ? filterGrammarTopics(grammarContent, query) : []),
     [section, query],
   );
   const grammarGroups = useMemo(

@@ -1,5 +1,5 @@
 import type { Content, Lesson, Story } from "@/lib/content";
-import type { ProgressState } from "@/features/reading/progress.types";
+import type { ProgressState } from "@/features/progress/progress.types";
 
 export function completedLessonCount(progress: ProgressState) {
   return Object.values(progress.lessons).filter((entry) => entry.status === "completed").length;
@@ -32,14 +32,6 @@ export function getActiveStory(stories: Story[], progress: ProgressState): Story
       return entry && !entry.completed && entry.resumePosition > 0;
     })
     .sort((a, b) => (progress.stories[b.id]?.updatedAt ?? "").localeCompare(progress.stories[a.id]?.updatedAt ?? ""))[0];
-}
-
-export function getRecentLessons(lessons: Lesson[], progress: ProgressState, limit = 3): Lesson[] {
-  const touched = lessons
-    .filter((lesson) => progress.lessons[lesson.id])
-    .sort((a, b) => (progress.lessons[b.id]?.updatedAt ?? "").localeCompare(progress.lessons[a.id]?.updatedAt ?? ""));
-  const touchedIds = new Set(touched.map((lesson) => lesson.id));
-  return [...touched, ...lessons.filter((lesson) => !touchedIds.has(lesson.id))].slice(0, limit);
 }
 
 export function averageStoryLength(stories: Story[]) {

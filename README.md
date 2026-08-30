@@ -12,8 +12,8 @@ flashcards — with in-browser progress.
   stored separately from reading
 - **Bilingual chrome** — English and Russian via i18next (default English; persisted in
   `calea:locale`). Lesson, story, and grammar markdown and card copy stay independent of UI language
-- **Local progress** — reading and card progress in `localStorage`; export/import backup from
-  Settings
+- **Local progress** — reading and card progress in `localStorage`, synchronised across open tabs;
+  export/import backup from Settings
 - **Profile** — course stats and overall progress
 - **Installable web app** — manifest-based; online-only, no offline cache
 
@@ -45,15 +45,65 @@ npm run preview
 `npm run build` runs `generate:cards`, builds the client to `dist/client`, and packages optional
 OpenAI Sites artifacts under `dist/`.
 
+**Keep the markdown pipeline out of the first paint.** `vite.config.ts` puts React in its own chunk
+*before* the `markdown` group. Without that, React — shared between the entry and every lazy route —
+ends up inside the markdown chunk and drags `react-markdown`, `remark` and `micromark` into the
+entry's static imports, so ~46 KB gzip is downloaded and parsed before the Overview screen appears.
+After changing chunking, check that it stayed out:
+
+```bash
+grep -o 'from"\./markdown-[^"]*"' dist/client/assets/index-*.js   # must print nothing
+grep -o 'markdown-[^"]*\.js' dist/client/index.html                # must not be modulepreloaded
+```
+
 ### Checks
 
 ```bash
-npm run typecheck
-npm run test:sites
-npm run test:cards
-npm run test:i18n
-npm run test:lesson-references
+npm run typecheck   # tsc --noEmit
+npm test            # every suite below, in order
 ```
+
+Individual suites:
+
+| Command | Checks |
+| --- | --- |
+| `npm run test:unit` | Pure logic: study-session reducer, storage parsers and merges, backup round-trip, metrics, grammar search |
+| `npm run test:cards` | Generated flashcards match the lesson Markdown and noun metadata |
+| `npm run test:i18n` | Locales agree with each other **and** with the keys used in `src/` |
+| `npm run test:lesson-references` | Lesson references cover every ordinary lesson |
+| `npm run test:sites` | The Sites worker and its build artifacts |
+
+CI (`.github/workflows/github-pages.yml`) runs `typecheck` and `npm test` before building.
+
+Unit tests import the real TypeScript modules — Node strips the types, and
+`tests/support/ts-alias-hooks.mjs` teaches it the `@/` alias and extensionless imports.
+A `pre-commit` hook runs `typecheck`.
+
+## Progress and storage
+
+Everything the learner accumulates lives in the browser. There is no account and no server, so the
+storage layer (`src/lib/storage.ts`) is deliberately defensive.
+
+| Key | Holds |
+| --- | --- |
+| `calea:progress:v1` | Lesson, story and grammar reading progress |
+| `calea:cards:v1` | Card grades and the Need-to-review queue |
+| `calea:reader-settings:v1` | Font size, line height, reader theme |
+| `calea:locale` | UI language |
+
+Three rules the storage layer guarantees — worth knowing before changing it:
+
+- **Nothing unreadable is destroyed.** A blob the parsers do not recognise — a future schema version,
+  truncated JSON — is copied to `<key>.bak` before the app writes over it. The first such blob wins
+  that slot, so an original is never replaced by a later mistake.
+- **Open tabs converge instead of overwriting.** Both progress stores listen for `storage` events and
+  merge: the incoming snapshot decides which entries exist (so a reset in one tab is not undone by
+  another resurrecting what it remembers), and per entry the newer `updatedAt` wins.
+- **Reading position is written lazily, but never lost.** Silent scroll saves fire on every 1% of a
+  text and are coalesced with a short debounce; forced saves — reader unmount, `pagehide`,
+  `visibilitychange` — always write immediately.
+
+Progress can be exported and re-imported as JSON from **Settings -> Data**.
 
 ## Versioning
 
@@ -109,15 +159,17 @@ src/
     ui/                # ProgressBar, ProgressRing, BackButton
     feedback/          # ErrorBoundary, NotFound
   features/
-    reading/           # lesson/story progress, metrics, their pages
-    cards/             # flashcard decks, progress, their pages
-    reader/            # reader settings, markdown viewer, scroll handling
+    progress/          # reading progress store, storage, metrics (used app-wide)
+    reading/           # lesson and story pages and rows
+    cards/             # flashcard decks, progress, session state, their pages
+    reader/            # reader settings, markdown viewer, scroll area and handling
     grammar/           # grammar catalogue, search, article page
     lesson-reference/  # Lessons Ref list and article pages
     backup/            # progress export/import
-  pages/               # Overview, Library, Profile, Settings
+  pages/               # Overview, Library, Profile
+    settings/          # Settings and Reader settings
   i18n/                # English and Russian UI strings
-  lib/                 # content index
+  lib/                 # content index and body loader, localStorage plumbing
   generated/           # cards.generated.ts (written by generate:cards)
   styles/              # theme tokens, base reset, per-area component CSS
   content/
@@ -127,6 +179,9 @@ src/
     lesson-references/ # lesson reference articles (*.md, words.json)
     cards/             # noun metadata for card generation
 docs/                  # content documentation
+tests/
+  unit/                # pure-logic tests (run against src/ directly)
+  support/             # Node resolver hook and test doubles
 ```
 
 Modules are imported through the `@/` alias (`@/features/cards/cards`), configured in

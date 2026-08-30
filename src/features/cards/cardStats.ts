@@ -1,13 +1,5 @@
 import { generatedCardCount } from "@/generated/cards.count";
-import type { CardProgressState } from "@/features/cards/cardProgress.types";
-
-export interface CardDeckProgress {
-  total: number;
-  known: number;
-  learning: number;
-  newCount: number;
-  percent: number;
-}
+import type { CardDeckProgress, CardProgressState } from "@/features/cards/cardProgress.types";
 
 /** Aggregate card progress without importing the full card dataset. */
 export function getTotalCardProgress(progress: CardProgressState): CardDeckProgress {

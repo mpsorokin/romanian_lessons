@@ -1,22 +1,18 @@
+import { isDate, isRecord, mergeRecords, readStored, removeStored, writeStored } from "@/lib/storage";
 import {
   createInitialProgress,
   type GrammarProgressRecord,
   type LessonProgressRecord,
   type ProgressState,
   type StoryProgressRecord,
-} from "@/features/reading/progress.types";
+} from "@/features/progress/progress.types";
 
 export const PROGRESS_STORAGE_KEY = "calea:progress:v1";
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
 
 const clamp = (value: unknown): number => {
   const number = typeof value === "number" ? value : Number(value);
   return Number.isFinite(number) ? Math.min(1, Math.max(0, number)) : 0;
 };
-
-const isDate = (value: unknown): value is string => typeof value === "string" && value.length > 0;
 
 function parseLessons(value: unknown): Record<string, LessonProgressRecord> {
   if (!isRecord(value)) return {};
@@ -58,9 +54,8 @@ function parseGrammar(value: unknown): Record<string, GrammarProgressRecord> {
 
   for (const [id, raw] of Object.entries(value)) {
     if (!isRecord(raw) || !isDate(raw.updatedAt)) continue;
-    const resumePosition = clamp(raw.resumePosition);
     result[id] = {
-      resumePosition,
+      resumePosition: clamp(raw.resumePosition),
       updatedAt: raw.updatedAt,
     };
   }
@@ -78,28 +73,33 @@ export function parseProgressState(value: unknown): ProgressState | null {
 }
 
 export function readProgress(): ProgressState {
-  try {
-    const raw = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
-    if (!raw) return createInitialProgress();
-    const parsed: unknown = JSON.parse(raw);
-    return parseProgressState(parsed) ?? createInitialProgress();
-  } catch {
-    return createInitialProgress();
-  }
+  return readStored(PROGRESS_STORAGE_KEY, parseProgressState, createInitialProgress);
 }
 
 export function writeProgress(progress: ProgressState): void {
-  try {
-    window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
-  } catch {
-    // Private browsing or disabled storage should not prevent reading.
-  }
+  writeStored(PROGRESS_STORAGE_KEY, progress);
 }
 
 export function clearProgress(): void {
-  try {
-    window.localStorage.removeItem(PROGRESS_STORAGE_KEY);
-  } catch {
-    // Private browsing or disabled storage should not prevent resetting memory state.
-  }
+  removeStored(PROGRESS_STORAGE_KEY);
 }
+
+/**
+ * Reconciles our state with what another tab just wrote.
+ *
+ * The incoming state decides which entries *exist* — otherwise a reset in one
+ * tab would be undone by the other resurrecting the entry it still remembers.
+ * For an entry both tabs know, the newer `updatedAt` wins. Nothing is lost by
+ * treating incoming as the base: silent scroll saves already hit storage
+ * immediately, so anything this tab has recorded is part of that snapshot.
+ */
+export function mergeProgress(local: ProgressState, incoming: ProgressState): ProgressState {
+  return {
+    version: 1,
+    lessons: mergeRecords(local.lessons, incoming.lessons),
+    stories: mergeRecords(local.stories, incoming.stories),
+    grammar: mergeRecords(local.grammar, incoming.grammar),
+  };
+}
+
+

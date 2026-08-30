@@ -1,10 +1,8 @@
 import { generatedCardDecks, generatedStudyCards, type GeneratedCardDeck, type GeneratedStudyCard } from "@/generated/cards.generated";
-import type { CardProgressState } from "@/features/cards/cardProgress.types";
+import type { CardDeckProgress, CardProgressState } from "@/features/cards/cardProgress.types";
 import { findContent, lessonContent } from "@/lib/content";
 
-export interface StudyCard extends GeneratedStudyCard {
-  note?: string;
-}
+export type StudyCard = GeneratedStudyCard;
 
 export type CardDeckKind = "lesson";
 
@@ -86,28 +84,12 @@ export function getCardsForDeck(deckId: string): StudyCard[] {
   return cardsByDeck.get(deckId) ?? [];
 }
 
-export function getCardsForLesson(lessonId: string): StudyCard[] {
-  return cardsByLesson.get(lessonId) ?? [];
-}
-
-export function getCardById(id: string): StudyCard | undefined {
-  return cardsById.get(id);
-}
-
 /** Resolves persisted queue IDs without changing their insertion order. */
 export function getCardsForReviewQueue(ids: readonly string[]): StudyCard[] {
   return ids.flatMap((id) => {
     const card = cardsById.get(id);
     return card ? [card] : [];
   });
-}
-
-export interface CardDeckProgress {
-  total: number;
-  known: number;
-  learning: number;
-  newCount: number;
-  percent: number;
 }
 
 export function getCardDeckProgress(deckId: string, progress: CardProgressState): CardDeckProgress {

@@ -43,13 +43,30 @@ export function groupGrammarTopics(topics: Grammar[]): GrammarGroup[] {
 }
 
 /** Search is case- and diacritic-insensitive while preserving the source copy. */
-export function normalizeGrammarSearch(value: string): string {
+function normalizeGrammarSearch(value: string): string {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("ru-RU");
 }
 
-export function grammarMatches(topic: Grammar, query: string): boolean {
+/**
+ * Normalising is the expensive part (NFD + regex + locale casing), so each
+ * topic's searchable text is folded once and kept. Without this every keystroke
+ * re-normalised the whole catalogue, twice per topic.
+ */
+const haystackByTopic = new Map<string, string>();
+
+function haystackFor(topic: Grammar): string {
+  const cached = haystackByTopic.get(topic.id);
+  if (cached !== undefined) return cached;
+  const haystack = normalizeGrammarSearch(
+    [topic.title, topic.subtitle, ...(topic.tags ?? [])].filter(Boolean).join(" "),
+  );
+  haystackByTopic.set(topic.id, haystack);
+  return haystack;
+}
+
+/** Returns the input array untouched for an empty query, so callers keep their memo. */
+export function filterGrammarTopics(topics: Grammar[], query: string): Grammar[] {
   const normalizedQuery = normalizeGrammarSearch(query.trim());
-  if (!normalizedQuery) return true;
-  const haystack = [topic.title, topic.subtitle, ...(topic.tags ?? [])].filter(Boolean).join(" ");
-  return normalizeGrammarSearch(haystack).includes(normalizedQuery);
+  if (!normalizedQuery) return topics;
+  return topics.filter((topic) => haystackFor(topic).includes(normalizedQuery));
 }

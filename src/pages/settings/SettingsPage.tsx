@@ -6,7 +6,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { createProgressBackup, downloadProgressBackup, parseProgressBackup } from "@/features/backup/progressBackup";
 import { useCardProgressActions, useCardProgressState } from "@/features/cards/useCardProgress";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
-import { useProgressActions } from "@/features/reading/useProgress";
+import { useProgressActions } from "@/features/progress/useProgress";
 import i18n from "@/i18n";
 import type { AppLocale } from "@/i18n/locale.types";
 

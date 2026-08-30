@@ -13,7 +13,6 @@
   "common": {
     "back": "Назад",
     "settings": "Настройки",
-    "progress": "Прогресс",
     "error": "Ошибка",
     "loading": "Загрузка…",
     "save": "Сохранить",
@@ -243,7 +242,6 @@
     "reviewQueueCount_other": "{{count}} карточек ждут повторения",
     "reviewQueueStatus": "на повторении",
     "reviewQueueStart": "Повторить очередь",
-    "reviewQueueEmpty": "Нет карточек для повторения.",
     "remembered": "Вспомнил",
     "backToDeck": "К колоде",
     "sessionDoneEyebrow": "Сессия завершена",
