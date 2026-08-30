@@ -34,13 +34,17 @@ export const MarkdownViewer = memo(function MarkdownViewer({
     },
   };
 
-  if (variant === "grammar") {
-    components.table = ({ node: _node, children, ...props }) => (
+  components.table = ({ node: _node, children, ...props }) => {
+    const table = <table {...props} className="reader-table">{children}</table>;
+
+    if (variant !== "grammar") return table;
+
+    return (
       <div className="grammar-table-scroll" role="region" tabIndex={0} aria-label={t("reader.grammarTable")}>
-        <table {...props}>{children}</table>
+        {table}
       </div>
     );
-  }
+  };
 
   return (
     <div className={`markdown-viewer markdown-viewer--${variant}`}>

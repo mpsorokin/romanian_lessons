@@ -81,11 +81,6 @@
 
 .lesson-reference-words {
   margin-top: 3em;
-  font-family: var(--font-serif);
-}
-
-.lesson-reference-words table {
-  min-width: 560px;
 }
 
 .lesson-reference-words td strong {

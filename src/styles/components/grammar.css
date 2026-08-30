@@ -37,9 +37,9 @@
 .grammar-article-subtitle { margin: 0 0 28px; color: var(--r-muted); font-family: var(--font-sans); font-size: 12px; line-height: 1.45; }
 .grammar-table-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--r-line); border-radius: 9px; scrollbar-color: var(--r-scroll-thumb) transparent; }
 .grammar-table-scroll:focus-visible { outline: 2px solid var(--color-gold-bright); outline-offset: 3px; }
-.markdown-viewer--grammar .grammar-table-scroll table { min-width: 520px; margin: 0; }
-.markdown-viewer--grammar .grammar-table-scroll th { background: var(--color-code-bg); color: inherit; }
-.markdown-viewer--grammar .grammar-table-scroll th, .markdown-viewer--grammar .grammar-table-scroll td { padding: 10px 9px; }
+.grammar-table-scroll .reader-table { min-width: 520px; margin: 0; }
+.grammar-table-scroll .reader-table th { background: var(--color-code-bg); color: inherit; }
+.grammar-table-scroll .reader-table th, .grammar-table-scroll .reader-table td { padding: 10px 9px; }
 .markdown-viewer--grammar code { white-space: nowrap; }
 .grammar-related { margin-top: 3em; }
 .grammar-related h2 { margin: 0 0 12px; color: inherit; font-family: var(--font-serif); font-size: 1.2em; font-weight: 600; letter-spacing: -0.03em; line-height: 1.2; }

@@ -27,9 +27,9 @@
 .markdown-viewer ul, .markdown-viewer ol { margin: 0 0 1.25em; padding-left: 1.3em; }
 .markdown-viewer li { padding-left: .2em; margin: .35em 0; }
 .markdown-viewer blockquote { margin: 1.35em 0; padding: .2em 0 .2em 1em; border-left: 2px solid var(--color-gold); color: var(--r-muted); }
-.markdown-viewer table { width: 100%; margin: 1.35em 0; border-collapse: collapse; font-family: var(--font-sans); font-size: .62em; line-height: 1.45; }
-.markdown-viewer th, .markdown-viewer td { padding: 8px 7px; border-bottom: 1px solid var(--r-line); text-align: left; vertical-align: top; }
-.markdown-viewer th { font-weight: 600; }
+.markdown-viewer table, .reader-table { width: 100%; margin: 1.35em 0; border-collapse: collapse; font-family: var(--font-sans); font-size: .62em; line-height: 1.45; }
+.markdown-viewer th, .markdown-viewer td, .reader-table th, .reader-table td { padding: 8px 7px; border-bottom: 1px solid var(--r-line); text-align: left; vertical-align: top; }
+.markdown-viewer th, .reader-table th { font-weight: 600; }
 .markdown-viewer code { padding: .1em .25em; border-radius: 4px; background: var(--color-code-bg); font-family: var(--font-mono); font-size: .8em; }
 .markdown-viewer hr { margin: 2.1em 0; border: 0; border-top: 1px solid var(--r-line); }
 .markdown-viewer--story .story-section-hr { margin: 1.1em 0; border-top-color: color-mix(in srgb, var(--r-line) 55%, transparent); }

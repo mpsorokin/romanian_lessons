@@ -53,7 +53,7 @@ export function LessonWordsTable({ lessonId }: { lessonId: string }) {
   return (
     <div className="lesson-reference-words">
       <div className="grammar-table-scroll" role="region" tabIndex={0} aria-label={t("lessonReference.wordsTable")}>
-        <table>
+        <table className="reader-table">
           <thead>
             <tr>
               <th scope="col">{t("lessonReference.wordsRomanian")}</th>
