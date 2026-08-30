@@ -1,12 +1,20 @@
 import { useCallback, useMemo, useReducer, type Dispatch } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { DeckOverview } from "@/features/cards/components/DeckOverview";
 import { SessionSummary } from "@/features/cards/components/SessionSummary";
 import { StudySession } from "@/features/cards/components/StudySession";
 import { useCardProgressActions, useCardProgressState } from "@/features/cards/useCardProgress";
-import { findCardDeck, getCardDeckProgress, getCardsForDeck, type CardDeck, type StudyCard } from "@/features/cards/cards";
+import {
+  findCardDeck,
+  getCardDeckProgress,
+  getCardsForDeck,
+  getCardsForReviewQueue,
+  NEED_TO_REVIEW_DECK_ID,
+  type CardDeck,
+  type StudyCard,
+} from "@/features/cards/cards";
 import type { CardResult } from "@/features/cards/cardProgress.types";
 import type { Lesson } from "@/lib/content";
 import { findContent } from "@/lib/content";
@@ -77,22 +85,25 @@ function CardDeckStudySession({
   lessonTitle,
   session,
   dispatch,
+  isReviewQueue = false,
 }: {
   lessonTitle: string;
   session: SessionState;
   dispatch: Dispatch<SessionEvent>;
+  isReviewQueue?: boolean;
 }) {
   const { t } = useTranslation();
-  const { markCard } = useCardProgressActions();
+  const { markCard, removeCardFromReview } = useCardProgressActions();
 
   const handleAnswer = useCallback(
     (result: CardResult) => {
       const card = session.cards?.[session.index];
       if (!card) return;
       markCard(card.id, result);
+      if (isReviewQueue && result === "remembered") removeCardFromReview(card.id);
       dispatch({ type: "answer", result, card });
     },
-    [dispatch, markCard, session.cards, session.index],
+    [dispatch, isReviewQueue, markCard, removeCardFromReview, session.cards, session.index],
   );
 
   if (!session.cards) return null;
@@ -108,6 +119,68 @@ function CardDeckStudySession({
         onReveal={() => dispatch({ type: "reveal" })}
         onAnswer={handleAnswer}
         onLeave={() => dispatch({ type: "leave" })}
+      />
+    </AppShell>
+  );
+}
+
+function CardReviewQueuePage({ session, dispatch }: { session: SessionState; dispatch: Dispatch<SessionEvent> }) {
+  const { t } = useTranslation();
+  const progress = useCardProgressState();
+  const reviewCards = useMemo(() => getCardsForReviewQueue(progress.needToReview), [progress.needToReview]);
+
+  const startSession = useCallback(
+    (selected?: StudyCard[]) => {
+      const source = selected ?? reviewCards;
+      if (source.length) dispatch({ type: "start", cards: source });
+    },
+    [dispatch, reviewCards],
+  );
+
+  if (!reviewCards.length && !session.cards && !session.summaryVisible) {
+    return <Navigate to="/cards" replace />;
+  }
+
+  if (session.cards) {
+    return (
+      <CardDeckStudySession
+        lessonTitle={t("cards.needReviewDeckTitle")}
+        session={session}
+        dispatch={dispatch}
+        isReviewQueue
+      />
+    );
+  }
+
+  if (session.summaryVisible) {
+    return (
+      <AppShell title={t("cards.title")} showBack right={<span />} className="card-deck-shell">
+        <SessionSummary
+          remembered={session.remembered}
+          repeat={session.repeat}
+          onRepeatDifficult={session.repeat > 0 ? () => startSession(session.lastDifficult) : undefined}
+        />
+      </AppShell>
+    );
+  }
+
+  const queueProgress = {
+    total: reviewCards.length,
+    known: 0,
+    learning: reviewCards.length,
+    newCount: 0,
+    percent: 0,
+  };
+
+  return (
+    <AppShell title={t("cards.title")} showBack right={<span />} className="card-deck-shell">
+      <DeckOverview
+        title={t("cards.needReviewDeckTitle")}
+        subtitle={t("cards.needReviewDescription")}
+        sourceLabel={t("cards.needReviewSource")}
+        progress={queueProgress}
+        onStartAdaptive={() => startSession()}
+        primaryLabel={t("cards.reviewQueueStart")}
       />
     </AppShell>
   );
@@ -174,11 +247,15 @@ function CardDeckIdleView({
 
 export function CardDeckPage() {
   const { deckId = "" } = useParams();
+  const [session, dispatch] = useReducer(sessionReducer, IDLE);
   const deck = findCardDeck(deckId);
   const lesson = deck ? findContent("lesson", deck.lessonId) : undefined;
-  const [session, dispatch] = useReducer(sessionReducer, IDLE);
 
   const deckCards = useMemo(() => (deck ? getCardsForDeck(deck.id) : []), [deck]);
+
+  if (deckId === NEED_TO_REVIEW_DECK_ID) {
+    return <CardReviewQueuePage session={session} dispatch={dispatch} />;
+  }
 
   if (!deck || !lesson) return <CardNotFoundPage />;
 

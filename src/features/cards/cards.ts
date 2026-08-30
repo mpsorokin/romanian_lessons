@@ -8,6 +8,8 @@ export interface StudyCard extends GeneratedStudyCard {
 
 export type CardDeckKind = "lesson";
 
+export const NEED_TO_REVIEW_DECK_ID = "need-to-review";
+
 export interface CardDeck extends GeneratedCardDeck {
   kind: CardDeckKind;
 }
@@ -90,6 +92,14 @@ export function getCardsForLesson(lessonId: string): StudyCard[] {
 
 export function getCardById(id: string): StudyCard | undefined {
   return cardsById.get(id);
+}
+
+/** Resolves persisted queue IDs without changing their insertion order. */
+export function getCardsForReviewQueue(ids: readonly string[]): StudyCard[] {
+  return ids.flatMap((id) => {
+    const card = cardsById.get(id);
+    return card ? [card] : [];
+  });
 }
 
 export interface CardDeckProgress {

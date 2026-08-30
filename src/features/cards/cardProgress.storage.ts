@@ -29,9 +29,23 @@ function parseCards(value: unknown): Record<string, CardProgressRecord> {
   return result;
 }
 
+function parseNeedToReview(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  for (const id of value) {
+    if (typeof id !== "string" || !id.trim() || seen.has(id)) continue;
+    seen.add(id);
+    result.push(id);
+  }
+
+  return result;
+}
+
 export function parseCardProgressState(value: unknown): CardProgressState | null {
   if (!isRecord(value) || value.version !== 1) return null;
-  return { version: 1, cards: parseCards(value.cards) };
+  return { version: 1, cards: parseCards(value.cards), needToReview: parseNeedToReview(value.needToReview) };
 }
 
 export function readCardProgress(): CardProgressState {

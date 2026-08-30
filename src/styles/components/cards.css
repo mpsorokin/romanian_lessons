@@ -7,6 +7,8 @@
 .card-deck-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto 20px; align-items: center; gap: 12px; min-height: 89px; padding: 12px 0; border-bottom: 1px solid var(--color-hairline); }
 .card-deck-row:hover strong { color: var(--color-gold-bright); }
 .card-deck-row__order { align-self: start; padding-top: 4px; color: var(--color-dimmer); font-family: var(--font-serif); font-size: 16px; }
+.card-deck-row__marker { align-self: start; display: grid; place-items: center; padding-top: 4px; color: var(--color-gold-dim); }
+.card-deck-row--review-queue:hover .card-deck-row__marker { color: var(--color-gold-bright); }
 .card-deck-row__main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .card-deck-row__main strong { overflow: hidden; color: var(--color-text); font-size: 13px; font-weight: 500; line-height: 1.25; text-overflow: ellipsis; }
 .card-deck-row__main small { overflow: hidden; color: var(--color-muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }

@@ -13,8 +13,10 @@ export interface CardProgressRecord {
 export interface CardProgressState {
   version: 1;
   cards: Record<string, CardProgressRecord>;
+  /** Card IDs in first-added order for the dedicated review queue. */
+  needToReview: string[];
 }
 
 export function createInitialCardProgress(): CardProgressState {
-  return { version: 1, cards: {} };
+  return { version: 1, cards: {}, needToReview: [] };
 }

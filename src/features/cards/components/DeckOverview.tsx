@@ -13,6 +13,7 @@ export function DeckOverview({
   progress,
   onStartAdaptive,
   onStartAll,
+  primaryLabel,
 }: {
   title: string;
   subtitle?: string;
@@ -21,6 +22,8 @@ export function DeckOverview({
   onStartAdaptive: () => void;
   /** Absent once nothing is left to learn — then the adaptive button replays the deck. */
   onStartAll?: () => void;
+  /** Overrides the default action label for special deck-like flows. */
+  primaryLabel?: string;
 }) {
   const { t } = useTranslation();
 
@@ -44,7 +47,7 @@ export function DeckOverview({
       </section>
       <div className="card-deck-actions">
         <button className="primary-button" type="button" onClick={onStartAdaptive}>
-          {onStartAll ? t("cards.continue") : t("cards.reviewDeck")}
+          {primaryLabel ?? (onStartAll ? t("cards.continue") : t("cards.reviewDeck"))}
         </button>
         {onStartAll && (
           <button className="secondary-button" type="button" onClick={onStartAll}>

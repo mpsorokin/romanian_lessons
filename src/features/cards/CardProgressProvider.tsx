@@ -6,6 +6,7 @@ export interface CardProgressActions {
   getCardRecord: (id: string) => CardProgressRecord | undefined;
   getCardStatus: (id: string) => CardStatus | "new";
   markCard: (id: string, result: CardResult) => void;
+  removeCardFromReview: (id: string) => void;
   resetCardProgress: () => void;
   replaceCardProgress: (state: CardProgressState) => void;
 }
@@ -34,13 +35,22 @@ export function CardProgressProvider({ children }: PropsWithChildren) {
       const existing = current.cards[id];
       const attempts = (existing?.attempts ?? 0) + 1;
       const remembered = (existing?.remembered ?? 0) + (result === "remembered" ? 1 : 0);
+      const needToReview =
+        result === "repeat" && !current.needToReview.includes(id)
+          ? [...current.needToReview, id]
+          : current.needToReview;
       return {
         version: 1,
         cards: {
           ...current.cards,
           [id]: { status: result === "remembered" ? "known" : "learning", attempts, remembered, updatedAt: now() },
         },
+        needToReview,
       };
+    }),
+    removeCardFromReview: (id) => apply((current) => {
+      if (!current.needToReview.includes(id)) return current;
+      return { ...current, needToReview: current.needToReview.filter((cardId) => cardId !== id) };
     }),
     resetCardProgress: () => {
       const initial = createInitialCardProgress();
