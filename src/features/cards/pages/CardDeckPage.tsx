@@ -155,11 +155,7 @@ function CardDeckIdleView({
     );
   }
 
-  const sourceLessons = deck.sourceLessonIds.map((id) => findContent("lesson", id)).filter(Boolean);
-  const sourceLabel =
-    deck.kind === "recall"
-      ? t("cards.recallDeckSource", { level: lesson.level, orders: sourceLessons.map((item) => item?.order).join("–") })
-      : t("cards.lessonDeckSource", { level: lesson.level });
+  const sourceLabel = t("cards.lessonDeckSource", { level: lesson.level });
   const hasAdaptiveCards = deckProgress.newCount + deckProgress.learning > 0;
 
   return (

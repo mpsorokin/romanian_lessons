@@ -6,7 +6,7 @@ export interface StudyCard extends GeneratedStudyCard {
   note?: string;
 }
 
-export type CardDeckKind = "lesson" | "recall";
+export type CardDeckKind = "lesson";
 
 export interface CardDeck extends GeneratedCardDeck {
   kind: CardDeckKind;
@@ -24,6 +24,7 @@ for (const card of studyCards) {
 
 const cardsById = new Map(studyCards.map((card) => [card.id, card]));
 const decksById = new Map(cardDecks.map((deck) => [deck.id, deck]));
+const decksByLesson = new Map(cardDecks.map((deck) => [deck.lessonId, deck]));
 
 const cardsByDeck = new Map<string, StudyCard[]>();
 for (const deck of cardDecks) {
@@ -54,12 +55,19 @@ function assertCardData() {
     }
     const orders = cards.map((card) => card.order).sort((a, b) => a - b);
     if (orders.some((order, index) => order !== index + 1)) throw new Error(lesson.id + ": card order must be continuous.");
+
+    const deck = decksByLesson.get(lesson.id);
+    if ((lesson.wordCount ?? 0) > 0 && !deck) throw new Error(`${lesson.id}: missing card deck.`);
+    if (!lesson.wordCount && deck) throw new Error(`${lesson.id}: Recall lessons must not have card decks.`);
   }
 
   for (const deck of cardDecks) {
     if (!findContent("lesson", deck.lessonId)) throw new Error(`${deck.id}: missing lesson metadata.`);
     if (!deck.sourceLessonIds.length) throw new Error(`${deck.id}: deck has no source lessons.`);
     if (new Set(deck.sourceLessonIds).size !== deck.sourceLessonIds.length) throw new Error(`${deck.id}: duplicate source lessons.`);
+    if (deck.sourceLessonIds.length !== 1 || deck.sourceLessonIds[0] !== deck.lessonId) {
+      throw new Error(`${deck.id}: lesson decks must contain only their own lesson.`);
+    }
     for (const lessonId of deck.sourceLessonIds) {
       if (!findContent("lesson", lessonId)) throw new Error(`${deck.id}: unknown source lesson ${lessonId}.`);
     }
@@ -103,4 +111,3 @@ export function getCardDeckProgress(deckId: string, progress: CardProgressState)
   const total = cards.length;
   return { total, known, learning, newCount: Math.max(0, total - known - learning), percent: total ? known / total : 0 };
 }
-

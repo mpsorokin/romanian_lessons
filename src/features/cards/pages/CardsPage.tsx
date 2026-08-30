@@ -19,11 +19,7 @@ export function CardsPage() {
         {cardDecks.map((deck) => {
           const lesson = findContent("lesson", deck.lessonId);
           if (!lesson) return null;
-          const sourceLessons = deck.sourceLessonIds.map((id) => findContent("lesson", id)).filter(Boolean);
-          const sourceLabel =
-            deck.kind === "recall"
-              ? t("cards.recallSource", { orders: sourceLessons.map((item) => item?.order).join("–") })
-              : (lesson.subtitle ?? t("cards.lessonDeckFallback"));
+          const sourceLabel = lesson.subtitle ?? t("cards.lessonDeckFallback");
           const progressSummary = getCardDeckProgress(deck.id, progress);
           return (
             <CardDeckRow

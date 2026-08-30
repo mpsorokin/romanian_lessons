@@ -64,34 +64,37 @@ test("every ordinary lesson has the declared number of ordered unique cards", ()
   }
 });
 
-test("Recall decks reference the previous four ordinary lessons without duplicates", () => {
+test("card decks include only ordinary lessons and preserve lesson numbering", () => {
   const lessonIds = new Set(lessons.map((lesson) => lesson.id));
   const deckIds = new Set();
-  const ordinary = [];
+  const ordinary = lessons.filter((lesson) => lesson.wordCount > 0);
+
+  assert.deepEqual(
+    lessons.map((lesson) => lesson.order),
+    Array.from({ length: lessons.length }, (_, index) => index + 1),
+  );
+  assert.deepEqual(
+    decks.map((deck) => deck.lessonId),
+    ordinary.map((lesson) => lesson.id),
+  );
+
   for (const lesson of lessons) {
     const deck = decks.find((item) => item.id === lesson.id);
-    assert.ok(deck, `Missing deck for ${lesson.id}`);
-    assert.equal(deckIds.has(deck.id), false, `Duplicate deck id: ${deck.id}`);
-    deckIds.add(deck.id);
-    assert.equal(deck.lessonId, lesson.id);
-    assert.ok(deck.sourceLessonIds.length > 0);
-    assert.equal(new Set(deck.sourceLessonIds).size, deck.sourceLessonIds.length);
-    for (const sourceId of deck.sourceLessonIds) assert.ok(lessonIds.has(sourceId), `Unknown source ${sourceId}`);
-
     if (lesson.wordCount > 0) {
+      assert.ok(deck, `Missing deck for ${lesson.id}`);
+      assert.equal(deckIds.has(deck.id), false, `Duplicate deck id: ${deck.id}`);
+      deckIds.add(deck.id);
+      assert.equal(deck.lessonId, lesson.id);
       assert.equal(deck.kind, "lesson");
       assert.deepEqual(deck.sourceLessonIds, [lesson.id]);
-      ordinary.push(lesson.id);
     } else {
-      assert.equal(deck.kind, "recall");
-      assert.deepEqual(deck.sourceLessonIds, ordinary.slice(-4));
-      const expectedCards = deck.sourceLessonIds.reduce(
-        (total, sourceId) => total + lessons.find((item) => item.id === sourceId).wordCount,
-        0,
-      );
-      const deckCards = cards.filter((card) => deck.sourceLessonIds.includes(card.lessonId));
-      assert.equal(new Set(deckCards.map((card) => card.id)).size, expectedCards);
+      assert.equal(deck, undefined, `Recall lesson ${lesson.id} must not have a card deck`);
     }
+  }
+
+  assert.equal(decks.length, ordinary.length);
+  for (const deck of decks) {
+    assert.ok(lessonIds.has(deck.lessonId), `Unknown lesson ${deck.lessonId}`);
   }
 });
 

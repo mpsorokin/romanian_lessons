@@ -21,7 +21,7 @@ export interface GeneratedStudyCard {
 export interface GeneratedCardDeck {
   id: string;
   lessonId: string;
-  kind: "lesson" | "recall";
+  kind: "lesson";
   sourceLessonIds: string[];
 }
 
@@ -5658,17 +5658,6 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
     ]
   },
   {
-    "id": "lesson-05",
-    "lessonId": "lesson-05",
-    "kind": "recall",
-    "sourceLessonIds": [
-      "lesson-01",
-      "lesson-02",
-      "lesson-03",
-      "lesson-04"
-    ]
-  },
-  {
     "id": "lesson-06",
     "lessonId": "lesson-06",
     "kind": "lesson",
@@ -5697,17 +5686,6 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
     "lessonId": "lesson-09",
     "kind": "lesson",
     "sourceLessonIds": [
-      "lesson-09"
-    ]
-  },
-  {
-    "id": "lesson-10",
-    "lessonId": "lesson-10",
-    "kind": "recall",
-    "sourceLessonIds": [
-      "lesson-06",
-      "lesson-07",
-      "lesson-08",
       "lesson-09"
     ]
   },
@@ -5744,17 +5722,6 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
     ]
   },
   {
-    "id": "lesson-15",
-    "lessonId": "lesson-15",
-    "kind": "recall",
-    "sourceLessonIds": [
-      "lesson-11",
-      "lesson-12",
-      "lesson-13",
-      "lesson-14"
-    ]
-  },
-  {
     "id": "lesson-16",
     "lessonId": "lesson-16",
     "kind": "lesson",
@@ -5783,17 +5750,6 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
     "lessonId": "lesson-19",
     "kind": "lesson",
     "sourceLessonIds": [
-      "lesson-19"
-    ]
-  },
-  {
-    "id": "lesson-20",
-    "lessonId": "lesson-20",
-    "kind": "recall",
-    "sourceLessonIds": [
-      "lesson-16",
-      "lesson-17",
-      "lesson-18",
       "lesson-19"
     ]
   },
@@ -5830,17 +5786,6 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
     ]
   },
   {
-    "id": "lesson-25",
-    "lessonId": "lesson-25",
-    "kind": "recall",
-    "sourceLessonIds": [
-      "lesson-21",
-      "lesson-22",
-      "lesson-23",
-      "lesson-24"
-    ]
-  },
-  {
     "id": "lesson-26",
     "lessonId": "lesson-26",
     "kind": "lesson",
@@ -5873,17 +5818,6 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
     ]
   },
   {
-    "id": "lesson-30",
-    "lessonId": "lesson-30",
-    "kind": "recall",
-    "sourceLessonIds": [
-      "lesson-26",
-      "lesson-27",
-      "lesson-28",
-      "lesson-29"
-    ]
-  },
-  {
     "id": "lesson-31",
     "lessonId": "lesson-31",
     "kind": "lesson",
@@ -5912,17 +5846,6 @@ export const generatedCardDecks: GeneratedCardDeck[] = [
     "lessonId": "lesson-34",
     "kind": "lesson",
     "sourceLessonIds": [
-      "lesson-34"
-    ]
-  },
-  {
-    "id": "lesson-35",
-    "lessonId": "lesson-35",
-    "kind": "recall",
-    "sourceLessonIds": [
-      "lesson-31",
-      "lesson-32",
-      "lesson-33",
       "lesson-34"
     ]
   }
