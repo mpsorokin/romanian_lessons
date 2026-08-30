@@ -1,14 +1,21 @@
 # Calea
 
-A small reading studio for learning Romanian: lessons and stories with in-browser progress.
+A Romanian reading studio: lessons, stories, grammar, lesson references, and Russian-to-Romanian
+flashcards — with in-browser progress.
 
 ## Features
 
-- Lessons and stories in Markdown with YAML frontmatter
-- Reader with font and text size settings
-- Local reading progress (saved in `localStorage`)
-- Stats and profile
-- Installable web app (manifest; online-only, no offline cache)
+- **Library** — lessons, stories, searchable grammar (grouped by category), and Lessons Ref
+  (`/lessons-ref`)
+- **Reader** — font size, line height, and paper/dark theme (Lora)
+- **Cards** — per-lesson decks, a Need-to-review queue, Russian prompt → Romanian answer; progress
+  stored separately from reading
+- **Bilingual chrome** — English and Russian via i18next (default English; persisted in
+  `calea:locale`). Lesson, story, and grammar markdown and card copy stay independent of UI language
+- **Local progress** — reading and card progress in `localStorage`; export/import backup from
+  Settings
+- **Profile** — course stats and overall progress
+- **Installable web app** — manifest-based; online-only, no offline cache
 
 ## Stack
 
@@ -16,6 +23,7 @@ A small reading studio for learning Romanian: lessons and stories with in-browse
 - Vite 8
 - Tailwind CSS 4.3 (design tokens + utilities; Preflight is deliberately not used)
 - React Router (`HashRouter`)
+- i18next + react-i18next
 - Content: Markdown in `src/content/`
 
 ## Local development
@@ -34,13 +42,17 @@ npm run build
 npm run preview
 ```
 
-Build outputs the client to `dist/client` (and optional OpenAI Sites artifacts under `dist/`).
+`npm run build` runs `generate:cards`, builds the client to `dist/client`, and packages optional
+OpenAI Sites artifacts under `dist/`.
 
 ### Checks
 
 ```bash
 npm run typecheck
 npm run test:sites
+npm run test:cards
+npm run test:i18n
+npm run test:lesson-references
 ```
 
 ## Versioning
@@ -70,7 +82,19 @@ Full guide: [Writing commit messages](docs/commit-messages.md).
 
 ## Adding content
 
-New lessons and stories are `.md` files in `src/content/`. No application code changes are required.
+Most content is Markdown with YAML frontmatter in `src/content/`:
+
+| Folder | Content |
+| --- | --- |
+| `lessons/` | Lessons |
+| `stories/` | Stories |
+| `grammar/` | Grammar reference topics |
+| `lesson-references/` | Lesson reference articles |
+| `lesson-references/words.json` | Lesson words table data |
+| `cards/nouns.json` | Noun metadata for generated cards |
+
+Flashcards are generated from lesson Markdown and `cards/nouns.json` via `npm run generate:cards`
+(also run automatically on `npm run build`).
 
 - [Adding lessons and stories](docs/adding-content.md)
 - [AI prompt template](docs/prompt-add-content.md) (Russian)
@@ -88,13 +112,20 @@ src/
     reading/           # lesson/story progress, metrics, their pages
     cards/             # flashcard decks, progress, their pages
     reader/            # reader settings, markdown viewer, scroll handling
-  pages/               # screens that read from several features
+    grammar/           # grammar catalogue, search, article page
+    lesson-reference/  # Lessons Ref list and article pages
+    backup/            # progress export/import
+  pages/               # Overview, Library, Profile, Settings
+  i18n/                # English and Russian UI strings
   lib/                 # content index
   generated/           # cards.generated.ts (written by generate:cards)
   styles/              # theme tokens, base reset, per-area component CSS
   content/
     lessons/           # lessons (*.md)
     stories/           # stories (*.md)
+    grammar/           # grammar topics (*.md)
+    lesson-references/ # lesson reference articles (*.md, words.json)
+    cards/             # noun metadata for card generation
 docs/                  # content documentation
 ```
 
