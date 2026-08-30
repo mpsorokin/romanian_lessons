@@ -21,14 +21,19 @@ function parseFrontmatter(raw) {
 
 const referenceFiles = (await readdir(referencesDir)).filter((file) => file.endsWith(".md")).sort();
 const lessonFiles = (await readdir(lessonsDir)).filter((file) => file.endsWith(".md"));
-const lessonIds = new Set();
+const lessons = [];
 for (const file of lessonFiles) {
   const { values } = parseFrontmatter(await readFile(join(lessonsDir, file), "utf8"));
-  if (Number(values.order) <= 5) lessonIds.add(values.id);
+  lessons.push({ file, ...values, order: Number(values.order), wordCount: Number(values.wordCount ?? 0) });
 }
+lessons.sort((a, b) => a.order - b.order);
+const ordinaryLessons = lessons.filter((lesson) => lesson.wordCount > 0);
+const recallLessons = lessons.filter((lesson) => lesson.wordCount === 0);
+const ordinaryLessonIds = ordinaryLessons.map((lesson) => lesson.id);
 
-test("lesson references cover exactly ordinary Lessons 1–4", async () => {
-  assert.deepEqual(referenceFiles, ["01-reference.md", "02-reference.md", "03-reference.md", "04-reference.md"]);
+test("lesson references cover all ordinary lessons and skip Recall lessons", async () => {
+  const expectedReferenceFiles = ordinaryLessons.map((lesson) => `${String(lesson.order).padStart(2, "0")}-reference.md`);
+  assert.deepEqual(referenceFiles, expectedReferenceFiles);
 
   const references = [];
   for (const file of referenceFiles) {
@@ -36,21 +41,25 @@ test("lesson references cover exactly ordinary Lessons 1–4", async () => {
     references.push({ file, ...parsed.values, body: parsed.body });
   }
 
-  assert.deepEqual(
-    references.map((reference) => Number(reference.order)),
-    [1, 2, 3, 4],
-  );
-  assert.equal(new Set(references.map((reference) => reference.id)).size, 4);
-  assert.equal(new Set(references.map((reference) => reference.lessonId)).size, 4);
+  assert.deepEqual(references.map((reference) => Number(reference.order)), ordinaryLessons.map((lesson) => lesson.order));
+  assert.deepEqual(references.map((reference) => reference.lessonId), ordinaryLessonIds);
+  assert.equal(new Set(references.map((reference) => reference.id)).size, ordinaryLessons.length);
+  assert.equal(new Set(references.map((reference) => reference.lessonId)).size, ordinaryLessons.length);
 
   for (const reference of references) {
     assert.ok(reference.id, `${reference.file} has an id`);
-    assert.ok(lessonIds.has(reference.lessonId), `${reference.file} points to a Lesson 1–5 id`);
-    assert.notEqual(reference.lessonId, "lesson-05", `${reference.file} does not target Recall 1`);
+    const lesson = lessons.find((candidate) => candidate.id === reference.lessonId);
+    assert.ok(lesson, `${reference.file} points to a known lesson`);
+    assert.ok(lesson.wordCount > 0, `${reference.file} does not target a Recall lesson`);
+    assert.equal(Number(reference.order), lesson.order, `${reference.file} order matches its lesson`);
     assert.match(reference.body, /^## Grammar ref/m, `${reference.file} has a grammar section`);
     assert.match(reference.body, /^## Forms & tables/m, `${reference.file} has a forms section`);
     assert.match(reference.body, /^## Lesson words/m, `${reference.file} has a words section`);
     assert.match(reference.body, /^\|.+\|/m, `${reference.file} contains a Markdown table`);
+  }
+
+  for (const recallLesson of recallLessons) {
+    assert.ok(!references.some((reference) => reference.lessonId === recallLesson.id), `${recallLesson.id} is not referenced`);
   }
 });
 
@@ -59,13 +68,13 @@ test("lesson reference words contain only ordered, unique headwords", async () =
   assert.ok(Array.isArray(words));
   assert.ok(words.length > 0);
 
-  const allowedInfinitive = /^a\s+[^\s]+$/i;
+  const allowedInfinitive = /^a\s+(?:se\s+)?[^\s]+$/i;
   const seen = new Set();
   const lessonOrders = new Map();
-  const expectedLessons = ["lesson-01", "lesson-02", "lesson-03", "lesson-04"];
+  const expectedLessons = ordinaryLessonIds;
 
   for (const word of words) {
-    assert.ok(expectedLessons.includes(word.lessonId), `${word.word} belongs to Lessons 1–4`);
+    assert.ok(expectedLessons.includes(word.lessonId), `${word.word} belongs to an ordinary lesson`);
     assert.ok(Number.isInteger(word.order) && word.order > 0, `${word.lessonId} word order is positive`);
     assert.ok(word.word && word.pronunciation && word.meaning, `${word.lessonId} word has copy`);
     assert.doesNotMatch(word.word, /[.!?…,:;]/, `${word.word} is not a sentence or punctuation unit`);
