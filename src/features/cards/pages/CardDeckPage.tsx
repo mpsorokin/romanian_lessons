@@ -33,17 +33,16 @@ function CardDeckStudySession({
   isReviewQueue?: boolean;
 }) {
   const { t } = useTranslation();
-  const { markCard, removeCardFromReview } = useCardProgressActions();
+  const { markCard } = useCardProgressActions();
 
   const handleAnswer = useCallback(
     (result: CardResult) => {
       const card = session.cards?.[session.index];
       if (!card) return;
-      markCard(card.id, result);
-      if (isReviewQueue && result === "remembered") removeCardFromReview(card.id);
+      markCard(card.id, result, { mode: isReviewQueue ? "today" : "manual" });
       dispatch({ type: "answer", result, card });
     },
-    [dispatch, isReviewQueue, markCard, removeCardFromReview, session.cards, session.index],
+    [dispatch, isReviewQueue, markCard, session.cards, session.index],
   );
 
   if (!session.cards) return null;

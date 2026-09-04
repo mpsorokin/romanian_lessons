@@ -1,6 +1,7 @@
-import { isDate, isRecord, mergeRecords, readStored, removeStored, writeStored } from "@/lib/storage";
-import { createInitialCardProgress, type CardProgressRecord, type CardProgressState } from "@/features/cards/cardProgress.types";
+import { isDate, isRecord } from "@/lib/storage";
+import type { CardProgressRecord, CardProgressState } from "@/features/cards/cardProgress.types";
 
+/** The v1 store is read once during migration to v2 and never written again. */
 export const CARD_PROGRESS_STORAGE_KEY = "calea:cards:v1";
 
 const positiveInteger = (value: unknown): number => {
@@ -42,29 +43,4 @@ function parseNeedToReview(value: unknown): string[] {
 export function parseCardProgressState(value: unknown): CardProgressState | null {
   if (!isRecord(value) || value.version !== 1) return null;
   return { version: 1, cards: parseCards(value.cards), needToReview: parseNeedToReview(value.needToReview) };
-}
-
-export function readCardProgress(): CardProgressState {
-  return readStored(CARD_PROGRESS_STORAGE_KEY, parseCardProgressState, createInitialCardProgress);
-}
-
-export function writeCardProgress(progress: CardProgressState): void {
-  writeStored(CARD_PROGRESS_STORAGE_KEY, progress);
-}
-
-export function clearCardProgress(): void {
-  removeStored(CARD_PROGRESS_STORAGE_KEY);
-}
-
-/**
- * Same rule as the reading store: the other tab's snapshot decides what exists,
- * per-card conflicts resolve by `updatedAt`. The review queue is taken wholesale
- * so that clearing a card there is not undone by this tab remembering it.
- */
-export function mergeCardProgress(local: CardProgressState, incoming: CardProgressState): CardProgressState {
-  return {
-    version: 1,
-    cards: mergeRecords(local.cards, incoming.cards),
-    needToReview: incoming.needToReview,
-  };
 }

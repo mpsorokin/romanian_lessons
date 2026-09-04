@@ -1,12 +1,14 @@
 import { parseCardProgressState } from "@/features/cards/cardProgress.storage";
-import type { CardProgressState } from "@/features/cards/cardProgress.types";
+import { parseCardProgressStateV2 } from "@/features/cards/cardProgress.v2.storage";
+import { isCardProgressV2, type CardProgressState, type CardProgressStateV2 } from "@/features/cards/cardProgress.types";
 import { parseProgressState } from "@/features/progress/progress.storage";
 import type { ProgressState } from "@/features/progress/progress.types";
 
 export const PROGRESS_BACKUP_KIND = "calea-progress";
 export const PROGRESS_BACKUP_VERSION = 1;
+export const PROGRESS_BACKUP_V2_VERSION = 2;
 
-export interface ProgressBackup {
+export interface ProgressBackupV1 {
   kind: typeof PROGRESS_BACKUP_KIND;
   version: typeof PROGRESS_BACKUP_VERSION;
   exportedAt: string;
@@ -14,10 +16,31 @@ export interface ProgressBackup {
   cards: CardProgressState;
 }
 
+export interface ProgressBackupV2 {
+  kind: typeof PROGRESS_BACKUP_KIND;
+  version: typeof PROGRESS_BACKUP_V2_VERSION;
+  exportedAt: string;
+  reading: ProgressState;
+  cards: CardProgressStateV2;
+}
+
+export type ProgressBackup = ProgressBackupV1 | ProgressBackupV2;
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === "object" && value !== null && !Array.isArray(value);
 
-export function createProgressBackup(reading: ProgressState, cards: CardProgressState): ProgressBackup {
+export function createProgressBackup(reading: ProgressState, cards: CardProgressState): ProgressBackupV1;
+export function createProgressBackup(reading: ProgressState, cards: CardProgressStateV2): ProgressBackupV2;
+export function createProgressBackup(reading: ProgressState, cards: CardProgressState | CardProgressStateV2): ProgressBackup {
+  if (isCardProgressV2(cards)) {
+    return {
+      kind: PROGRESS_BACKUP_KIND,
+      version: PROGRESS_BACKUP_V2_VERSION,
+      exportedAt: new Date().toISOString(),
+      reading,
+      cards,
+    };
+  }
   return {
     kind: PROGRESS_BACKUP_KIND,
     version: PROGRESS_BACKUP_VERSION,
@@ -29,20 +52,22 @@ export function createProgressBackup(reading: ProgressState, cards: CardProgress
 
 export function parseProgressBackup(value: unknown): ProgressBackup | null {
   if (!isRecord(value)) return null;
-  if (value.kind !== PROGRESS_BACKUP_KIND || value.version !== PROGRESS_BACKUP_VERSION) return null;
+  if (value.kind !== PROGRESS_BACKUP_KIND) return null;
   if (typeof value.exportedAt !== "string" || value.exportedAt.length === 0) return null;
 
   const reading = parseProgressState(value.reading);
-  const cards = parseCardProgressState(value.cards);
-  if (!reading || !cards) return null;
+  if (!reading) return null;
 
-  return {
-    kind: PROGRESS_BACKUP_KIND,
-    version: PROGRESS_BACKUP_VERSION,
-    exportedAt: value.exportedAt,
-    reading,
-    cards,
-  };
+  const exportedAt = value.exportedAt;
+  if (value.version === PROGRESS_BACKUP_V2_VERSION) {
+    const cards = parseCardProgressStateV2(value.cards);
+    return cards && { kind: PROGRESS_BACKUP_KIND, version: PROGRESS_BACKUP_V2_VERSION, exportedAt, reading, cards };
+  }
+  if (value.version === PROGRESS_BACKUP_VERSION) {
+    const cards = parseCardProgressState(value.cards);
+    return cards && { kind: PROGRESS_BACKUP_KIND, version: PROGRESS_BACKUP_VERSION, exportedAt, reading, cards };
+  }
+  return null;
 }
 
 export function progressBackupFilename(date = new Date()): string {

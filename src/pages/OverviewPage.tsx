@@ -61,6 +61,17 @@ export function OverviewPage() {
         </Link>
       )}
 
+      {cardProgress.version === 2 && (cardProgress.daily.newIntroduced > 0 || Object.keys(cardProgress.cards).length > 0) && (
+        <Link to="/cards/today" className="resume-story-row overview-today-link" aria-label={t("cards.today")}>
+          <div>
+            <p className="eyebrow">{t("cards.todayEyebrow")}</p>
+            <strong>{t("cards.today")}</strong>
+            <span>{t("cards.todayDescription")}</span>
+          </div>
+          <ContinueArrow />
+        </Link>
+      )}
+
       <section className="launcher-grid" aria-label={t("overview.appSections")}>
         <Link to="/library/lessons" className="launcher-card">
           <BookOpenText size={24} weight="regular" aria-hidden="true" />

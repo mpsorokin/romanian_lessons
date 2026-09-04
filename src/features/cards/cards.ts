@@ -1,6 +1,7 @@
 import { generatedCardDecks, generatedStudyCards, type GeneratedCardDeck, type GeneratedStudyCard } from "@/generated/cards.generated";
-import type { CardDeckProgress, CardProgressState } from "@/features/cards/cardProgress.types";
+import type { CardDeckProgress, CardProgressState, CardProgressStateV2 } from "@/features/cards/cardProgress.types";
 import { findContent, lessonContent } from "@/lib/content";
+import { TODAY_LIMIT, TODAY_NEW_LIMIT, dateKey, isDue, normalizeDailyUsage } from "@/features/cards/scheduler";
 
 export type StudyCard = GeneratedStudyCard;
 
@@ -84,6 +85,10 @@ export function getCardsForDeck(deckId: string): StudyCard[] {
   return cardsByDeck.get(deckId) ?? [];
 }
 
+export function findStudyCard(id: string): StudyCard | undefined {
+  return cardsById.get(id);
+}
+
 /** Resolves persisted queue IDs without changing their insertion order. */
 export function getCardsForReviewQueue(ids: readonly string[]): StudyCard[] {
   return ids.flatMap((id) => {
@@ -102,4 +107,57 @@ export function getCardDeckProgress(deckId: string, progress: CardProgressState)
   }
   const total = cards.length;
   return { total, known, learning, newCount: Math.max(0, total - known - learning), percent: total ? known / total : 0 };
+}
+
+export interface TodayQueue {
+  cards: StudyCard[];
+  dueCount: number;
+  newCount: number;
+  remainingDue: number;
+}
+
+/** Build the bounded mixed queue without mutating persisted state. */
+export function getTodayQueue(
+  progress: CardProgressStateV2,
+  now = new Date(),
+  limit = TODAY_LIMIT,
+  newLimit = TODAY_NEW_LIMIT,
+): TodayQueue {
+  const today = dateKey(now);
+  const daily = normalizeDailyUsage(progress.daily, today);
+  const started = new Set(progress.startedDeckIds);
+  const due: { card: StudyCard; dueDate: string }[] = [];
+  const fresh: StudyCard[] = [];
+  for (const card of studyCards) {
+    const record = progress.cards[card.id];
+    if (!record) {
+      if (started.has(card.lessonId)) fresh.push(card);
+    } else if (isDue(record, today)) {
+      due.push({ card, dueDate: record.dueDate });
+    }
+  }
+  due.sort((a, b) =>
+    a.dueDate.localeCompare(b.dueDate) ||
+    a.card.lessonId.localeCompare(b.card.lessonId) ||
+    a.card.order - b.card.order);
+
+  const dueCards = due.slice(0, limit).map((entry) => entry.card);
+  const availableNew = Math.max(0, newLimit - daily.newIntroduced);
+  const freshCards = fresh.slice(0, Math.min(availableNew, Math.max(0, limit - dueCards.length)));
+  return {
+    cards: [...dueCards, ...freshCards],
+    dueCount: due.length,
+    newCount: freshCards.length,
+    remainingDue: Math.max(0, due.length - dueCards.length),
+  };
+}
+
+export function getNextReviewDate(progress: CardProgressStateV2, now = new Date()): string | null {
+  const today = dateKey(now);
+  let earliest: string | null = null;
+  for (const card of studyCards) {
+    const dueDate = progress.cards[card.id]?.dueDate;
+    if (dueDate && dueDate > today && (earliest === null || dueDate < earliest)) earliest = dueDate;
+  }
+  return earliest;
 }

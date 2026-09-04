@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/AppShell";
 import { createProgressBackup, downloadProgressBackup, parseProgressBackup } from "@/features/backup/progressBackup";
 import { useCardProgressActions, useCardProgressState } from "@/features/cards/useCardProgress";
+import { migrateLegacyProgress } from "@/features/cards/cardProgress.v2.storage";
+import { isCardProgressV2 } from "@/features/cards/cardProgress.types";
 import { useReaderSettings } from "@/features/reader/ReaderSettingsProvider";
 import { useProgressActions } from "@/features/progress/useProgress";
 import i18n from "@/i18n";
@@ -57,7 +59,9 @@ export function SettingsPage() {
     if (!window.confirm(t("settings.importConfirm"))) return;
 
     replaceProgress(backup.reading);
-    replaceCardProgress(backup.cards);
+    replaceCardProgress(isCardProgressV2(backup.cards)
+      ? { ...backup.cards, activeSession: null }
+      : migrateLegacyProgress(backup.cards.cards, backup.cards.needToReview));
     window.alert(t("settings.importDone"));
   };
 

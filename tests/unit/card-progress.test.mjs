@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mergeCardProgress, parseCardProgressState } from "../../src/features/cards/cardProgress.storage.ts";
+import { parseCardProgressState } from "../../src/features/cards/cardProgress.storage.ts";
 import { getTotalCardProgress } from "../../src/features/cards/cardStats.ts";
 import { generatedCardCount } from "../../src/generated/cards.count.ts";
 
@@ -43,23 +43,6 @@ test("the review queue is de-duplicated and stripped of junk, keeping insertion 
 
 test("a non-array review queue degrades to empty rather than throwing", () => {
   assert.deepEqual(parseCardProgressState({ version: 1, cards: {}, needToReview: "b" }).needToReview, []);
-});
-
-test("merging keeps the newer card and adopts the other tab's queue", () => {
-  const local = {
-    version: 1,
-    cards: { a: record({ status: "known", updatedAt: "2026-05-01T00:00:00.000Z" }) },
-    needToReview: ["a"],
-  };
-  const incoming = {
-    version: 1,
-    cards: { a: record({ status: "learning", updatedAt: "2026-01-01T00:00:00.000Z" }) },
-    needToReview: [],
-  };
-
-  const merged = mergeCardProgress(local, incoming);
-  assert.equal(merged.cards.a.status, "known", "our newer grade survives");
-  assert.deepEqual(merged.needToReview, [], "clearing the queue elsewhere is respected");
 });
 
 test("the collection rollup counts statuses and never exceeds the real card count", () => {

@@ -15,6 +15,7 @@ const StoryPage = lazy(() => import("@/features/reading/pages/StoryPage").then((
 const GrammarArticlePage = lazy(() => import("@/features/grammar/pages/GrammarArticlePage").then((m) => ({ default: m.GrammarArticlePage })));
 const LibraryPage = lazy(() => import("@/pages/LibraryPage").then((m) => ({ default: m.LibraryPage })));
 const CardsPage = lazy(() => import("@/features/cards/pages/CardsPage").then((m) => ({ default: m.CardsPage })));
+const TodayPage = lazy(() => import("@/features/cards/pages/TodayPage").then((m) => ({ default: m.TodayPage })));
 const CardDeckPage = lazy(() => import("@/features/cards/pages/CardDeckPage").then((m) => ({ default: m.CardDeckPage })));
 const ReaderSettingsPage = lazy(() =>
   import("@/pages/settings/ReaderSettingsPage").then((m) => ({ default: m.ReaderSettingsPage })),
@@ -39,6 +40,7 @@ export function App() {
           <Route path="/grammar" element={<Navigate to="/library/grammar" replace />} />
           <Route path="/grammar/:id" element={<GrammarArticlePage />} />
           <Route path="/cards" element={<CardsPage />} />
+          <Route path="/cards/today" element={<TodayPage />} />
           <Route path="/cards/:deckId" element={<CardDeckPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/stats" element={<Navigate to="/profile" replace />} />

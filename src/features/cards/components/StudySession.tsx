@@ -1,4 +1,5 @@
 import { ArrowCounterClockwise, ArrowLeft, Check } from "@phosphor-icons/react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import type { StudyCard } from "@/features/cards/cards";
@@ -14,6 +15,9 @@ export function StudySession({
   onReveal,
   onAnswer,
   onLeave,
+  sourceLabel,
+  rememberedLabel,
+  repeatLabel,
 }: {
   lessonTitle: string;
   card: StudyCard;
@@ -23,14 +27,23 @@ export function StudySession({
   onReveal: () => void;
   onAnswer: (result: CardResult) => void;
   onLeave: () => void;
+  sourceLabel?: string;
+  rememberedLabel?: string;
+  repeatLabel?: string;
 }) {
   const { t } = useTranslation();
+  // Track which card was answered rather than a boolean the next card has to
+  // reset: a new card clears the disabled state without an extra render pass.
+  const [answeredKey, setAnsweredKey] = useState<string | null>(null);
+  const answerKey = `${card.id}:${index}`;
+  const answered = answeredKey === answerKey;
 
   return (
     <>
       <div className="card-session-top">
         <div>
           <p className="eyebrow">{lessonTitle}</p>
+          {sourceLabel && <small className="card-session-top__source">{sourceLabel}</small>}
           <span>{t("cards.cardProgress", { current: index + 1, total })}</span>
         </div>
         <ProgressBar value={(index + (revealed ? 1 : 0)) / total} label={t("cards.sessionProgress")} />
@@ -65,11 +78,11 @@ export function StudySession({
               )}
             </div>
             <div className="study-card__actions">
-              <button className="secondary-button" type="button" onClick={() => onAnswer("repeat")}>
-                <ArrowCounterClockwise size={17} aria-hidden="true" /> {t("cards.needReview")}
+              <button className="secondary-button" type="button" disabled={answered} onClick={() => { setAnsweredKey(answerKey); onAnswer("repeat"); }}>
+                <ArrowCounterClockwise size={17} aria-hidden="true" /> {repeatLabel ?? t("cards.needReview")}
               </button>
-              <button className="primary-button" type="button" onClick={() => onAnswer("remembered")}>
-                <Check size={17} weight="bold" aria-hidden="true" /> {t("cards.remembered")}
+              <button className="primary-button" type="button" disabled={answered} onClick={() => { setAnsweredKey(answerKey); onAnswer("remembered"); }}>
+                <Check size={17} weight="bold" aria-hidden="true" /> {rememberedLabel ?? t("cards.remembered")}
               </button>
             </div>
           </>
